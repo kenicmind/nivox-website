@@ -6,6 +6,9 @@ import HubExperienceSection from '../../components/sections/HubExperienceSection
 import ExperienceNivoxSection from '../../components/sections/ExperienceNivoxSection';
 import BuiltForEveryStudentSection from '../../components/sections/BuiltForEveryStudentSection';
 import MembershipAccessSection from '../../components/sections/MembershipAccessSection';
+import PartnershipSection from '../../components/sections/PartnershipSection';
+import FinalCtaSection from '../../components/sections/FinalCtaSection';
+import FooterSection from '../../components/sections/FooterSection';
 
 const HomePage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -30,6 +33,9 @@ const HomePage = () => {
       <ExperienceNivoxSection />
       <BuiltForEveryStudentSection />
       <MembershipAccessSection />
+      <PartnershipSection />
+      <FinalCtaSection />
+      <FooterSection />
     </>
   );
 };
