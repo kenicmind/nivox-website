@@ -746,15 +746,16 @@ const AboutPage = () => {
             the next generation, there's a place for you at NIVOX.
           </p>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-            <motion.a
-              href="#"
-              whileHover={{ y: -2, scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#ffd54a] px-6 py-3.5 text-sm font-semibold text-[#2b0a5a] shadow-[0_12px_35px_rgba(255,213,74,0.24)]"
-            >
-              Become a Member
-              <ArrowRight className="h-4 w-4" />
-            </motion.a>
+            <Link to="/membership">
+                  <motion.button
+                    whileHover={{ y: -2, scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="inline-flex items-center justify-center gap-2 rounded-full bg-[#ffd54a] px-6 py-3.5 text-sm font-semibold text-[#2b0a5a] shadow-[0_12px_35px_rgba(255,213,74,0.24)]"
+                  >
+                    Become a Member
+                    <ArrowRight className="h-4 w-4" />
+                  </motion.button>
+                </Link>
             <motion.a
               href="#"
               whileHover={{ y: -2, scale: 1.02 }}

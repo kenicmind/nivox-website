@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   ArrowRight,
@@ -79,13 +80,15 @@ const HeroSection = () => {
           </p>
 
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-            <motion.button
-              whileHover={{ scale: 1.03, y: -2 }}
-              whileTap={{ scale: 0.98 }}
-              className="rounded-full bg-[#FFD54A] px-6 py-3.5 text-sm font-semibold text-[#140726] shadow-[0_10px_35px_rgba(255,213,74,0.25)] transition"
-            >
-              Join the Waitlist
-            </motion.button>
+            <Link to="/register">
+              <motion.button
+                whileHover={{ scale: 1.03, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                className="rounded-full bg-[#FFD54A] px-6 py-3.5 text-sm font-semibold text-[#140726] shadow-[0_10px_35px_rgba(255,213,74,0.25)] transition"
+              >
+                Join the Waitlist
+              </motion.button>
+            </Link>
             <motion.button
               whileHover={{ scale: 1.03, y: -2 }}
               whileTap={{ scale: 0.98 }}

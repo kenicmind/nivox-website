@@ -43,14 +43,14 @@ const SpacesPage = () => {
           </motion.p>
 
           <motion.a
-            href="#digital-workspace"
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.98 }}
-            className="mt-12 inline-flex items-center gap-3 rounded-full bg-[#FFD54A] px-8 py-4 font-semibold text-[#2b0a5a]"
-          >
-            Explore Our Spaces
-            <ArrowRight size={20} />
-          </motion.a>
+        href="#digital-workspace"
+        whileHover={{ scale: 1.04 }}
+        whileTap={{ scale: 0.98 }}
+        className="mt-12 inline-flex items-center gap-3 rounded-full bg-[#FFD54A] px-8 py-4 font-semibold text-[#2b0a5a]"
+      >
+        Explore Our Spaces
+        <ArrowRight size={20} />
+      </motion.a>
 
         </div>
 

@@ -90,14 +90,16 @@ useEffect(() => {
         </div>
 
         <div className="hidden items-center gap-3 md:flex">
-        <motion.button
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.97 }}
-          className="rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white/80 transition hover:bg-white/20 hover:text-white"
-          type="button"
-        >
-          Sign In
-        </motion.button>
+        <Link to="/login">
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            className="rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white/80 transition hover:bg-white/20 hover:text-white"
+            type="button"
+          >
+            Sign In
+          </motion.button>
+        </Link>
 
         <Link to="/membership">
           <motion.button
@@ -144,23 +146,38 @@ useEffect(() => {
                 </NavLink>
               ))}
               <div className="mt-2 flex flex-col gap-2">
+                <Link to="/login" onClick={() => setIsOpen(false)}>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white"
+                    type="button"
+                  >
+                    Sign In
+                  </motion.button>
+                </Link>
+
+                <Link to="/membership" onClick={() => setIsOpen(false)}>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full rounded-full bg-[#FACC15] px-4 py-2 text-sm font-semibold text-[#140726]"
+                    type="button"
+                  >
+                    Get Started
+                  </motion.button>
+                </Link>
+                <Link to="/membership" onClick={() => setIsOpen(false)}>
+                <Link to="/login" onClick={() => setIsOpen(false)}>
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white"
+                  className="w-full rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white"
                   type="button"
                 >
                   Sign In
                 </motion.button>
-                <Link to="/membership" onClick={() => setIsOpen(false)}>
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="rounded-full bg-[#FACC15] px-4 py-2 text-sm font-semibold text-[#140726] w-full"
-                  type="button"
-                >
-                  Get Started
-                </motion.button>
+              </Link>
               </Link>
               </div>
             </div>

@@ -6,9 +6,11 @@ import SpacesPage from '../pages/Spaces/SpacesPage';
 import EventsPage from '../pages/Events/EventsPage';
 import CommunityPage from '../pages/Community/CommunityPage';
 import MembershipPage from "../pages/Membership/MembershipPage";
-import AuthPage from '../pages/Auth/AuthPage';
+import AuthPage from '../pages/Auth/LoginPage.jsx';
 import DashboardPage from '../pages/Dashboard/DashboardPage';
 import AdminPage from '../pages/Admin/AdminPage';
+import LoginPage from "../pages/Auth/LoginPage";
+import RegisterPage from "../pages/Auth/RegisterPage";
 
 const AppRouter = () => {
   return (
@@ -21,9 +23,10 @@ const AppRouter = () => {
           <Route path="/events" element={<EventsPage />} />
           <Route path="/community" element={<CommunityPage />} />
          <Route path="/membership" element={<MembershipPage />} />
-          <Route path="/auth" element={<AuthPage />} />
+         <Route path="/login" element={<LoginPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/admin" element={<AdminPage />} />
+          <Route path="/register" element={<RegisterPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
