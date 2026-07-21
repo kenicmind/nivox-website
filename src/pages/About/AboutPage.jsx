@@ -274,7 +274,84 @@ const AboutPage = () => {
             ))}
           </div>
         </motion.section>
+            {/* ================= WHY NIVOX MATTERS ================= */}
 
+            <motion.section
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.7 }}
+              className="rounded-[32px] border border-[#2b0a5a]/10 bg-white/80 p-8 shadow-[0_20px_70px_rgba(43,10,90,0.08)] backdrop-blur-xl sm:p-10"
+            >
+              <div className="mx-auto max-w-3xl text-center">
+                <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#2b0a5a]/70">
+                  Why NIVOX Matters
+                </p>
+
+                <h2 className="mt-4 text-3xl font-black text-[#2b0a5a] sm:text-4xl">
+                  More Than Just a Workspace
+                </h2>
+
+                <p className="mt-5 text-lg leading-8 text-gray-700">
+                  NIVOX is an ecosystem where students gain access to technology,
+                  collaboration, creativity, entrepreneurship, and opportunities that
+                  prepare them for the future.
+                </p>
+              </div>
+
+              <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+
+                {[
+                  {
+                    emoji: "🌐",
+                    title: "Digital Access",
+                    text: "Fast internet, reliable electricity and modern technology that remove barriers to learning."
+                  },
+                  {
+                    emoji: "💡",
+                    title: "Innovation",
+                    text: "Transform ideas into projects, startups and meaningful solutions."
+                  },
+                  {
+                    emoji: "🤝",
+                    title: "Collaboration",
+                    text: "Work with students from different disciplines and build together."
+                  },
+                  {
+                    emoji: "🚀",
+                    title: "Career Growth",
+                    text: "Develop practical skills and prepare for internships, careers and leadership."
+                  },
+                  {
+                    emoji: "🎥",
+                    title: "Creative Studios",
+                    text: "Photography, videography, podcasting, graphic design and digital media creation."
+                  },
+                  {
+                    emoji: "💼",
+                    title: "Entrepreneurship",
+                    text: "Launch ideas, connect with mentors and build businesses that create impact."
+                  }
+                ].map((item) => (
+                  <motion.div
+                    key={item.title}
+                    whileHover={{ y: -8, scale: 1.02 }}
+                    className="rounded-[24px] border border-[#2b0a5a]/10 bg-[linear-gradient(145deg,rgba(255,255,255,0.95),rgba(248,244,255,0.95))] p-6"
+                  >
+                    <div className="text-4xl">{item.emoji}</div>
+
+                    <h3 className="mt-5 text-xl font-bold text-[#2b0a5a]">
+                      {item.title}
+                    </h3>
+
+                    <p className="mt-3 text-gray-700 leading-7">
+                      {item.text}
+                    </p>
+                  </motion.div>
+                ))}
+
+              </div>
+            </motion.section>
         <motion.section
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
