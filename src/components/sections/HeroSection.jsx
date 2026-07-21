@@ -12,29 +12,29 @@ import {
 
 const features = [
   {
-    title: 'High-Speed Internet',
-    icon: Network,
-    description: 'Ultra-fast connectivity for focus and flow.',
-  },
-  {
-    title: 'Smart Workstations',
-    icon: Laptop2,
-    description: 'Premium setups for deep work and creation.',
-  },
-  {
-    title: 'Content Studio',
-    icon: Headphones,
-    description: 'A polished space for recording and production.',
-  },
-  {
-    title: 'Collaboration Space',
-    icon: Users,
-    description: 'Designed for teamwork and innovation.',
-  },
-  {
-    title: 'Learning Zone',
+    title: "Study Zone",
     icon: Library,
-    description: 'Curated resources to accelerate growth.',
+    description: "Quiet learning spaces with high-speed internet.",
+  },
+  {
+    title: "Tech Lab",
+    icon: Laptop2,
+    description: "Modern computers for coding, design, and research.",
+  },
+  {
+    title: "Creator Studio",
+    icon: Headphones,
+    description: "Professional space for podcasts, videos, and content creation.",
+  },
+  {
+    title: "Startup Corner",
+    icon: Users,
+    description: "Collaborate, build startups, and launch innovative ideas.",
+  },
+  {
+    title: "Innovation Hub",
+    icon: Network,
+    description: "Workshops, hackathons, networking, and innovation events.",
   },
 ];
 
@@ -59,9 +59,9 @@ const HeroSection = () => {
             Premium student innovation hub
           </div>
 
-          <h1 className="text-4xl font-black leading-[0.9] tracking-[-0.03em] text-white sm:text-5xl lg:text-7xl">
-            Building the
-            <span className="block text-[#FFD54A]">Future</span>
+          <h1 className="text-5xl font-black leading-tight tracking-tight text-white sm:text-6xl lg:text-7xl">
+            Building the{" "}
+            <span className="text-[#FFD54A]">Future</span>{" "}
             Student Hub
           </h1>
 
@@ -72,13 +72,13 @@ const HeroSection = () => {
             <span>Connect.</span>
           </div>
 
-          <p className="mt-8 max-w-xl text-lg leading-8 text-white/75 sm:text-xl">
+          <p className="mt-8 max-w-2xl text-lg leading-9 text-white/75 sm:text-xl">
             NIVOX is a modern digital hub where students gain access to premium internet,
             collaborative spaces, computers, learning resources, and creative studios designed
             for tomorrow’s innovators.
           </p>
 
-          <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+          <div className="mt-10 flex flex-col gap-4 sm:flex-row">
             <motion.button
               whileHover={{ scale: 1.03, y: -2 }}
               whileTap={{ scale: 0.98 }}
@@ -93,6 +93,37 @@ const HeroSection = () => {
             >
               Explore NIVOX
             </motion.button>
+          </div>
+          <div className="mt-14 grid grid-cols-3 gap-4">
+            <motion.div
+              whileHover={{ y: -5 }}
+              className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl"
+            >
+              <h3 className="text-3xl font-black text-[#FFD54A]">22K+</h3>
+              <p className="mt-2 text-sm text-white/70">
+                Students to Empower
+              </p>
+            </motion.div>
+
+            <motion.div
+              whileHover={{ y: -5 }}
+              className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl"
+            >
+              <h3 className="text-3xl font-black text-[#FFD54A]">24/7</h3>
+              <p className="mt-2 text-sm text-white/70">
+                Power & Internet
+              </p>
+            </motion.div>
+
+            <motion.div
+              whileHover={{ y: -5 }}
+              className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl"
+            >
+              <h3 className="text-3xl font-black text-[#FFD54A]">100%</h3>
+              <p className="mt-2 text-sm text-white/70">
+                Innovation Focused
+              </p>
+            </motion.div>
           </div>
         </motion.div>
 
@@ -123,10 +154,14 @@ const HeroSection = () => {
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.45, delay: 0.1 + index * 0.07, ease: 'easeOut' }}
-                    whileHover={{ y: -6, scale: 1.02, rotate: -1 }}
+                    whileHover={{
+                      y: -10,
+                      scale: 1.05,
+                      boxShadow: "0 25px 50px rgba(255,213,74,0.25)",
+                    }}
                     className="rounded-[20px] border border-white/12 bg-white/10 p-4 shadow-[0_10px_30px_rgba(0,0,0,0.16)] backdrop-blur-md"
                   >
-                    <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-2xl bg-[#FFD54A]/15 text-[#FFD54A]">
+                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#FFD54A]/20 text-[#FFD54A] shadow-lg">
                       <Icon className="h-5 w-5" />
                     </div>
                     <h3 className="text-sm font-semibold text-white">{feature.title}</h3>

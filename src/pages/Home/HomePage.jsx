@@ -5,6 +5,9 @@ import WhyNivoxSection from '../../components/sections/WhyNivoxSection';
 import HubExperienceSection from '../../components/sections/HubExperienceSection';
 import ExperienceNivoxSection from '../../components/sections/ExperienceNivoxSection';
 import BuiltForEveryStudentSection from '../../components/sections/BuiltForEveryStudentSection';
+
+import InsideNivoxSection from "../../components/sections/InsideNivoxSection";
+
 import MembershipAccessSection from '../../components/sections/MembershipAccessSection';
 import PartnershipSection from '../../components/sections/PartnershipSection';
 import FinalCtaSection from '../../components/sections/FinalCtaSection';
