@@ -5,6 +5,7 @@ import AboutPage from '../pages/About/AboutPage';
 import SpacesPage from '../pages/Spaces/SpacesPage';
 import EventsPage from '../pages/Events/EventsPage';
 import CommunityPage from '../pages/Community/CommunityPage';
+import MembershipPage from "../pages/Membership/MembershipPage";
 import AuthPage from '../pages/Auth/AuthPage';
 import DashboardPage from '../pages/Dashboard/DashboardPage';
 import AdminPage from '../pages/Admin/AdminPage';
@@ -19,6 +20,7 @@ const AppRouter = () => {
           <Route path="/spaces" element={<SpacesPage />} />
           <Route path="/events" element={<EventsPage />} />
           <Route path="/community" element={<CommunityPage />} />
+         <Route path="/membership" element={<MembershipPage />} />
           <Route path="/auth" element={<AuthPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/admin" element={<AdminPage />} />

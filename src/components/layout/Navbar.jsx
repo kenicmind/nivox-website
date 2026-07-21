@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from "react-router-dom";
 
 const navItems = [
-  { to: '/', label: 'Home' },
-  { to: '/about', label: 'About' },
-  { to: '/spaces', label: 'Spaces' },
-  { to: '/events', label: 'Events' },
-  { to: '/community', label: 'Community' },
+  { to: "/", label: "Home" },
+  { to: "/about", label: "About" },
+  { to: "/spaces", label: "Spaces" },
+  { to: "/events", label: "Events" },
+  { to: "/community", label: "Community" },
+  { to: "/membership", label: "Membership" },
 ];
 
 const Navbar = () => {
@@ -89,14 +90,16 @@ useEffect(() => {
         </div>
 
         <div className="hidden items-center gap-3 md:flex">
-          <motion.button
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            className="rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white/80 transition hover:bg-white/20 hover:text-white"
-            type="button"
-          >
-            Sign In
-          </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
+          className="rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white/80 transition hover:bg-white/20 hover:text-white"
+          type="button"
+        >
+          Sign In
+        </motion.button>
+
+        <Link to="/membership">
           <motion.button
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
@@ -105,8 +108,9 @@ useEffect(() => {
           >
             Get Started
           </motion.button>
-        </div>
+        </Link>
 
+      </div>
         <button
           type="button"
           className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white transition hover:bg-white/20 md:hidden"
@@ -148,14 +152,16 @@ useEffect(() => {
                 >
                   Sign In
                 </motion.button>
+                <Link to="/membership" onClick={() => setIsOpen(false)}>
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="rounded-full bg-[#FACC15] px-4 py-2 text-sm font-semibold text-[#140726]"
+                  className="rounded-full bg-[#FACC15] px-4 py-2 text-sm font-semibold text-[#140726] w-full"
                   type="button"
                 >
                   Get Started
                 </motion.button>
+              </Link>
               </div>
             </div>
           </motion.div>
