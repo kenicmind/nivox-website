@@ -3,51 +3,35 @@ import { motion } from "framer-motion";
 const partners = [
   {
     name: "MTN Foundation",
-    logo: "https://logo.clearbit.com/mtn.com",
+    logo: "/partners/mtn-foundation.png",
   },
   {
     name: "NITDA",
-    logo: "https://logo.clearbit.com/nitda.gov.ng",
+    logo: "/partners/nitda.png",
   },
   {
     name: "Access Bank",
-    logo: "https://logo.clearbit.com/accessbankplc.com",
+    logo: "/partners/access-bank.png",
   },
   {
     name: "HP",
-    logo: "https://logo.clearbit.com/hp.com",
-  },
-  {
-    name: "Microsoft",
-    logo: "https://logo.clearbit.com/microsoft.com",
-  },
-  {
-    name: "Google",
-    logo: "https://logo.clearbit.com/google.com",
-  },
-  {
-    name: "NVIDIA",
-    logo: "https://logo.clearbit.com/nvidia.com",
+    logo: "/partners/hp.png",
   },
   {
     name: "Moniepoint",
-    logo: "https://logo.clearbit.com/moniepoint.com",
+    logo: "/partners/moniepoint.png",
+  },
+  {
+    name: "Airtel Nigeria",
+    logo: "/partners/airtel.png",
   },
   {
     name: "Tony Elumelu Foundation",
-    logo: "https://logo.clearbit.com/tonyelumelufoundation.org",
+    logo: "/partners/tef.png",
   },
   {
     name: "UNDP",
-    logo: "https://logo.clearbit.com/undp.org",
-  },
-  {
-    name: "Airtel",
-    logo: "https://logo.clearbit.com/airtel.com",
-  },
-  {
-    name: "Niger Delta University",
-    logo: "https://logo.clearbit.com/ndu.edu.ng",
+    logo: "/partners/undp.png",
   },
 ];
 
