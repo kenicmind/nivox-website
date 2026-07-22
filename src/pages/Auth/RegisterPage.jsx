@@ -9,6 +9,7 @@ import {
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const RegisterPage = () => {
 const [showPassword, setShowPassword] = useState(false);
@@ -23,23 +24,24 @@ const [password, setPassword] = useState("");
 const [confirmPassword, setConfirmPassword] = useState("");
 const [agree, setAgree] = useState(false);
 const [loading, setLoading] = useState(false);
+
 const handleRegister = async (e) => {
   e.preventDefault();
+
 
   console.log("Register button clicked");
 
   if (!agree) {
-    alert("Please accept the Terms & Conditions.");
+    toast.error("Please accept the Terms & Conditions.");
     return;
   }
-
   if (password !== confirmPassword) {
-    alert("Passwords do not match.");
+    toast.error("Passwords do not match.");
     return;
   }
 
   if (password.length < 8) {
-    alert("Password must be at least 8 characters.");
+    toast.error("Password must be at least 8 characters.");
     return;
   }
 
@@ -73,25 +75,32 @@ const handleRegister = async (e) => {
 
   console.log("Saved to Firestore");
 
-  alert(
+  toast.success(
     "Account created successfully! Please check your email to verify your account."
   );
 
-  console.log("Redirecting to login...");
-
-  navigate("/login");
+  setTimeout(() => {
+    navigate("/verify-email");
+  }, 2000);
 
 } catch (error) {
-  console.error("Registration error:", error);
 
   if (error.code === "auth/email-already-in-use") {
-    alert("This email is already registered.");
+
+    toast.error("This email is already registered.");
+
   } else if (error.code === "auth/invalid-email") {
-    alert("Please enter a valid email address.");
+
+    toast.error("Please enter a valid email address.");
+
   } else if (error.code === "auth/weak-password") {
-    alert("Password must be at least 8 characters.");
+
+    toast.error("Password must be at least 8 characters.");
+
   } else {
-    alert(error.message);
+
+    toast.error(error.message);
+
   }
 
 } finally {
@@ -125,14 +134,13 @@ const handleRegister = async (e) => {
                 Create Your NIVOX Account
             </h1>
 
-            <p className="mt-3 text-white/70 leading-7">
-                Join the future of learning, innovation and collaboration.
-            </p>
+          <p className="mt-3 text-white/70 leading-7">
+              Join the future of learning, innovation and collaboration.
+          </p>
 
-            </div>
+          </div>
 
-        <form onSubmit={handleRegister} className="mt-8 space-y-5">
-
+          <form onSubmit={handleRegister} className="mt-8 space-y-5">
           <div className="relative">
             <User className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-white/50" />
             <input

@@ -6,11 +6,14 @@ import SpacesPage from '../pages/Spaces/SpacesPage';
 import EventsPage from '../pages/Events/EventsPage';
 import CommunityPage from '../pages/Community/CommunityPage';
 import MembershipPage from "../pages/Membership/MembershipPage";
-import AuthPage from '../pages/Auth/LoginPage.jsx';
 import DashboardPage from '../pages/Dashboard/DashboardPage';
 import AdminPage from '../pages/Admin/AdminPage';
 import LoginPage from "../pages/Auth/LoginPage";
 import RegisterPage from "../pages/Auth/RegisterPage";
+import VerifyEmailPage from "../pages/Auth/VerifyEmailPage";
+import AuthStatusPage from "../pages/Auth/AuthStatusPage";
+import ForgotPasswordPage from "../pages/Auth/ForgotPasswordPage";
+import ProtectedRoute from "./ProtectedRoute";
 
 const AppRouter = () => {
   return (
@@ -24,9 +27,19 @@ const AppRouter = () => {
           <Route path="/community" element={<CommunityPage />} />
          <Route path="/membership" element={<MembershipPage />} />
          <Route path="/login" element={<LoginPage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <DashboardPage />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/verify-email" element={<VerifyEmailPage />} />
+          <Route path="/auth-status" element={<AuthStatusPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
