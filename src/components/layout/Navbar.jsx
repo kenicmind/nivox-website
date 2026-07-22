@@ -166,18 +166,6 @@ useEffect(() => {
                   >
                     Get Started
                   </motion.button>
-                </Link>
-                <Link to="/membership" onClick={() => setIsOpen(false)}>
-                <Link to="/login" onClick={() => setIsOpen(false)}>
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white"
-                  type="button"
-                >
-                  Sign In
-                </motion.button>
-              </Link>
               </Link>
               </div>
             </div>
