@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import {
   BookOpen,
   Calendar,
@@ -8,23 +7,21 @@ import {
   Clock,
   Cpu,
   CreditCard,
-  Lock,
   ShieldCheck,
-  Sparkles,
   Users,
   X,
   ArrowRight,
-  Zap,
-  QrCode,
   Check,
 } from 'lucide-react';
-import { collection, addDoc, getDocs, query, where, serverTimestamp } from 'firebase/firestore';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import toast from 'react-hot-toast';
 import { auth, db } from '../../firebase/firebase';
 import { useNavigate } from 'react-router-dom';
 import Modal from '../design/feedback/Modal';
 import Button from '../design/ui/Button';
 import ReservationTicket from './ReservationTicket';
+import { completePaystackPayment, isPaystackConfigured } from '../../services/paymentService';
+import { createVerifiedReservation } from '../../services/reservationService';
 
 const WORKSPACES = [
   {
@@ -101,6 +98,7 @@ const TIME_SLOTS = [
 ];
 
 const BookingModal = ({ open, onClose, onBookingSuccess }) => {
+  const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [selectedWorkspace, setSelectedWorkspace] = useState(WORKSPACES[0]);
   const [selectedDate, setSelectedDate] = useState(() => new Date().toISOString().split('T')[0]);
@@ -110,13 +108,6 @@ const BookingModal = ({ open, onClose, onBookingSuccess }) => {
   const [isCheckingSeats, setIsCheckingSeats] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [confirmedReservation, setConfirmedReservation] = useState(null);
-
-  // Simulated Payment Form State
-  const [paymentDetails, setPaymentDetails] = useState({
-    cardNumber: '4242 •••• •••• 4242',
-    expiry: '12/28',
-    cvv: '984',
-  });
 
   // Fetch occupied seats for selected workspace, date, and time slot
   useEffect(() => {
@@ -178,63 +169,27 @@ const BookingModal = ({ open, onClose, onBookingSuccess }) => {
 
     try {
       setIsProcessingPayment(true);
-
-      // Generate Paystack Reference & Ticket ID
-      const paymentRef = `PAY-NIV-${Math.floor(100000 + Math.random() * 900000)}`;
-      const generatedTicketId = `TKT-NIV-${Math.floor(100000 + Math.random() * 900000)}`;
-
-      const reservationPayload = {
-        uid: user.uid,
-        userEmail: user.email || '',
-        userName: user.displayName || user.email?.split('@')[0] || 'Student',
-        ticketId: generatedTicketId,
-        workspaceId: selectedWorkspace.id,
-        workspaceName: selectedWorkspace.name,
-        workspaceCategory: selectedWorkspace.category,
-        date: selectedDate,
-        timeSlot: selectedTimeSlot,
-        seatId: selectedSeat.id,
-        seatNumber: selectedSeat.number,
-        duration: '2 Hours',
-        price: 300,
-        priceFormatted: '₦300',
-        paymentStatus: 'paid',
-        paymentMethod: 'Paystack Card',
-        paymentReference: paymentRef,
-        status: 'upcoming',
-        createdAt: serverTimestamp(),
-      };
-
-      // Save single authoritative record to `reservations` collection
-      const reservationRef = await addDoc(collection(db, 'reservations'), reservationPayload);
-
-      // 3. Save to `payments` collection
-      await addDoc(collection(db, 'payments'), {
-        reservationId: reservationRef.id,
-        uid: user.uid,
-        userEmail: user.email || '',
+      const payment = await completePaystackPayment({
+        user,
         amount: 300,
-        currency: 'NGN',
-        paymentStatus: 'paid',
-        paymentReference: paymentRef,
-        paymentMethod: 'Paystack Card',
-        createdAt: serverTimestamp(),
+        metadata: {
+          workspaceId: selectedWorkspace.id,
+          date: selectedDate,
+          timeSlot: selectedTimeSlot,
+          seatId: selectedSeat.id,
+        },
       });
 
-      // 4. Save to `notifications` collection
-      await addDoc(collection(db, 'notifications'), {
-        uid: user.uid,
-        title: 'Reservation Confirmed',
-        detail: `${selectedWorkspace.name} (${selectedSeat.number}) • ${selectedTimeSlot}`,
-        time: 'Just now',
-        type: 'reservation',
-        read: false,
-        createdAt: serverTimestamp(),
+      const fullData = await createVerifiedReservation({
+        user,
+        workspace: selectedWorkspace,
+        seat: selectedSeat,
+        date: selectedDate,
+        timeSlot: selectedTimeSlot,
+        payment,
       });
 
       toast.success(`Payment Confirmed! Seat ${selectedSeat.number} Reserved.`);
-
-      const fullData = { id: reservationRef.id, ...reservationPayload };
       setConfirmedReservation(fullData);
 
       if (onBookingSuccess) {
@@ -245,7 +200,7 @@ const BookingModal = ({ open, onClose, onBookingSuccess }) => {
       setStep(5);
     } catch (err) {
       console.error('Error confirming reservation & payment:', err);
-      toast.error('Payment processing failed. Please try again.');
+      toast.error(err.message || 'Payment processing failed. Please try again.');
     } finally {
       setIsProcessingPayment(false);
     }
@@ -457,43 +412,19 @@ const BookingModal = ({ open, onClose, onBookingSuccess }) => {
                 <span className="text-xs font-bold text-purple-200 flex items-center gap-2">
                   <CreditCard className="h-4 w-4" /> Paystack Secured Gateway
                 </span>
-                <span className="text-[10px] uppercase font-bold text-emerald-300">256-Bit SSL</span>
+                <ShieldCheck className="h-4 w-4 text-emerald-300" />
               </div>
 
-              <div>
-                <label className="block text-[10px] font-semibold uppercase text-white/60">Card Number</label>
-                <input
-                  required
-                  type="text"
-                  value={paymentDetails.cardNumber}
-                  onChange={(e) => setPaymentDetails((p) => ({ ...p, cardNumber: e.target.value }))}
-                  className="mt-1 w-full rounded-xl border border-white/20 bg-[#140726] p-2.5 text-xs text-white focus:border-[#FFD54A] focus:outline-none"
-                />
-              </div>
+              <p className="text-xs leading-6 text-white/70">
+                Continue to Paystack's secure checkout to choose card, bank, transfer, or another available payment method.
+                NIVOX never receives or stores your card details.
+              </p>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-[10px] font-semibold uppercase text-white/60">Expiry Date</label>
-                  <input
-                    required
-                    type="text"
-                    value={paymentDetails.expiry}
-                    onChange={(e) => setPaymentDetails((p) => ({ ...p, expiry: e.target.value }))}
-                    className="mt-1 w-full rounded-xl border border-white/20 bg-[#140726] p-2.5 text-xs text-white focus:border-[#FFD54A] focus:outline-none"
-                  />
+              {!isPaystackConfigured && (
+                <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-200">
+                  Online checkout is awaiting production payment-server configuration.
                 </div>
-                <div>
-                  <label className="block text-[10px] font-semibold uppercase text-white/60">CVV</label>
-                  <input
-                    required
-                    type="password"
-                    maxLength={4}
-                    value={paymentDetails.cvv}
-                    onChange={(e) => setPaymentDetails((p) => ({ ...p, cvv: e.target.value }))}
-                    className="mt-1 w-full rounded-xl border border-white/20 bg-[#140726] p-2.5 text-xs text-white focus:border-[#FFD54A] focus:outline-none"
-                  />
-                </div>
-              </div>
+              )}
             </div>
           </form>
         )}
@@ -531,10 +462,10 @@ const BookingModal = ({ open, onClose, onBookingSuccess }) => {
             type="button"
             variant="primary"
             onClick={handlePaymentAndConfirm}
-            disabled={isProcessingPayment}
+            disabled={isProcessingPayment || !isPaystackConfigured}
             className="gap-2 shadow-[0_10px_25px_rgba(255,213,74,0.3)]"
           >
-            {isProcessingPayment ? 'Processing Payment...' : 'Pay ₦300 & Confirm'}
+            {isProcessingPayment ? 'Opening Paystack…' : 'Continue to Paystack • ₦300'}
           </Button>
         ) : (
           <Button

@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import {
   ShieldCheck,
   Users,
@@ -7,9 +6,6 @@ import {
   CreditCard,
   Send,
   Search,
-  Filter,
-  CheckCircle2,
-  XCircle,
   TrendingUp,
   Cpu,
   BellRing,
@@ -19,7 +15,7 @@ import {
   Download,
   QrCode,
 } from 'lucide-react';
-import { collection, getDocs, addDoc, doc, updateDoc, query, orderBy, serverTimestamp } from 'firebase/firestore';
+import { collection, getDocs, addDoc, doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import toast from 'react-hot-toast';
 import { db } from '../../firebase/firebase';
 import { GlassCard } from '../../components/design/ui/Card';
@@ -33,8 +29,12 @@ const AdminPage = () => {
   const [reservations, setReservations] = useState([]);
   const [students, setStudents] = useState([]);
   const [payments, setPayments] = useState([]);
+  const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [broadcastTitle, setBroadcastTitle] = useState('');
+  const [broadcastDetail, setBroadcastDetail] = useState('');
+  const [isBroadcasting, setIsBroadcasting] = useState(false);
 
   const [isScannerOpen, setIsScannerOpen] = useState(false);
 
@@ -80,6 +80,8 @@ const AdminPage = () => {
       const paySnap = await getDocs(collection(db, 'payments'));
       const payData = paySnap.docs.map((d) => ({ id: d.id, ...d.data() }));
       setPayments(payData);
+      const eventSnap = await getDocs(collection(db, 'events'));
+      setEvents(eventSnap.docs.map((d) => ({ id: d.id, ...d.data() })));
     } catch (err) {
       console.error('Error loading admin portal data:', err);
       toast.error('Failed to sync admin records with Firestore.');
@@ -89,6 +91,8 @@ const AdminPage = () => {
   };
 
   useEffect(() => {
+    // Firestore synchronization intentionally updates the loading state.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchAdminData();
   }, []);
 
@@ -229,7 +233,10 @@ const AdminPage = () => {
         <div className="flex items-center gap-2 overflow-x-auto border-b border-white/10 pb-4">
           {[
             { key: 'analytics', label: 'Reservations Audit', icon: Calendar },
+            { key: 'bookings', label: 'Bookings', icon: CreditCard },
             { key: 'students', label: 'Student Roster', icon: Users },
+            { key: 'events', label: 'Events', icon: Sparkles },
+            { key: 'reports', label: 'Reports', icon: TrendingUp },
             { key: 'broadcast', label: 'Notification Broadcast', icon: BellRing },
             { key: 'seats', label: 'Seat Map Auditor', icon: Cpu },
             { key: 'settings', label: 'System Settings', icon: Settings },
@@ -254,6 +261,23 @@ const AdminPage = () => {
 
         {/* Tab Content */}
         <div className="mt-8">
+          {activeTab === 'bookings' && (
+            <div className="space-y-4">
+              <h3 className="text-lg font-bold text-white">Booking Operations</h3>
+              <div className="overflow-x-auto rounded-2xl border border-white/10 bg-white/5">
+                <table className="w-full text-left text-xs text-white/80">
+                  <thead className="border-b border-white/10 text-[10px] uppercase text-white/50"><tr><th className="p-4">Reference</th><th className="p-4">Student</th><th className="p-4">Session</th><th className="p-4">Status</th><th className="p-4">Action</th></tr></thead>
+                  <tbody className="divide-y divide-white/5">{reservations.map((booking) => <tr key={booking.id}><td className="p-4 font-mono text-[#FFD54A]">{booking.paymentReference || booking.ticketId}</td><td className="p-4">{booking.userName || booking.userEmail}</td><td className="p-4">{booking.date} · {booking.timeSlot}</td><td className="p-4">{booking.status}</td><td className="p-4"><button className="text-[#FFD54A] underline" onClick={async () => { await updateDoc(doc(db, 'reservations', booking.id), { status: booking.status === 'cancelled' ? 'upcoming' : 'cancelled' }); await fetchAdminData(); }}>Toggle status</button></td></tr>)}</tbody>
+                </table>
+              </div>
+            </div>
+          )}
+          {activeTab === 'events' && (
+            <div className="space-y-4"><h3 className="text-lg font-bold text-white">Events</h3><div className="grid gap-3 sm:grid-cols-2">{events.length ? events.map((event) => <div key={event.id} className="rounded-2xl border border-white/10 bg-white/5 p-4"><p className="font-bold text-white">{event.title || event.name}</p><p className="mt-1 text-xs text-white/60">{event.date || 'Date pending'} · {event.status || 'draft'}</p></div>) : <p className="text-sm text-white/50">No events have been published.</p>}</div></div>
+          )}
+          {activeTab === 'reports' && (
+            <div className="grid gap-4 sm:grid-cols-3"><GlassCard padded><p className="text-xs text-white/60">Gross revenue</p><p className="mt-2 text-2xl font-black text-[#FFD54A]">₦{payments.reduce((sum, payment) => sum + Number(payment.amount || 0), 0).toLocaleString()}</p></GlassCard><GlassCard padded><p className="text-xs text-white/60">Paid transactions</p><p className="mt-2 text-2xl font-black text-white">{payments.filter((payment) => payment.paymentStatus === 'paid').length}</p></GlassCard><GlassCard padded><p className="text-xs text-white/60">Attendance completed</p><p className="mt-2 text-2xl font-black text-white">{reservations.filter((booking) => booking.status === 'completed').length}</p></GlassCard></div>
+          )}
           {/* Tab 1: Reservations Audit */}
           {activeTab === 'analytics' && (
             <div className="space-y-6">
@@ -332,7 +356,7 @@ const AdminPage = () => {
           {/* Tab 2: Student Roster */}
           {activeTab === 'students' && (
             <div className="space-y-6">
-              <h3 className="text-lg font-bold text-white">Registered Student Roster</h3>
+              <div className="flex items-center justify-between"><h3 className="text-lg font-bold text-white">Registered Student Roster</h3><Button onClick={handleExportStudents} variant="ghost" size="sm" className="gap-2 border border-white/15"><Download className="h-3.5 w-3.5" /> Export CSV</Button></div>
 
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {students.map((st) => (

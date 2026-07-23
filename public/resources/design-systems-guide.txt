@@ -1,0 +1,6 @@
+NIVOX placeholder resource
+
+UI/UX Design Systems and Micro-Interactions
+
+This local placeholder confirms that the NIVOX download flow is connected.
+TODO: Replace with the approved, licensed NIVOX design systems guide.

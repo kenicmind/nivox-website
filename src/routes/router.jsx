@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Layout from '../components/common/layout/Layout.jsx';
 import HomePage from '../pages/Home/HomePage';
 import ProtectedRoute from "./ProtectedRoute";
+import AdminRoute from "./AdminRoute";
 
 // Lazy-loaded pages for optimized performance
 const AboutPage = lazy(() => import('../pages/About/AboutPage'));
@@ -179,7 +180,14 @@ const AppRouter = () => {
                 </ProtectedRoute>
               }
             />
-            <Route path="/admin" element={<AdminPage />} />
+            <Route
+              path="/admin"
+              element={
+                <AdminRoute>
+                  <AdminPage />
+                </AdminRoute>
+              }
+            />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/verify-email" element={<VerifyEmailPage />} />
             <Route path="/auth-status" element={<AuthStatusPage />} />

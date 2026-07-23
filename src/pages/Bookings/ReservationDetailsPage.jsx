@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { ArrowLeft, Calendar, Clock, MapPin, ShieldCheck, Ticket, Trash2, CreditCard, Sparkles, CheckCircle2 } from 'lucide-react';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { ArrowLeft, Trash2, Sparkles, CheckCircle2 } from 'lucide-react';
+import { doc, getDoc } from 'firebase/firestore';
 import toast from 'react-hot-toast';
 import { db } from '../../firebase/firebase';
 import { GlassCard } from '../../components/design/ui/Card';
 import Button from '../../components/design/ui/Button';
 import ReservationTicket from '../../components/booking/ReservationTicket';
 import ErrorState from '../../app/components/common/ErrorState';
+import { cancelReservation } from '../../services/reservationService';
 
 const ReservationDetailsPage = () => {
   const { id } = useParams();
@@ -36,7 +36,11 @@ const ReservationDetailsPage = () => {
         }
 
         if (docSnap.exists()) {
-          setReservation({ id: docSnap.id, ...docSnap.data() });
+          setReservation({
+            id: docSnap.id,
+            sourceCollection: docRef.parent.id,
+            ...docSnap.data(),
+          });
         } else {
           setError('Reservation record not found.');
         }
@@ -55,8 +59,7 @@ const ReservationDetailsPage = () => {
     if (!reservation) return;
     try {
       setIsCancelling(true);
-      const docRef = doc(db, 'reservations', reservation.id);
-      await updateDoc(docRef, { status: 'cancelled' });
+      await cancelReservation(reservation);
 
       setReservation((prev) => ({ ...prev, status: 'cancelled' }));
       toast.success('Reservation cancelled successfully.');

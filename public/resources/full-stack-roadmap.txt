@@ -1,0 +1,6 @@
+NIVOX placeholder resource
+
+Full-Stack Web Development Roadmap
+
+This local placeholder confirms that the NIVOX download flow is connected.
+TODO: Replace with the approved, licensed NIVOX full-stack roadmap PDF.

@@ -15,6 +15,11 @@ export const getCurrentAuthUser = () => {
   return auth.currentUser;
 };
 
+export const getEmailVerificationActionSettings = () => ({
+  url: `${window.location.origin}/verify-email`,
+  handleCodeInApp: true,
+});
+
 export const fetchUserProfile = async (uid) => {
   try {
     const userDocRef = doc(db, 'users', uid);

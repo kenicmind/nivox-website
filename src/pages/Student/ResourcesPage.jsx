@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Download, Search, Sparkles, FileText, Code, Video, Cpu, ArrowUpRight } from 'lucide-react';
+import { useState } from 'react';
+import { Download, Search, Sparkles, FileText, Code, Video, Cpu } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { GlassCard } from '../../components/design/ui/Card';
 import Button from '../../components/design/ui/Button';
@@ -14,6 +13,7 @@ const RESOURCES = [
     icon: Code,
     description: 'Comprehensive guide covering React 19, Node.js, and serverless architectures.',
     fileSize: '4.2 MB',
+    file: '/resources/full-stack-roadmap.txt',
   },
   {
     id: 2,
@@ -23,6 +23,7 @@ const RESOURCES = [
     icon: FileText,
     description: 'Master glassmorphic UI design, color harmony, and fluid motion physics.',
     fileSize: '12.8 MB',
+    file: '/resources/design-systems-guide.txt',
   },
   {
     id: 3,
@@ -32,6 +33,7 @@ const RESOURCES = [
     icon: Cpu,
     description: 'Operating guidelines for 4K video recording, podcast mics, and lighting rigs.',
     fileSize: '2.1 MB',
+    file: '/resources/creator-studio-manual.txt',
   },
   {
     id: 4,
@@ -41,6 +43,7 @@ const RESOURCES = [
     icon: Video,
     description: 'Introduction to PyTorch, LLM fine-tuning, and neural network pipelines.',
     fileSize: '45.0 MB',
+    file: '/resources/ai-data-science-series.txt',
   },
   {
     id: 5,
@@ -50,6 +53,7 @@ const RESOURCES = [
     icon: Sparkles,
     description: 'Investor pitch templates, financial modeling spreadsheets, and executive summaries.',
     fileSize: '8.5 MB',
+    file: '/resources/pitch-deck-toolkit.txt',
   },
 ];
 
@@ -66,9 +70,7 @@ const ResourcesPage = () => {
     return matchesCategory && matchesSearch;
   });
 
-  const handleDownload = (resource) => {
-    toast.success(`Downloading ${resource.title} (${resource.fileSize})`);
-  };
+  const handleDownload = (resource) => toast.success(`Downloading ${resource.title} (${resource.fileSize})`);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-10">
@@ -148,7 +150,7 @@ const ResourcesPage = () => {
 
                 <div className="mt-6 flex items-center justify-between border-t border-white/10 pt-4 text-xs">
                   <span className="text-white/50 font-mono text-[11px]">{res.fileSize}</span>
-                  <Button onClick={() => handleDownload(res)} variant="ghost" size="sm" className="gap-1.5 border border-white/15">
+                  <Button as="a" href={res.file} download onClick={() => handleDownload(res)} variant="primary" size="sm" className="gap-1.5">
                     <Download className="h-3.5 w-3.5" /> Download
                   </Button>
                 </div>

@@ -12,13 +12,14 @@ import {
   Users,
 } from 'lucide-react';
 import { onAuthStateChanged } from 'firebase/auth';
-import { collection, query, where, getDocs, doc, updateDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 import toast from 'react-hot-toast';
 import { auth, db } from '../../firebase/firebase';
 import { GlassCard } from '../../components/design/ui/Card';
 import Button from '../../components/design/ui/Button';
 import BookingModal from '../../components/booking/BookingModal';
 import ErrorState from '../../app/components/common/ErrorState';
+import { cancelReservation } from '../../services/reservationService';
 
 const categoryIcons = {
   'learning-zone': BookOpen,
@@ -107,8 +108,8 @@ const BookingsPage = () => {
     try {
       setCancellingId(bookingId);
       const booking = bookings.find((item) => item.id === bookingId);
-      const bookingRef = doc(db, booking?.sourceCollection || 'reservations', bookingId);
-      await updateDoc(bookingRef, { status: 'cancelled' });
+      if (!booking) throw new Error('Reservation record not found.');
+      await cancelReservation(booking);
 
       setBookings((prev) =>
         prev.map((b) => (b.id === bookingId ? { ...b, status: 'cancelled' } : b))

@@ -10,6 +10,7 @@ import {
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { getEmailVerificationActionSettings } from "../../services/authService";
 
 const RegisterPage = () => {
 const [showPassword, setShowPassword] = useState(false);
@@ -56,7 +57,7 @@ const handleRegister = async (e) => {
 
     // Send verification email
     try {
-      await sendEmailVerification(user);
+      await sendEmailVerification(user, getEmailVerificationActionSettings());
     } catch (verificationError) {
       console.error("Error sending verification email:", verificationError);
       toast.error("Failed to send verification email. You can request one later.");
@@ -88,7 +89,7 @@ const handleRegister = async (e) => {
       "Account created successfully! Please check your email to verify your account."
     );
 
-    navigate("/verify-email");
+    navigate("/verify-email", { state: { email: user.email } });
 
   } catch (error) {
 

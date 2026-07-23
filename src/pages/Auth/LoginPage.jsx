@@ -10,6 +10,7 @@ import {
   sendEmailVerification,
 } from "firebase/auth";
 import toast from "react-hot-toast";
+import { getEmailVerificationActionSettings } from "../../services/authService";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -34,11 +35,11 @@ const LoginPage = () => {
 
       if (!userCredential.user.emailVerified) {
         try {
-          await sendEmailVerification(userCredential.user);
+          await sendEmailVerification(userCredential.user, getEmailVerificationActionSettings());
         } catch {
           toast.error("We couldn't send a verification email. Please try again.");
         }
-        navigate("/verify-email");
+        navigate("/verify-email", { state: { email: userCredential.user.email } });
         return;
       }
 

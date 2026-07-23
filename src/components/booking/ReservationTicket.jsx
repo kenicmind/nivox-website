@@ -107,13 +107,13 @@ const ReservationTicket = ({ ticket }) => {
             <div className="flex items-center gap-2">
               <Button
                 onClick={() => navigate(`/student/reservations/${ticket.id}`)}
-                variant="ghost"
+                variant="secondary"
                 size="sm"
                 className="border border-white/15 text-xs"
               >
                 Open Record
               </Button>
-              <Button onClick={() => setIsDetailOpen(true)} variant="ghost" size="sm" className="gap-1 border border-white/15 text-xs">
+              <Button onClick={() => setIsDetailOpen(true)} variant="primary" size="sm" className="gap-1 text-xs">
                 <Eye className="h-3.5 w-3.5" />
                 Details
               </Button>

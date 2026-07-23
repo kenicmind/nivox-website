@@ -1,0 +1,6 @@
+NIVOX placeholder resource
+
+Creator Studio Equipment Manual
+
+This local placeholder confirms that the NIVOX download flow is connected.
+TODO: Replace with the final NIVOX equipment manual approved by hub operations.
