@@ -9,6 +9,7 @@ import {
   signInWithEmailAndPassword,
   sendEmailVerification,
 } from "firebase/auth";
+import toast from "react-hot-toast";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -31,11 +32,13 @@ const LoginPage = () => {
         password
       );
 
-     if (!userCredential.user.emailVerified) {
-        await sendEmailVerification(userCredential.user);
-
+      if (!userCredential.user.emailVerified) {
+        try {
+          await sendEmailVerification(userCredential.user);
+        } catch {
+          toast.error("We couldn't send a verification email. Please try again.");
+        }
         navigate("/verify-email");
-
         return;
       }
 
@@ -43,23 +46,12 @@ const LoginPage = () => {
       navigate("/dashboard");
 
     } catch (error) {
-
-      if (error.code === "auth/invalid-credential") {
-
-        navigate("/auth-status", {
-          state: {
-            type: "error",
-            title: "Sign In Failed",
-            message:
-              "The email or password you entered is incorrect. Please try again.",
-            primaryText: "Try Again",
-            primaryLink: "/login",
-            secondaryText: "Forgot Password?",
-            secondaryLink: "/forgot-password",
-          },
-        });
-
-      }
+      const messages = {
+        "auth/invalid-credential": "The email or password you entered is incorrect.",
+        "auth/too-many-requests": "Too many attempts. Please wait and try again.",
+        "auth/user-disabled": "This account has been disabled. Please contact support.",
+      };
+      toast.error(messages[error.code] || "Unable to sign in. Please try again.");
 
     } finally {
       setLoading(false);

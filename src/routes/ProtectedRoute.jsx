@@ -1,8 +1,16 @@
 import { Navigate } from "react-router-dom";
-import { auth } from "../firebase/firebase";
+import { useAuth } from "../context/useAuth";
 
 const ProtectedRoute = ({ children }) => {
-  const user = auth.currentUser;
+  const { user, authInitialized } = useAuth();
+
+  if (!authInitialized) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center bg-[#140726] text-sm text-[#FFE7A3]">
+        Loading your NIVOX session…
+      </div>
+    );
+  }
 
   // Not logged in
   if (!user) {

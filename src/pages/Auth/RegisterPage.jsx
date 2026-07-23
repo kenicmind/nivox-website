@@ -29,8 +29,6 @@ const handleRegister = async (e) => {
   e.preventDefault();
 
 
-  console.log("Register button clicked");
-
   if (!agree) {
     toast.error("Please accept the Terms & Conditions.");
     return;
@@ -90,9 +88,7 @@ const handleRegister = async (e) => {
       "Account created successfully! Please check your email to verify your account."
     );
 
-    setTimeout(() => {
-      navigate("/verify-email");
-    }, 2000);
+    navigate("/verify-email");
 
   } catch (error) {
 

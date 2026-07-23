@@ -1,97 +1,121 @@
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
+import { useEffect } from 'react';
+
+const PARTICLES = [
+  { left: '12%', top: '18%', size: 3, delay: 0 },
+  { left: '24%', top: '72%', size: 2, delay: 1.2 },
+  { left: '78%', top: '22%', size: 2, delay: 0.6 },
+  { left: '86%', top: '68%', size: 3, delay: 1.8 },
+  { left: '62%', top: '12%', size: 2, delay: 2.4 },
+  { left: '38%', top: '86%', size: 2, delay: 1.5 },
+  { left: '92%', top: '42%', size: 2, delay: 0.9 },
+  { left: '7%', top: '48%', size: 2, delay: 2.1 },
+];
 
 const Loader = ({
   title = 'NIVOX',
   subtitle = 'Shaping Tomorrow, Today.',
   logoSrc = '/images/logo.png',
-  backgroundColor = '#140726',
-  accentColor = '#d4af37',
-  glowColor = 'rgba(167, 139, 250, 0.35)',
   className = '',
+  onComplete,
 }) => {
-  return (
-    <div
-      className={`relative flex min-h-screen w-full items-center justify-center overflow-hidden ${className}`}
-      style={{ backgroundColor }}
-    >
-      <motion.div
-        className="absolute inset-0"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.2, ease: 'easeOut' }}
-      >
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage:
-              'radial-gradient(circle at 20% 20%, rgba(255,255,255,0.08), transparent 28%), radial-gradient(circle at 80% 20%, rgba(255,255,255,0.06), transparent 22%), radial-gradient(circle at 50% 80%, rgba(255,255,255,0.05), transparent 30%)',
-          }}
-        />
-        <motion.div
-          className="absolute inset-0"
-          animate={{
-            backgroundPosition: ['0% 0%', '100% 100%', '0% 0%'],
-          }}
-          transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
-          style={{
-            backgroundImage:
-              'linear-gradient(120deg, rgba(255,255,255,0.02), rgba(212,175,55,0.06), rgba(255,255,255,0.02))',
-            backgroundSize: '200% 200%',
-          }}
-        />
-      </motion.div>
+  const prefersReducedMotion = useReducedMotion();
 
-      <div className="relative z-10 flex flex-col items-center text-center">
+  useEffect(() => {
+    if (!onComplete) return undefined;
+
+    const timeout = window.setTimeout(onComplete, prefersReducedMotion ? 450 : 1150);
+    return () => window.clearTimeout(timeout);
+  }, [onComplete, prefersReducedMotion]);
+
+  return (
+    <motion.main
+      aria-label="Loading NIVOX"
+      initial={prefersReducedMotion ? false : { opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: prefersReducedMotion ? 0.12 : 0.35, ease: 'easeOut' }}
+      className={`fixed inset-0 z-[100] isolate flex min-h-screen w-full items-center justify-center overflow-hidden bg-[#140726] px-6 text-white ${className}`}
+    >
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(255,213,74,0.14),transparent_25%),radial-gradient(circle_at_15%_20%,rgba(124,58,237,0.2),transparent_32%),linear-gradient(135deg,#140726_0%,#1e1038_52%,#0c031c_100%)]"
+      />
+
+      <motion.div
+        aria-hidden="true"
+        className="absolute left-1/2 top-1/2 h-56 w-56 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#FFD54A]/10 blur-[90px] sm:h-72 sm:w-72"
+        animate={prefersReducedMotion ? undefined : { scale: [0.92, 1.08, 0.92], opacity: [0.45, 0.75, 0.45] }}
+        transition={prefersReducedMotion ? undefined : { duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
+      />
+
+      {!prefersReducedMotion &&
+        PARTICLES.map((particle, index) => (
+          <motion.span
+            key={`${particle.left}-${particle.top}`}
+            aria-hidden="true"
+            className="absolute rounded-full bg-[#FFE7A3]"
+            style={{
+              left: particle.left,
+              top: particle.top,
+              width: particle.size,
+              height: particle.size,
+            }}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: [0, 0.7, 0], y: [8, -12, 8] }}
+            transition={{
+              duration: 3.8 + (index % 3) * 0.5,
+              delay: particle.delay,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+          />
+        ))}
+
+      <motion.section
+        initial={prefersReducedMotion ? false : { opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={prefersReducedMotion ? { duration: 0.12 } : { duration: 0.55, ease: 'easeOut' }}
+        className="relative z-10 flex w-full max-w-sm flex-col items-center text-center"
+      >
         <motion.div
-          initial={{ opacity: 0, scale: 0.86, y: 18 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: 'easeOut' }}
-          className="flex flex-col items-center"
+          animate={prefersReducedMotion ? undefined : { y: [0, -8, 0] }}
+          transition={prefersReducedMotion ? undefined : { duration: 3.6, repeat: Infinity, ease: 'easeInOut' }}
+          className="relative"
         >
-          <motion.img
+          <div
+            aria-hidden="true"
+            className="absolute -inset-5 rounded-full border border-[#FFD54A]/20 shadow-[0_0_50px_rgba(255,213,74,0.22)] sm:-inset-6"
+          />
+          <img
             src={logoSrc}
             alt="NIVOX logo"
-            className="mb-5 h-24 w-24 rounded-full object-contain shadow-[0_0_45px_8px_rgba(167,139,250,0.28)]"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.15, ease: 'easeOut' }}
+            className="relative h-20 w-20 rounded-full border-2 border-[#FFD54A]/70 object-cover shadow-[0_0_35px_rgba(255,213,74,0.28)] sm:h-24 sm:w-24"
           />
-
-          <motion.h1
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.25, ease: 'easeOut' }}
-            className="text-4xl font-black tracking-[0.35em] text-white sm:text-5xl"
-          >
-            {title}
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.35, ease: 'easeOut' }}
-            className="mt-3 text-sm font-medium uppercase tracking-[0.35em] text-white/80 sm:text-base"
-          >
-            {subtitle}
-          </motion.p>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, width: '0%' }}
-          animate={{ opacity: 1, width: '100%' }}
-          transition={{ duration: 0.9, delay: 0.45, ease: 'easeOut' }}
-          className="mt-8 h-[1px] w-48 overflow-hidden rounded-full bg-white/15 sm:w-64"
+        <h1 className="mt-9 text-3xl font-black tracking-[0.3em] text-white sm:text-4xl">{title}</h1>
+        <p className="mt-3 text-xs font-medium uppercase tracking-[0.28em] text-[#FFE7A3] sm:text-sm">
+          {subtitle}
+        </p>
+
+        <div
+          role="progressbar"
+          aria-label="Loading application"
+          className="mt-9 h-px w-48 overflow-hidden rounded-full bg-white/15 sm:w-64"
         >
-          <motion.div
-            initial={{ width: '0%' }}
-            animate={{ width: '100%' }}
-            transition={{ duration: 3, ease: 'easeInOut' }}
-            className="h-full rounded-full"
-            style={{ backgroundColor: accentColor, boxShadow: `0 0 18px ${glowColor}` }}
-          />
-        </motion.div>
-      </div>
-    </div>
+          {prefersReducedMotion ? (
+            <div className="h-full w-1/2 rounded-full bg-[#FFD54A]" />
+          ) : (
+            <motion.div
+              className="h-full w-2/5 rounded-full bg-gradient-to-r from-transparent via-[#FFD54A] to-transparent shadow-[0_0_16px_rgba(255,213,74,0.85)]"
+              animate={{ x: ['-120%', '280%'] }}
+              transition={{ duration: 1.7, repeat: Infinity, ease: 'easeInOut' }}
+            />
+          )}
+        </div>
+      </motion.section>
+    </motion.main>
   );
 };
 

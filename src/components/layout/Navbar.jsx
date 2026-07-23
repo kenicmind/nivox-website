@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { NavLink, Link } from "react-router-dom";
+import toast from "react-hot-toast";
+import { useAuth } from "../../context/useAuth";
 
 const navItems = [
   { to: "/", label: "Home" },
@@ -26,6 +28,17 @@ useEffect(() => {
 }, []);
 
   const [isOpen, setIsOpen] = useState(false);
+  const { user, signOutUser } = useAuth();
+
+  const handleSignOut = async () => {
+    try {
+      await signOutUser();
+      setIsOpen(false);
+      toast.success("You have been signed out.");
+    } catch {
+      toast.error("Unable to sign out. Please try again.");
+    }
+  };
 
   return (
     <motion.header
@@ -75,16 +88,28 @@ useEffect(() => {
         </div>
 
         <div className="hidden items-center gap-3 md:flex">
-          <Link to="/login">
+          {user ? (
             <motion.button
+              onClick={handleSignOut}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/15"
               type="button"
             >
-              Sign In
+              Sign Out
             </motion.button>
-          </Link>
+          ) : (
+            <Link to="/login">
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/15"
+                type="button"
+              >
+                Sign In
+              </motion.button>
+            </Link>
+          )}
 
           <Link to="/membership">
             <motion.button
@@ -131,16 +156,28 @@ useEffect(() => {
                 </NavLink>
               ))}
               <div className="mt-2 flex flex-col gap-2">
-                <Link to="/login" onClick={() => setIsOpen(false)}>
+                {user ? (
                   <motion.button
+                    onClick={handleSignOut}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     className="w-full rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white"
                     type="button"
                   >
-                    Sign In
+                    Sign Out
                   </motion.button>
-                </Link>
+                ) : (
+                  <Link to="/login" onClick={() => setIsOpen(false)}>
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="w-full rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white"
+                      type="button"
+                    >
+                      Sign In
+                    </motion.button>
+                  </Link>
+                )}
 
                 <Link to="/membership" onClick={() => setIsOpen(false)}>
                   <motion.button

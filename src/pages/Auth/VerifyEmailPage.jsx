@@ -1,8 +1,35 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { MailCheck } from "lucide-react";
+import { useState } from "react";
+import { sendEmailVerification } from "firebase/auth";
+import toast from "react-hot-toast";
+import { auth } from "../../firebase/firebase";
 
 const VerifyEmailPage = () => {
+  const navigate = useNavigate();
+  const [sending, setSending] = useState(false);
+
+  const handleResend = async () => {
+    const user = auth.currentUser;
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+
+    try {
+      setSending(true);
+      await sendEmailVerification(user);
+      toast.success("Verification email sent. Check your inbox.");
+    } catch (error) {
+      toast.error(error.code === "auth/too-many-requests"
+        ? "Please wait before requesting another email."
+        : "Unable to resend verification email.");
+    } finally {
+      setSending(false);
+    }
+  };
+
   return (
     <main className="min-h-screen flex items-center justify-center bg-[linear-gradient(125deg,_#2B0A5A_0%,_#140726_55%,_#0C031C_100%)] px-6">
 
@@ -44,9 +71,12 @@ const VerifyEmailPage = () => {
           </a>
 
           <button
+            type="button"
+            onClick={handleResend}
+            disabled={sending}
             className="w-full rounded-xl border border-[#FFD54A] py-3 font-bold text-[#FFD54A] hover:bg-[#FFD54A]/10 transition"
           >
-            Resend Verification Email
+            {sending ? "Sending…" : "Resend Verification Email"}
           </button>
 
           <Link

@@ -1,7 +1,6 @@
-import React, { lazy, Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Layout from '../components/common/layout/Layout.jsx';
-import Loader from '../components/common/Loader.jsx';
 import HomePage from '../pages/Home/HomePage';
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -37,10 +36,20 @@ const UniversitiesPage = lazy(() => import('../pages/FooterPages/UniversitiesPag
 const CorporatePartnersPage = lazy(() => import('../pages/FooterPages/CorporatePartnersPage'));
 const ProspectusPage = lazy(() => import('../pages/FooterPages/ProspectusPage'));
 
+const RouteLoadingState = () => (
+  <div
+    aria-label="Loading page"
+    aria-live="polite"
+    className="flex min-h-[50vh] items-center justify-center bg-[#140726] text-sm text-[#FFE7A3]"
+  >
+    Loading…
+  </div>
+);
+
 const AppRouter = () => {
   return (
     <BrowserRouter>
-      <Suspense fallback={<Loader />}>
+      <Suspense fallback={<RouteLoadingState />}>
         <Routes>
           <Route element={<Layout />}>
             <Route path="/" element={<HomePage />} />
