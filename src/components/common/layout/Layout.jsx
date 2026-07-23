@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
 import ScrollProgress from "../ScrollProgress";
+import ScrollToTop from "../ScrollToTop";
 import ScrollToTopButton from "../ScrollToTopButton";
 import Navbar from "../../layout/Navbar";
 import FooterSection from "../../sections/FooterSection";
@@ -10,6 +11,7 @@ const Layout = () => {
 
   return (
     <div className="min-h-screen bg-[#140726] text-white">
+      <ScrollToTop />
       <ScrollProgress />
 
       <Navbar />

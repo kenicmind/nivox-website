@@ -11,7 +11,7 @@ const Modal = ({ open, onClose, children, className = '' }) => {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.18 }}
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 px-4"
+        className="fixed inset-0 z-50 flex touch-pan-y items-start justify-center overflow-y-auto bg-black/55 px-4 py-4 sm:items-center sm:py-6"
       >
         <motion.div
           initial={{ opacity: 0, y: 12, scale: 0.98 }}
