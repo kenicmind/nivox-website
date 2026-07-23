@@ -8,12 +8,14 @@ const RESOURCES = [
   {
     id: 1,
     title: 'Full-Stack Web Development Roadmap 2026',
-    category: 'Development',
+    category: 'Technology',
     type: 'PDF Guide',
     icon: Code,
     description: 'Comprehensive guide covering React 19, Node.js, and serverless architectures.',
-    fileSize: '4.2 MB',
-    file: '/resources/full-stack-roadmap.txt',
+    author: 'NIVOX Learning Team',
+    version: 'v0.1 placeholder',
+    fileSize: '0.7 MB',
+    file: '/documents/NIVOX-Sponsorship-Prospectus.pdf',
   },
   {
     id: 2,
@@ -22,38 +24,46 @@ const RESOURCES = [
     type: 'Figma Kit & Docs',
     icon: FileText,
     description: 'Master glassmorphic UI design, color harmony, and fluid motion physics.',
-    fileSize: '12.8 MB',
-    file: '/resources/design-systems-guide.txt',
+    author: 'NIVOX Design Guild',
+    version: 'v0.1 placeholder',
+    fileSize: '0.7 MB',
+    file: '/documents/NIVOX-Sponsorship-Prospectus.pdf',
   },
   {
     id: 3,
     title: 'NIVOX Creator Studio Equipment Manual',
-    category: 'Hardware',
+    category: 'Technology',
     type: 'User Manual',
     icon: Cpu,
     description: 'Operating guidelines for 4K video recording, podcast mics, and lighting rigs.',
-    fileSize: '2.1 MB',
-    file: '/resources/creator-studio-manual.txt',
+    author: 'NIVOX Creator Studio',
+    version: 'v0.1 placeholder',
+    fileSize: '0.7 MB',
+    file: '/documents/NIVOX-Sponsorship-Prospectus.pdf',
   },
   {
     id: 4,
     title: 'AI & Data Science Masterclass Video Series',
-    category: 'Development',
+    category: 'AI',
     type: 'Video Course',
     icon: Video,
     description: 'Introduction to PyTorch, LLM fine-tuning, and neural network pipelines.',
-    fileSize: '45.0 MB',
-    file: '/resources/ai-data-science-series.txt',
+    author: 'NIVOX AI Lab',
+    version: 'v0.1 placeholder',
+    fileSize: '0.7 MB',
+    file: '/documents/NIVOX-Sponsorship-Prospectus.pdf',
   },
   {
     id: 5,
     title: 'Startup Pitch Deck & Prospectus Toolkit',
-    category: 'Business',
+    category: 'Entrepreneurship',
     type: 'Template Pack',
     icon: Sparkles,
     description: 'Investor pitch templates, financial modeling spreadsheets, and executive summaries.',
-    fileSize: '8.5 MB',
-    file: '/resources/pitch-deck-toolkit.txt',
+    author: 'NIVOX Venture Studio',
+    version: 'v0.1 placeholder',
+    fileSize: '0.7 MB',
+    file: '/documents/NIVOX-Sponsorship-Prospectus.pdf',
   },
 ];
 
@@ -61,7 +71,7 @@ const ResourcesPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
 
-  const categories = ['All', 'Development', 'Design', 'Hardware', 'Business'];
+  const categories = ['All', 'Design', 'Technology', 'Career', 'Entrepreneurship', 'AI'];
 
   const filteredResources = RESOURCES.filter((res) => {
     const matchesCategory = selectedCategory === 'All' || res.category === selectedCategory;
@@ -146,6 +156,10 @@ const ResourcesPage = () => {
 
                   <h3 className="mt-4 text-base font-bold text-white leading-snug">{res.title}</h3>
                   <p className="mt-2 text-xs text-white/65 leading-relaxed">{res.description}</p>
+                  <div className="mt-4 grid grid-cols-2 gap-2 text-[10px] text-white/55">
+                    <span><strong className="text-white/75">Author:</strong> {res.author}</span>
+                    <span><strong className="text-white/75">Version:</strong> {res.version}</span>
+                  </div>
                 </div>
 
                 <div className="mt-6 flex items-center justify-between border-t border-white/10 pt-4 text-xs">
