@@ -25,6 +25,9 @@ const ResourcesPage = lazy(() => import('../pages/Student/ResourcesPage'));
 const AchievementsPage = lazy(() => import('../pages/Student/AchievementsPage'));
 const AnalyticsPage = lazy(() => import('../pages/Student/AnalyticsPage'));
 const OpportunitiesPage = lazy(() => import('../pages/Student/OpportunitiesPage'));
+const TermsPage = lazy(() => import('../pages/Legal/TermsPage'));
+const PrivacyPage = lazy(() => import('../pages/Legal/PrivacyPage'));
+const FaqPage = lazy(() => import('../pages/Help/FaqPage'));
 const NotFoundPage = lazy(() => import('../pages/Common/NotFoundPage'));
 
 // Hidden Footer Pages
@@ -172,6 +175,12 @@ const AppRouter = () => {
             <Route path="/verify-email" element={<VerifyEmailPage />} />
             <Route path="/auth-status" element={<AuthStatusPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+
+            {/* Legal & Help Routes */}
+            <Route path="/terms" element={<TermsPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/faq" element={<FaqPage />} />
+            <Route path="/help" element={<FaqPage />} />
 
             {/* Hidden Footer Routes */}
             <Route path="/partners" element={<PartnersPage />} />
