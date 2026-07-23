@@ -58,9 +58,9 @@ const MembershipAccessSection = () => {
             <div className="rounded-[24px] border border-[#2b0a5a]/10 bg-gradient-to-br from-[#2b0a5a] to-[#3f0f73] p-8 text-white shadow-[0_20px_60px_rgba(43,10,90,0.2)]">
               <div className="flex items-center justify-between gap-4">
                 <div>
-                  <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#ffd54a]">Daily Access</p>
+                  <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#ffd54a]">Standard Access</p>
                   <h3 className="mt-2 text-3xl font-black">₦300</h3>
-                  <p className="mt-2 text-sm text-white/70">per day</p>
+                  <p className="mt-2 text-sm text-white/70">for 2 Hours</p>
                 </div>
                 <div className="rounded-2xl bg-[#ffd54a]/15 p-3 text-[#ffd54a]">
                   <Sparkles className="h-6 w-6" />
@@ -94,10 +94,22 @@ const MembershipAccessSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.55 }}
-              className="rounded-[28px] border border-[#2b0a5a]/10 bg-white/80 p-6 shadow-[0_18px_55px_rgba(43,10,90,0.08)] backdrop-blur-xl"
+              className="overflow-hidden rounded-[28px] border border-[#2b0a5a]/10 bg-white/80 p-6 shadow-[0_18px_55px_rgba(43,10,90,0.08)] backdrop-blur-xl"
             >
+              <div className="relative h-44 overflow-hidden rounded-[20px] mb-4">
+                <img
+                  src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80"
+                  alt="NIVOX Workspace"
+                  loading="lazy"
+                  className="h-full w-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#2b0a5a]/70 via-transparent to-transparent" />
+                <span className="absolute bottom-3 left-3 rounded-full bg-[#2b0a5a]/80 px-3 py-1 text-xs font-semibold text-[#ffd54a] backdrop-blur-md">
+                  NIVOX Studio Hub
+                </span>
+              </div>
               <h3 className="text-2xl font-semibold text-[#2b0a5a]">Why NIVOX Access?</h3>
-              <p className="mt-3 text-base leading-7 text-gray-600">
+              <p className="mt-2 text-base leading-7 text-gray-600">
                 Unlock the full student experience with flexible access built for focus, connection and momentum.
               </p>
             </motion.div>

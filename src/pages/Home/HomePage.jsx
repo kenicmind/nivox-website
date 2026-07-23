@@ -20,7 +20,7 @@ const HomePage = () => {
   useEffect(() => {
     const timer = window.setTimeout(() => {
       setIsLoading(false);
-    }, 3000);
+    }, 400);
 
     return () => window.clearTimeout(timer);
   }, []);
@@ -39,7 +39,6 @@ const HomePage = () => {
       <MembershipAccessSection />
       <PartnersSection />
       <FinalCtaSection />
-      <FooterSection />
     </>
   );
 };

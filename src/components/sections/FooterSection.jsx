@@ -1,4 +1,6 @@
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import toast from 'react-hot-toast';
 import {
   ArrowRight,
   BadgeCheck,
@@ -10,11 +12,59 @@ import {
   Play,
   Send,
   Sparkles,
+  Handshake,
+  Award,
+  GraduationCap,
+  Building2,
+  FileText,
+  ChevronRight,
 } from 'lucide-react';
 
-const quickLinks = ['Home', 'About', 'Spaces', 'Events', 'Community', 'Contact'];
-const exploreLinks = ['Learning Zone', 'Computer Lab', 'Creator Studio', 'Innovation Hub', 'Membership'];
-const partnerLinks = ['Become a Partner', 'Sponsor NIVOX', 'Universities', 'Corporate Partners', 'Download Prospectus'];
+const quickLinks = [
+  { label: 'Home', to: '/' },
+  { label: 'About', to: '/about' },
+  { label: 'Spaces', to: '/spaces' },
+  { label: 'Events', to: '/events' },
+  { label: 'Community', to: '/community' },
+  { label: 'Membership', to: '/membership' },
+];
+
+const exploreLinks = [
+  { label: 'Learning Zone', to: '/spaces' },
+  { label: 'Computer Lab', to: '/spaces' },
+  { label: 'Creator Studio', to: '/spaces' },
+  { label: 'Innovation Hub', to: '/spaces' },
+  { label: 'Membership', to: '/membership' },
+];
+
+const partnerLinks = [
+  {
+    label: 'Become a Partner',
+    to: '/partners',
+    icon: Handshake,
+  },
+  {
+    label: 'Sponsor NIVOX',
+    to: '/sponsor',
+    icon: Award,
+  },
+  {
+    label: 'Universities',
+    to: '/universities',
+    icon: GraduationCap,
+  },
+  {
+    label: 'Corporate Partners',
+    to: '/corporate-partners',
+    icon: Building2,
+  },
+  {
+    label: 'Download Prospectus',
+    to: '/prospectus',
+    icon: FileText,
+  },
+];
+
 const socialLinks = [
   { label: 'Facebook', icon: Globe2 },
   { label: 'Instagram', icon: BadgeCheck },
@@ -68,23 +118,25 @@ const FooterSection = () => {
               </p>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row">
-              <motion.a
-                href="#"
-                whileHover={{ y: -2, scale: 1.02, boxShadow: '0 14px 40px rgba(255,213,74,0.24)' }}
-                whileTap={{ scale: 0.98 }}
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-[#ffd54a] px-6 py-3.5 text-sm font-semibold text-[#2b0a5a]"
-              >
-                Join the Waitlist
-                <ArrowRight className="h-4 w-4" />
-              </motion.a>
-              <motion.a
-                href="#"
-                whileHover={{ y: -2, scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/10 px-6 py-3.5 text-sm font-semibold text-white backdrop-blur"
-              >
-                Become a Partner
-              </motion.a>
+              <Link to="/membership">
+                <motion.button
+                  whileHover={{ y: -2, scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#ffd54a] px-6 py-3.5 text-sm font-semibold text-[#2b0a5a]"
+                >
+                  Join the Waitlist
+                  <ArrowRight className="h-4 w-4" />
+                </motion.button>
+              </Link>
+              <Link to="/community">
+                <motion.button
+                  whileHover={{ y: -2, scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/20 bg-white/10 px-6 py-3.5 text-sm font-semibold text-white backdrop-blur"
+                >
+                  Become a Partner
+                </motion.button>
+              </Link>
             </div>
           </div>
         </motion.div>
@@ -97,7 +149,7 @@ const FooterSection = () => {
             transition={{ duration: 0.6 }}
             className="lg:col-span-1"
           >
-            <div className="flex items-center gap-3">
+            <Link to="/" className="flex items-center gap-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#ffd54a]/15 text-[#ffd54a] shadow-[0_0_24px_rgba(255,213,74,0.18)]">
                 <Sparkles className="h-5 w-5" />
               </div>
@@ -105,7 +157,7 @@ const FooterSection = () => {
                 <p className="text-xl font-black tracking-[0.2em] text-white">NIVOX</p>
                 <p className="text-sm text-[#ffe7a3]">Shaping Tomorrow, Today.</p>
               </div>
-            </div>
+            </Link>
             <p className="mt-5 text-sm leading-7 text-white/70">
               NIVOX is a modern student hub designed to provide technology, innovation and collaborative spaces for the next generation.
             </p>
@@ -113,18 +165,18 @@ const FooterSection = () => {
               {socialLinks.map((social, index) => {
                 const Icon = social.icon;
                 return (
-                  <motion.a
+                  <motion.button
                     key={social.label}
-                    href="#"
+                    onClick={() => toast.success(`${social.label} channel link initialized`)}
                     initial={{ opacity: 0, y: 8 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, amount: 0.2 }}
                     transition={{ duration: 0.4, delay: index * 0.05 }}
-                    whileHover={{ y: -3, scale: 1.05, boxShadow: '0 0 16px rgba(255,213,74,0.22)' }}
+                    whileHover={{ y: -3, scale: 1.05 }}
                     className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/10 text-[#ffd54a] backdrop-blur"
                   >
                     <Icon className="h-4 w-4" />
-                  </motion.a>
+                  </motion.button>
                 );
               })}
             </div>
@@ -139,14 +191,10 @@ const FooterSection = () => {
             <h4 className="text-sm font-semibold uppercase tracking-[0.3em] text-[#ffe7a3]">Quick Links</h4>
             <ul className="mt-5 space-y-3 text-sm text-white/70">
               {quickLinks.map((link) => (
-                <li key={link}>
-                  <motion.a
-                    href="#"
-                    whileHover={{ x: 4, color: '#ffd54a' }}
-                    className="transition-colors duration-200"
-                  >
-                    {link}
-                  </motion.a>
+                <li key={link.label}>
+                  <Link to={link.to} className="transition-colors duration-200 hover:text-[#ffd54a]">
+                    {link.label}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -161,14 +209,10 @@ const FooterSection = () => {
             <h4 className="text-sm font-semibold uppercase tracking-[0.3em] text-[#ffe7a3]">Explore</h4>
             <ul className="mt-5 space-y-3 text-sm text-white/70">
               {exploreLinks.map((link) => (
-                <li key={link}>
-                  <motion.a
-                    href="#"
-                    whileHover={{ x: 4, color: '#ffd54a' }}
-                    className="transition-colors duration-200"
-                  >
-                    {link}
-                  </motion.a>
+                <li key={link.label}>
+                  <Link to={link.to} className="transition-colors duration-200 hover:text-[#ffd54a]">
+                    {link.label}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -181,18 +225,36 @@ const FooterSection = () => {
             transition={{ duration: 0.6, delay: 0.15 }}
           >
             <h4 className="text-sm font-semibold uppercase tracking-[0.3em] text-[#ffe7a3]">Partners</h4>
-            <ul className="mt-5 space-y-3 text-sm text-white/70">
-              {partnerLinks.map((link) => (
-                <li key={link}>
-                  <motion.a
-                    href="#"
-                    whileHover={{ x: 4, color: '#ffd54a' }}
-                    className="transition-colors duration-200"
+            <ul className="mt-4 space-y-1.5">
+              {partnerLinks.map((link) => {
+                const Icon = link.icon;
+                const innerContent = (
+                  <motion.div
+                    whileHover={{ x: 3 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={link.action}
+                    className="group flex min-h-[38px] cursor-pointer items-center gap-2.5 rounded-xl px-2 py-1.5 text-xs font-medium text-white/75 transition-colors hover:bg-white/10 hover:text-[#ffd54a]"
                   >
-                    {link}
-                  </motion.a>
-                </li>
-              ))}
+                    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-white/10 text-[#ffd54a] transition-colors group-hover:bg-[#ffd54a]/20">
+                      <Icon className="h-3.5 w-3.5" />
+                    </div>
+                    <span className="flex-1 leading-snug">{link.label}</span>
+                    <ChevronRight className="h-3 w-3 text-white/30 transition-transform group-hover:translate-x-0.5 group-hover:text-[#ffd54a]" />
+                  </motion.div>
+                );
+
+                return (
+                  <li key={link.label}>
+                    {link.to ? (
+                      <Link to={link.to} className="block">
+                        {innerContent}
+                      </Link>
+                    ) : (
+                      innerContent
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           </motion.div>
 
@@ -230,12 +292,12 @@ const FooterSection = () => {
             <p>© 2026 NIVOX. All Rights Reserved.</p>
             <div className="flex flex-wrap items-center gap-4">
               <span>Built with ❤️ in Nigeria.</span>
-              <motion.a href="#" whileHover={{ color: '#ffd54a' }} className="transition-colors duration-200">
+              <button onClick={() => toast.info('Privacy Policy & Data Security terms coming soon.')} className="transition-colors duration-200 hover:text-[#ffd54a]">
                 Privacy Policy
-              </motion.a>
-              <motion.a href="#" whileHover={{ color: '#ffd54a' }} className="transition-colors duration-200">
+              </button>
+              <button onClick={() => toast.info('Terms of Use & Community Guidelines coming soon.')} className="transition-colors duration-200 hover:text-[#ffd54a]">
                 Terms of Use
-              </motion.a>
+              </button>
             </div>
           </div>
         </div>

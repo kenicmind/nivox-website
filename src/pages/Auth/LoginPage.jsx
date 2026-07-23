@@ -39,8 +39,7 @@ const LoginPage = () => {
         return;
       }
 
-      alert("Welcome to NIVOX!");
-
+      sessionStorage.setItem('showWelcomeOverlay', 'true');
       navigate("/dashboard");
 
     } catch (error) {

@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import ScrollProgress from "../ScrollProgress";
 import ScrollToTopButton from "../ScrollToTopButton";
 import Navbar from "../../layout/Navbar";
+import FooterSection from "../../sections/FooterSection";
 
 const Layout = () => {
   return (
@@ -10,9 +11,11 @@ const Layout = () => {
 
       <Navbar />
 
-      <main className="mx-auto max-w-6xl px-6 pt-28 pb-10 sm:px-8 lg:px-10">
+      <main className="w-full pt-20">
         <Outlet />
       </main>
+
+      <FooterSection />
 
       <ScrollToTopButton />
     </div>

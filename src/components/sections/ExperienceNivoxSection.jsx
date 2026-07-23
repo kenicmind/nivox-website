@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   BookOpen,
@@ -7,62 +8,81 @@ import {
   Lightbulb,
   Mic,
   Monitor,
-  Network,
   Rocket,
   Sparkles,
   Sunrise,
-  Users,
-  Zap,
+  ChevronRight,
+  CheckCircle2,
 } from 'lucide-react';
 
 const scenes = [
   {
     id: 1,
+    step: '01',
     eyebrow: 'Step into the future',
     title: 'Your Journey Starts Here',
     description:
       'A bright new chapter begins the moment you step inside NIVOX, where learning and innovation feel effortless.',
-    accent: 'from-[#ffd54a]/25 via-[#ffbf1f]/15 to-transparent',
+    badge: 'Step 01 • Arrival & Access',
+    image: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=80',
+    highlights: ['Instant Student Access', 'Welcoming Hub Environment', 'High-Speed Wi-Fi & Lounge'],
+    accent: 'from-[#ffd54a]/30 via-[#ffbf1f]/15 to-transparent',
     icon: Sunrise,
     visual: 'sunrise',
   },
   {
     id: 2,
+    step: '02',
     eyebrow: 'Built for focus',
     title: 'A Space Built for Learning',
     description:
       'Every detail is designed to help students study deeply, stay connected, and work comfortably all day.',
-    accent: 'from-[#7c3aed]/20 via-[#2b0a5a]/20 to-transparent',
+    badge: 'Step 02 • Deep Focus & Study',
+    image: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80',
+    highlights: ['Ergonomic Workstations', 'Quiet Study Pods', 'Power Backup & Charging'],
+    accent: 'from-[#7c3aed]/30 via-[#2b0a5a]/20 to-transparent',
     icon: BookOpen,
     visual: 'learning',
   },
   {
     id: 3,
+    step: '03',
     eyebrow: 'Create with power',
     title: 'Build Amazing Things',
     description:
       'Modern workstations bring together coding, design, research, and productivity in one fluid experience.',
-    accent: 'from-[#2dd4bf]/20 via-[#0f766e]/10 to-transparent',
+    badge: 'Step 03 • Building & Prototyping',
+    image: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1200&q=80',
+    highlights: ['High-Performance PCs', 'Coding & Design Software', 'Peer Collaboration'],
+    accent: 'from-[#2dd4bf]/30 via-[#0f766e]/15 to-transparent',
     icon: Monitor,
     visual: 'workstations',
   },
   {
     id: 4,
+    step: '04',
     eyebrow: 'Studio energy',
     title: 'Create Without Limits',
     description:
       'Record, edit, stream, and publish with tools and spaces made for creators from day one.',
-    accent: 'from-[#fb923c]/20 via-[#f59e0b]/10 to-transparent',
+    badge: 'Step 04 • Content Studio',
+    image: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=1200&q=80',
+    highlights: ['Studio Microphones & Mics', '4K Camera & Lighting', 'Audio/Video Editing'],
+    accent: 'from-[#fb923c]/30 via-[#f59e0b]/15 to-transparent',
     icon: Mic,
     visual: 'studio',
   },
   {
     id: 5,
+    step: '05',
     eyebrow: 'Future in motion',
     title: 'Shape Tomorrow, Today.',
     description:
       'Students collaborate, mentor, network, and transform ideas into real ventures inside the NIVOX innovation hub.',
-    accent: 'from-[#f43f5e]/20 via-[#7c3aed]/15 to-transparent',
+    badge: 'Step 05 • Innovation & Startups',
+    image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80',
+    highlights: ['Founder Mentorship', 'Pitch & Hackathon Days', 'Active Student Community'],
+    accent: 'from-[#f43f5e]/30 via-[#7c3aed]/15 to-transparent',
     icon: Rocket,
     visual: 'innovation',
   },
@@ -70,34 +90,17 @@ const scenes = [
 
 const ExperienceNivoxSection = () => {
   const [activeScene, setActiveScene] = useState(0);
-  const [scrollProgress, setScrollProgress] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const section = document.getElementById('experience-nivox');
-      if (!section) return;
-
-      const rect = section.getBoundingClientRect();
-      const start = window.innerHeight * 0.2;
-      const progress = Math.min(Math.max((start - rect.top) / (window.innerHeight * 0.8), 0), 1);
-      setScrollProgress(progress);
-    };
-
-    handleScroll();
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   useEffect(() => {
     const section = document.getElementById('experience-nivox');
     if (!section) return;
 
     const childCount = scenes.length;
-    const sectionTop = section.offsetTop;
-    const height = section.offsetHeight;
 
     const handleScroll = () => {
-      const scrollY = window.scrollY - sectionTop + window.innerHeight * 0.2;
+      const rect = section.getBoundingClientRect();
+      const height = section.offsetHeight;
+      const scrollY = -rect.top + window.innerHeight * 0.3;
       const raw = scrollY / (height - window.innerHeight * 0.4);
       const nextScene = Math.min(childCount - 1, Math.max(0, Math.floor(raw * childCount)));
       setActiveScene(nextScene);
@@ -109,176 +112,149 @@ const ExperienceNivoxSection = () => {
   }, []);
 
   const activeSceneData = scenes[activeScene];
-  const sceneGlow = useMemo(() => {
-    const gradients = {
-      sunrise: 'from-[#ffd54a]/30 via-[#ff7a00]/20 to-transparent',
-      learning: 'from-[#a78bfa]/30 via-[#2b0a5a]/20 to-transparent',
-      workstations: 'from-[#2dd4bf]/25 via-[#0f766e]/15 to-transparent',
-      studio: 'from-[#fb923c]/25 via-[#f59e0b]/15 to-transparent',
-      innovation: 'from-[#f43f5e]/25 via-[#7c3aed]/15 to-transparent',
-    };
-    return gradients[activeSceneData.visual] || gradients.sunrise;
-  }, [activeSceneData.visual]);
 
   return (
     <section id="experience-nivox" className="relative overflow-hidden bg-[#0a0315] text-white">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,213,74,0.15),transparent_25%),radial-gradient(circle_at_bottom_right,rgba(124,58,237,0.25),transparent_35%)]" />
-      <div className="absolute inset-0 opacity-[0.08] [background-image:linear-gradient(to_right,rgba(255,255,255,0.5)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.5)_1px,transparent_1px)] [background-size:42px_42px]" />
-      <div className="absolute left-[-6%] top-[12%] h-48 w-48 rounded-full bg-[#ffd54a]/15 blur-[120px]" />
-      <div className="absolute bottom-[10%] right-[-8%] h-64 w-64 rounded-full bg-fuchsia-500/20 blur-[140px]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,213,74,0.15),transparent_25%),radial-gradient(circle_at_bottom_right,rgba(124,58,237,0.25),transparent_35%)] pointer-events-none" />
+      <div className="absolute inset-0 opacity-[0.08] [background-image:linear-gradient(to_right,rgba(255,255,255,0.5)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.5)_1px,transparent_1px)] [background-size:42px_42px] pointer-events-none" />
+      <div className="absolute left-[-6%] top-[12%] h-48 w-48 rounded-full bg-[#ffd54a]/15 blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[10%] right-[-8%] h-64 w-64 rounded-full bg-fuchsia-500/20 blur-[140px] pointer-events-none" />
 
       <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col justify-center px-4 py-20 sm:px-6 lg:px-8">
+        {/* Step Navigation Dots */}
+        <div className="mb-8 flex items-center justify-center gap-2 sm:gap-3">
+          {scenes.map((scene, idx) => (
+            <button
+              key={scene.id}
+              onClick={() => setActiveScene(idx)}
+              className={`flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all duration-300 ${
+                activeScene === idx
+                  ? 'bg-[#ffd54a] text-[#140726] shadow-[0_0_15px_rgba(255,213,74,0.4)]'
+                  : 'border border-white/15 bg-white/10 text-white/60 hover:bg-white/20 hover:text-white'
+              }`}
+            >
+              <span>{scene.step}</span>
+              <span className="hidden md:inline">{scene.title.split(' ')[0]}</span>
+            </button>
+          ))}
+        </div>
+
         <AnimatePresence mode="wait">
           <motion.div
             key={activeSceneData.id}
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -24 }}
-            transition={{ duration: 0.7, ease: 'easeOut' }}
-            className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]"
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
+            className="grid items-center gap-10 lg:grid-cols-12"
           >
-            <div className="max-w-2xl">
-              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white/80 backdrop-blur-md">
+            {/* Left Storytelling Text Column */}
+            <div className="lg:col-span-5 max-w-2xl">
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-semibold text-white/90 backdrop-blur-md">
                 <Sparkles className="h-4 w-4 text-[#ffd54a]" />
-                Experience NIVOX
+                {activeSceneData.eyebrow}
               </div>
 
               <motion.h2
-                initial={{ opacity: 0, y: 18 }}
+                initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.55, delay: 0.08 }}
-                className="text-4xl font-black leading-[0.95] tracking-[-0.03em] text-white sm:text-5xl lg:text-7xl"
+                transition={{ duration: 0.4, delay: 0.05 }}
+                className="text-3xl font-black leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl"
               >
                 {activeSceneData.title}
               </motion.h2>
 
               <motion.p
-                initial={{ opacity: 0, y: 18 }}
+                initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.55, delay: 0.14 }}
-                className="mt-6 max-w-xl text-lg leading-8 text-white/75 sm:text-xl"
+                transition={{ duration: 0.4, delay: 0.1 }}
+                className="mt-4 text-base leading-7 text-white/80 sm:text-lg sm:leading-8"
               >
                 {activeSceneData.description}
               </motion.p>
 
               <motion.div
-                initial={{ opacity: 0, y: 18 }}
+                initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.55, delay: 0.2 }}
-                className="mt-8 flex flex-wrap gap-3"
+                transition={{ duration: 0.4, delay: 0.15 }}
+                className="mt-6 space-y-2.5"
               >
-                <motion.button
-                  whileHover={{ scale: 1.03, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="rounded-full bg-[#ffd54a] px-6 py-3.5 text-sm font-semibold text-[#140726] shadow-[0_10px_35px_rgba(255,213,74,0.25)]"
+                {activeSceneData.highlights.map((item) => (
+                  <div key={item} className="flex items-center gap-2.5 text-xs font-medium text-white/90">
+                    <CheckCircle2 className="h-4 w-4 text-[#ffd54a] shrink-0" />
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.2 }}
+                className="mt-8 flex flex-wrap items-center gap-3"
+              >
+                <Link to="/membership">
+                  <motion.button
+                    whileHover={{ scale: 1.03, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="rounded-full bg-[#ffd54a] px-6 py-3 text-sm font-semibold text-[#140726] shadow-[0_10px_35px_rgba(255,213,74,0.25)]"
+                  >
+                    Join the Waitlist
+                  </motion.button>
+                </Link>
+
+                <button
+                  onClick={() => setActiveScene((prev) => (prev + 1) % scenes.length)}
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#ffd54a] hover:underline"
                 >
-                  Join the Waitlist
-                </motion.button>
+                  <span>Next Journey Stage</span>
+                  <ChevronRight className="h-4 w-4" />
+                </button>
               </motion.div>
             </div>
 
+            {/* Right Storytelling Visual Frame */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.96 }}
+              initial={{ opacity: 0, scale: 0.97 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.65, delay: 0.1 }}
-              className="relative"
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="lg:col-span-7 relative"
             >
-              <div className={`absolute inset-0 rounded-[32px] bg-gradient-to-br ${sceneGlow} blur-3xl`} />
-              <div className="relative rounded-[32px] border border-white/15 bg-white/10 p-5 shadow-[0_25px_90px_rgba(0,0,0,0.28)] backdrop-blur-xl sm:p-8">
-                {activeSceneData.visual === 'sunrise' && (
-                  <div className="relative min-h-[420px] overflow-hidden rounded-[24px] border border-white/10 bg-gradient-to-br from-[#ffd54a]/25 via-[#ff9f1c]/20 to-[#2b0a5a]/40 p-6">
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,rgba(255,255,255,0.25),transparent_22%)]" />
-                    <div className="absolute bottom-[-20px] left-[8%] h-36 w-36 rounded-full bg-[#140726]/80 blur-[1px]" />
-                    <div className="absolute bottom-[-6px] left-[30%] h-28 w-36 rounded-[50%] bg-[#2b0a5a]/70" />
-                    <div className="absolute bottom-[48px] right-[14%] h-24 w-24 rounded-full border border-white/15 bg-white/10 backdrop-blur-md" />
-                    <div className="absolute left-[10%] top-[14%] h-3 w-3 rounded-full bg-[#ffd54a] shadow-[0_0_20px_#ffd54a]" />
-                    <div className="absolute left-[22%] top-[24%] h-2.5 w-2.5 rounded-full bg-white/70" />
-                    <div className="absolute bottom-[18%] left-[18%] h-20 w-20 rounded-full border-[10px] border-white/20" />
-                    <div className="absolute bottom-[18%] left-[16%] h-20 w-20 rounded-full border-[10px] border-white/20" />
-                    <div className="absolute bottom-[12%] left-[35%] h-28 w-28 rounded-full border-[10px] border-white/20" />
-                    <div className="absolute bottom-[18%] right-[12%] h-20 w-20 rounded-full border-[10px] border-white/20" />
-                  </div>
-                )}
+              <div className={`absolute inset-0 rounded-[32px] bg-gradient-to-br ${activeSceneData.accent} blur-3xl pointer-events-none`} />
+              <div className="relative overflow-hidden rounded-[32px] border border-white/15 bg-white/10 p-3 sm:p-4 shadow-[0_25px_90px_rgba(0,0,0,0.35)] backdrop-blur-xl">
+                <div className="relative h-72 sm:h-96 w-full overflow-hidden rounded-[24px]">
+                  <img
+                    src={activeSceneData.image}
+                    alt={activeSceneData.title}
+                    loading="lazy"
+                    className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#140726] via-[#140726]/30 to-transparent" />
 
-                {activeSceneData.visual === 'learning' && (
-                  <div className="grid min-h-[420px] gap-4 rounded-[24px] border border-white/10 bg-gradient-to-br from-[#2b0a5a]/45 to-[#140726]/60 p-6 lg:grid-cols-2">
-                    {[
-                      { title: 'High-Speed Internet', icon: Network },
-                      { title: 'Comfortable Workspace', icon: BookOpen },
-                      { title: 'Reliable Power', icon: Zap },
-                      { title: 'Charging Stations', icon: Cpu },
-                    ].map((item, index) => {
-                      const Icon = item.icon;
-                      return (
-                        <motion.div
-                          key={item.title}
-                          initial={{ opacity: 0, y: 12 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.4, delay: 0.08 * index }}
-                          className="rounded-[20px] border border-white/10 bg-white/10 p-4 backdrop-blur-md"
-                        >
-                          <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-2xl bg-[#ffd54a]/15 text-[#ffd54a]">
-                            <Icon className="h-5 w-5" />
-                          </div>
-                          <h3 className="text-lg font-semibold text-white">{item.title}</h3>
-                        </motion.div>
-                      );
-                    })}
+                  {/* Stage Badge Chip */}
+                  <div className="absolute top-4 left-4">
+                    <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/60 px-3.5 py-1.5 text-xs font-semibold text-[#ffd54a] backdrop-blur-md">
+                      <Sparkles className="h-3.5 w-3.5 text-[#ffd54a]" />
+                      {activeSceneData.badge}
+                    </span>
                   </div>
-                )}
 
-                {activeSceneData.visual === 'workstations' && (
-                  <div className="relative min-h-[420px] overflow-hidden rounded-[24px] border border-white/10 bg-gradient-to-br from-[#0f172a]/70 to-[#111827]/80 p-6">
-                    <div className="absolute right-[8%] top-[10%] h-24 w-24 rounded-full bg-[#2dd4bf]/15 blur-3xl" />
-                    <div className="grid gap-4 md:grid-cols-2">
-                      {[{ label: 'Coding', icon: Cpu }, { label: 'Design', icon: Monitor }, { label: 'Research', icon: BookOpen }, { label: 'Productivity', icon: Sparkles }].map((item, index) => {
-                        const Icon = item.icon;
-                        return (
-                          <motion.div
-                            key={item.label}
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.35, delay: 0.08 * index }}
-                            className="rounded-[20px] border border-white/10 bg-white/10 p-4 backdrop-blur-md"
-                          >
-                            <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-2xl bg-[#2dd4bf]/15 text-[#2dd4bf]">
-                              <Icon className="h-5 w-5" />
-                            </div>
-                            <h3 className="text-lg font-semibold text-white">{item.label}</h3>
-                          </motion.div>
-                        );
-                      })}
+                  {/* Floating Title Overlay at bottom of image */}
+                  <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between rounded-2xl border border-white/15 bg-black/50 p-4 backdrop-blur-md">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#ffd54a] text-[#140726]">
+                        {(() => {
+                          const Icon = activeSceneData.icon;
+                          return <Icon className="h-5 w-5" />;
+                        })()}
+                      </div>
+                      <div>
+                        <h4 className="text-base font-bold text-white">{activeSceneData.title}</h4>
+                        <p className="text-xs text-[#FFE7A3]">Stage {activeSceneData.step} of 05</p>
+                      </div>
                     </div>
                   </div>
-                )}
-
-                {activeSceneData.visual === 'studio' && (
-                  <div className="relative min-h-[420px] overflow-hidden rounded-[24px] border border-white/10 bg-gradient-to-br from-[#7c2d12]/45 to-[#1f2937]/70 p-6">
-                    <div className="absolute left-[12%] top-[14%] h-24 w-24 rounded-full border border-white/10 bg-white/10 backdrop-blur-md" />
-                    <div className="absolute right-[12%] top-[16%] h-20 w-20 rounded-full border border-white/10 bg-white/10 backdrop-blur-md" />
-                    <div className="absolute bottom-[15%] left-[18%] h-28 w-28 rounded-full border border-[#ffd54a]/20 bg-[#ffd54a]/10" />
-                    <div className="absolute bottom-[18%] right-[16%] h-24 w-24 rounded-full border border-white/10 bg-white/10 backdrop-blur-md" />
-                    <div className="absolute inset-x-0 bottom-8 mx-auto flex w-3/4 items-center justify-center gap-4 rounded-[20px] border border-white/10 bg-[#140726]/50 p-4 backdrop-blur-md">
-                      <Mic className="h-5 w-5 text-[#ffd54a]" />
-                      <Camera className="h-5 w-5 text-[#ffd54a]" />
-                      <Cpu className="h-5 w-5 text-[#ffd54a]" />
-                    </div>
-                  </div>
-                )}
-
-                {activeSceneData.visual === 'innovation' && (
-                  <div className="relative min-h-[420px] overflow-hidden rounded-[24px] border border-white/10 bg-gradient-to-br from-[#f43f5e]/20 to-[#2b0a5a]/60 p-6">
-                    <div className="absolute left-[10%] top-[18%] h-24 w-24 rounded-full border border-white/10 bg-white/10 backdrop-blur-md" />
-                    <div className="absolute right-[10%] top-[18%] h-24 w-24 rounded-full border border-white/10 bg-white/10 backdrop-blur-md" />
-                    <div className="absolute bottom-[14%] left-[20%] h-20 w-20 rounded-full border border-[#ffd54a]/20 bg-[#ffd54a]/10" />
-                    <div className="absolute bottom-[16%] right-[20%] h-20 w-20 rounded-full border border-white/10 bg-white/10 backdrop-blur-md" />
-                    <div className="absolute inset-x-0 bottom-8 mx-auto flex w-3/4 items-center justify-center gap-4 rounded-[20px] border border-white/10 bg-[#140726]/55 p-4 backdrop-blur-md">
-                      <Lightbulb className="h-5 w-5 text-[#ffd54a]" />
-                      <Users className="h-5 w-5 text-[#ffd54a]" />
-                      <Rocket className="h-5 w-5 text-[#ffd54a]" />
-                    </div>
-                  </div>
-                )}
+                </div>
               </div>
             </motion.div>
           </motion.div>
@@ -299,13 +275,15 @@ const ExperienceNivoxSection = () => {
           <p className="mx-auto mt-4 max-w-2xl text-lg text-white/80">
             Join the waitlist and be first to discover the future of student connection and creativity.
           </p>
-          <motion.button
-            whileHover={{ scale: 1.03, y: -2 }}
-            whileTap={{ scale: 0.98 }}
-            className="mt-8 rounded-full bg-[#ffd54a] px-6 py-3.5 text-sm font-semibold text-[#140726] shadow-[0_10px_35px_rgba(255,213,74,0.25)]"
-          >
-            Join the Waitlist
-          </motion.button>
+          <Link to="/membership">
+            <motion.button
+              whileHover={{ scale: 1.03, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              className="mt-8 rounded-full bg-[#ffd54a] px-6 py-3.5 text-sm font-semibold text-[#140726] shadow-[0_10px_35px_rgba(255,213,74,0.25)]"
+            >
+              Join the Waitlist
+            </motion.button>
+          </Link>
         </motion.div>
       </div>
     </section>

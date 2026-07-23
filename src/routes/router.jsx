@@ -15,6 +15,13 @@ import AuthStatusPage from "../pages/Auth/AuthStatusPage";
 import ForgotPasswordPage from "../pages/Auth/ForgotPasswordPage";
 import ProtectedRoute from "./ProtectedRoute";
 
+// Hidden Footer Pages
+import PartnersPage from '../pages/FooterPages/PartnersPage';
+import SponsorPage from '../pages/FooterPages/SponsorPage';
+import UniversitiesPage from '../pages/FooterPages/UniversitiesPage';
+import CorporatePartnersPage from '../pages/FooterPages/CorporatePartnersPage';
+import ProspectusPage from '../pages/FooterPages/ProspectusPage';
+
 const AppRouter = () => {
   return (
     <BrowserRouter>
@@ -25,8 +32,8 @@ const AppRouter = () => {
           <Route path="/spaces" element={<SpacesPage />} />
           <Route path="/events" element={<EventsPage />} />
           <Route path="/community" element={<CommunityPage />} />
-         <Route path="/membership" element={<MembershipPage />} />
-         <Route path="/login" element={<LoginPage />} />
+          <Route path="/membership" element={<MembershipPage />} />
+          <Route path="/login" element={<LoginPage />} />
           <Route
             path="/dashboard"
             element={
@@ -40,6 +47,13 @@ const AppRouter = () => {
           <Route path="/verify-email" element={<VerifyEmailPage />} />
           <Route path="/auth-status" element={<AuthStatusPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+
+          {/* Hidden Footer Routes */}
+          <Route path="/partners" element={<PartnersPage />} />
+          <Route path="/sponsor" element={<SponsorPage />} />
+          <Route path="/universities" element={<UniversitiesPage />} />
+          <Route path="/corporate-partners" element={<CorporatePartnersPage />} />
+          <Route path="/prospectus" element={<ProspectusPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -83,58 +83,64 @@ const MembershipPage = () => {
     <div className="mt-20 grid gap-8 md:grid-cols-2 xl:grid-cols-4">
 
         {[
-        {
-            emoji: "🌐",
+          {
+            image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=80",
             title: "High-Speed Internet",
-            text: "Reliable internet for studying, research and online learning."
-        },
-        {
-            emoji: "💻",
+            text: "Reliable gigabit internet for studying, research and online learning."
+          },
+          {
+            image: "https://images.unsplash.com/photo-1527192491265-7e15c55b1ed2?auto=format&fit=crop&w=800&q=80",
             title: "Modern Workspaces",
-            text: "Comfortable spaces designed for focus and collaboration."
-        },
-        {
-            emoji: "🎤",
+            text: "Comfortable ergonomic spaces designed for deep focus and collaboration."
+          },
+          {
+            image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=800&q=80",
             title: "Exclusive Events",
-            text: "Priority access to workshops, talks and networking sessions."
-        },
-        {
-            emoji: "🤝",
+            text: "Priority access to workshops, hackathons and founder talks."
+          },
+          {
+            image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=800&q=80",
             title: "Community Access",
-            text: "Connect with students, mentors and innovators."
-        }
+            text: "Connect with ambitious students, mentors and startup founders."
+          }
 
         ].map((item, index) => (
 
-        <motion.div
+          <motion.div
             key={item.title}
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{
-            duration: 0.6,
-            delay: index * 0.08
+              duration: 0.6,
+              delay: index * 0.08
             }}
             whileHover={{
-            y: -10,
-            scale: 1.03
+              y: -8,
+              scale: 1.02
             }}
-            className="rounded-[30px] border border-[#ebe3ff] bg-white p-8 shadow-lg"
-        >
+            className="overflow-hidden rounded-[30px] border border-[#ebe3ff] bg-white p-6 shadow-lg transition-all"
+          >
 
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#FFD54A]/20 text-4xl">
-            {item.emoji}
+            <div className="relative h-44 overflow-hidden rounded-[22px] mb-5">
+              <img
+                src={item.image}
+                alt={item.title}
+                loading="lazy"
+                className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#2b0a5a]/40 via-transparent to-transparent" />
             </div>
 
-            <h3 className="mt-6 text-2xl font-bold text-[#2b0a5a]">
-            {item.title}
+            <h3 className="text-2xl font-bold text-[#2b0a5a]">
+              {item.title}
             </h3>
 
-            <p className="mt-4 leading-8 text-gray-600">
-            {item.text}
+            <p className="mt-3 leading-7 text-gray-600">
+              {item.text}
             </p>
 
-        </motion.div>
+          </motion.div>
 
         ))}
 

@@ -8,6 +8,7 @@ const cards = [
     description:
       'Access reliable internet, quiet workspaces and digital resources for assignments, research and exam preparation.',
     icon: BookOpen,
+    image: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80',
     accent: 'from-[#ffd54a]/25 to-[#ffb703]/10',
     glow: 'shadow-[0_20px_60px_rgba(255,213,74,0.15)]',
   },
@@ -17,6 +18,7 @@ const cards = [
     description:
       'Use modern workstations to code, design, edit videos and learn practical digital skills.',
     icon: Cpu,
+    image: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80',
     accent: 'from-[#7c3aed]/25 to-[#a78bfa]/10',
     glow: 'shadow-[0_20px_60px_rgba(124,58,237,0.15)]',
   },
@@ -26,6 +28,7 @@ const cards = [
     description:
       'Produce videos, podcasts and creative projects with professional tools.',
     icon: Camera,
+    image: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=800&q=80',
     accent: 'from-[#2dd4bf]/25 to-[#14b8a6]/10',
     glow: 'shadow-[0_20px_60px_rgba(45,212,191,0.15)]',
   },
@@ -35,6 +38,7 @@ const cards = [
     description:
       'Meet collaborators, attend events and turn ideas into startups.',
     icon: Rocket,
+    image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80',
     accent: 'from-[#f43f5e]/25 to-[#fb923c]/10',
     glow: 'shadow-[0_20px_60px_rgba(244,63,94,0.15)]',
   },
@@ -80,12 +84,16 @@ const BuiltForEveryStudentSection = () => {
                 whileHover={{ y: -8, scale: 1.02 }}
                 className={`rounded-[28px] border border-white/70 bg-white/70 p-6 shadow-[0_18px_55px_rgba(43,10,90,0.08)] backdrop-blur-xl ${card.glow}`}
               >
-                <div className={`rounded-[22px] bg-gradient-to-br ${card.accent} p-4`}>
-                  <div className="relative h-32 overflow-hidden rounded-[18px] border border-white/50 bg-[#140726]/90 p-4">
-                    <div className="absolute left-3 top-3 h-8 w-8 rounded-full border border-white/10 bg-white/10" />
-                    <div className="absolute right-4 top-4 h-12 w-12 rounded-[16px] border border-white/10 bg-white/10" />
-                    <div className="absolute bottom-4 left-4 h-16 w-16 rounded-[20px] border border-[#ffd54a]/20 bg-[#ffd54a]/10" />
-                    <div className="absolute bottom-5 right-5 flex h-10 w-10 items-center justify-center rounded-2xl bg-white/15 text-[#ffd54a]">
+                <div className={`rounded-[22px] bg-gradient-to-br ${card.accent} p-3`}>
+                  <div className="relative h-36 overflow-hidden rounded-[18px]">
+                    <img
+                      src={card.image}
+                      alt={card.title}
+                      loading="lazy"
+                      className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#140726]/60 via-transparent to-transparent" />
+                    <div className="absolute bottom-3 right-3 flex h-10 w-10 items-center justify-center rounded-2xl bg-[#140726]/80 text-[#ffd54a] backdrop-blur-md">
                       <Icon className="h-5 w-5" />
                     </div>
                   </div>

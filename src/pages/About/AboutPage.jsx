@@ -85,14 +85,15 @@ const AboutPage = () => {
                     <ArrowRight className="h-4 w-4" />
                   </motion.button>
                 </Link>
-                <motion.a
-                  href="#"
-                  whileHover={{ y: -2, scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="inline-flex items-center justify-center gap-2 rounded-full border border-[#2b0a5a]/10 bg-white/80 px-6 py-3.5 text-sm font-semibold text-[#2b0a5a]"
-                >
-                  Partner With NIVOX
-                </motion.a>
+                <Link to="/community">
+                  <motion.button
+                    whileHover={{ y: -2, scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="inline-flex items-center justify-center gap-2 rounded-full border border-[#2b0a5a]/10 bg-white/80 px-6 py-3.5 text-sm font-semibold text-[#2b0a5a]"
+                  >
+                    Partner With NIVOX
+                  </motion.button>
+                </Link>
               </div>
             </div>
 
@@ -756,14 +757,15 @@ const AboutPage = () => {
                     <ArrowRight className="h-4 w-4" />
                   </motion.button>
                 </Link>
-            <motion.a
-              href="#"
-              whileHover={{ y: -2, scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-[#2b0a5a]/10 bg-white px-6 py-3.5 text-sm font-semibold text-[#2b0a5a]"
-            >
-              Partner With NIVOX
-            </motion.a>
+            <Link to="/community">
+              <motion.button
+                whileHover={{ y: -2, scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-[#2b0a5a]/10 bg-white px-6 py-3.5 text-sm font-semibold text-[#2b0a5a]"
+              >
+                Partner With NIVOX
+              </motion.button>
+            </Link>
           </div>
         </motion.section>
         <div className="h-16"></div>

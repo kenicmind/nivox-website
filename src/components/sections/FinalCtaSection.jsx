@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, CalendarDays, Mail, Sparkles, Star, Users, Zap } from 'lucide-react';
 
@@ -88,24 +89,26 @@ const FinalCtaSection = () => {
               </p>
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <motion.a
-                  href="#"
-                  whileHover={{ y: -2, scale: 1.02, boxShadow: '0 18px 45px rgba(255,213,74,0.28)' }}
-                  whileTap={{ scale: 0.98 }}
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-[#ffd54a] px-6 py-3.5 text-sm font-semibold text-[#2b0a5a]"
-                >
-                  Join the Waitlist
-                  <ArrowRight className="h-4 w-4" />
-                </motion.a>
-                <motion.a
-                  href="#"
-                  whileHover={{ y: -2, scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/10 px-6 py-3.5 text-sm font-semibold text-white backdrop-blur"
-                >
-                  <CalendarDays className="h-4 w-4" />
-                  Book a Tour
-                </motion.a>
+                <Link to="/membership">
+                  <motion.button
+                    whileHover={{ y: -2, scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#ffd54a] px-6 py-3.5 text-sm font-semibold text-[#2b0a5a] shadow-[0_18px_45px_rgba(255,213,74,0.28)]"
+                  >
+                    Join the Waitlist
+                    <ArrowRight className="h-4 w-4" />
+                  </motion.button>
+                </Link>
+                <Link to="/spaces">
+                  <motion.button
+                    whileHover={{ y: -2, scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/20 bg-white/10 px-6 py-3.5 text-sm font-semibold text-white backdrop-blur"
+                  >
+                    <CalendarDays className="h-4 w-4" />
+                    Book a Tour
+                  </motion.button>
+                </Link>
               </div>
             </div>
 
