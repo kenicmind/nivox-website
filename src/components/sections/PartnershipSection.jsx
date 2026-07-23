@@ -230,15 +230,22 @@ const PartnershipSection = () => {
                     <ArrowRight className="h-4 w-4" />
                   </motion.button>
                 </Link>
-                <motion.button
+                <a
+                  href="/documents/NIVOX-Sponsorship-Prospectus.pdf"
+                  download="NIVOX-Sponsorship-Prospectus.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   onClick={() => toast.success('NIVOX Partnership Prospectus download started')}
-                  whileHover={{ y: -2, scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/10 px-6 py-3.5 text-sm font-semibold text-white backdrop-blur"
                 >
-                  <Download className="h-4 w-4" />
-                  Download Partnership Prospectus
-                </motion.button>
+                  <motion.button
+                    whileHover={{ y: -2, scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/20 bg-white/10 px-6 py-3.5 text-sm font-semibold text-white backdrop-blur"
+                  >
+                    <Download className="h-4 w-4" />
+                    Download Partnership Prospectus
+                  </motion.button>
+                </a>
               </div>
             </div>
 

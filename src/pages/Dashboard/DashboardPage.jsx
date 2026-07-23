@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import {
   ArrowRight,
   BellRing,
@@ -24,9 +25,11 @@ import {
   ChevronRight,
   Flame,
   Clock,
+  Plus,
+  Ticket,
 } from 'lucide-react';
 import { onAuthStateChanged } from 'firebase/auth';
-import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, setDoc, serverTimestamp, collection, query, where, getDocs } from 'firebase/firestore';
 import toast from 'react-hot-toast';
 import { auth, db } from '../../firebase/firebase';
 import PageHeader from '../../app/components/layout/PageHeader';
@@ -38,6 +41,9 @@ import Modal from '../../components/design/feedback/Modal';
 import Input from '../../components/design/forms/Input';
 import Select from '../../components/design/forms/Select';
 import AutocompleteInput from '../../components/design/forms/AutocompleteInput';
+import BookingModal from '../../components/booking/BookingModal';
+import NotificationCenter from '../../components/notifications/NotificationCenter';
+import { fetchUserNotifications, markNotificationAsRead } from '../../services/notificationService';
 import { NIGERIAN_INSTITUTIONS, NIGERIAN_COURSES } from '../../data/nigerianTertiaryData';
 
 // Lightweight, GPU-accelerated motion variants
@@ -46,17 +52,17 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.05,
+      staggerChildren: 0.02,
     },
   },
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 12 },
+  hidden: { opacity: 0, y: 8 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.35, ease: 'easeOut' },
+    transition: { duration: 0.18, ease: 'easeOut' },
   },
 };
 
@@ -72,7 +78,7 @@ const AnimatedCounter = React.memo(({ target = 0, suffix = '', prefix = '' }) =>
     }
 
     let startTime = null;
-    const duration = 800;
+    const duration = 300;
 
     const step = (timestamp) => {
       if (!startTime) startTime = timestamp;
@@ -186,11 +192,16 @@ const notifications = [
 ];
 
 const DashboardPage = () => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [activeBookingsCount, setActiveBookingsCount] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
+  const [liveNotifications, setLiveNotifications] = useState([]);
+  const [isNotificationCenterOpen, setIsNotificationCenterOpen] = useState(false);
 
   const [formData, setFormData] = useState({
     fullName: '',
@@ -203,6 +214,13 @@ const DashboardPage = () => {
   const [showWelcome, setShowWelcome] = useState(() => {
     return sessionStorage.getItem('showWelcomeOverlay') === 'true';
   });
+
+  const profileCompletion = useMemo(() => {
+    if (!userProfile) return 0;
+    const fields = ['fullName', 'phone', 'school', 'course', 'level'];
+    const completed = fields.filter((f) => !!userProfile[f]?.trim()).length;
+    return Math.round((completed / fields.length) * 100);
+  }, [userProfile]);
 
   // Fetch Profile once on Auth Change
   const fetchProfile = useCallback(() => {
@@ -219,6 +237,22 @@ const DashboardPage = () => {
       try {
         const userDocRef = doc(db, 'users', currentUser.uid);
         const userSnap = await getDoc(userDocRef);
+
+        // Fetch active bookings count for student
+        try {
+          const bQuery = query(
+            collection(db, 'reservations'),
+            where('uid', '==', currentUser.uid),
+            where('status', '==', 'upcoming')
+          );
+          const bSnap = await getDocs(bQuery);
+          setActiveBookingsCount(bSnap.docs.length);
+
+          const notifs = await fetchUserNotifications(currentUser.uid);
+          setLiveNotifications(notifs);
+        } catch (bErr) {
+          console.error('Error fetching bookings/notifications count:', bErr);
+        }
 
         if (userSnap.exists()) {
           const data = userSnap.data();
@@ -425,7 +459,14 @@ const DashboardPage = () => {
         title: 'Book a Workspace',
         description: 'Reserve your next studio session',
         icon: Cpu,
-        action: () => toast.success('Workspace Reservation Drawer initialized'),
+        action: () => setIsBookingModalOpen(true),
+      },
+      {
+        id: 'my-tickets',
+        title: 'My Digital Tickets',
+        description: 'View entry passes & verification QR',
+        icon: Ticket,
+        action: () => navigate('/tickets'),
       },
       {
         id: 'profile',
@@ -435,21 +476,14 @@ const DashboardPage = () => {
         action: () => setIsEditModalOpen(true),
       },
       {
-        id: 'event',
-        title: 'Join an Event',
-        description: 'Find upcoming community experiences',
-        icon: CalendarDays,
-        action: () => toast.success('Event Directory initialized'),
-      },
-      {
         id: 'resource',
         title: 'Access Resources',
         description: 'Open learning and creator tools',
         icon: BookOpen,
-        action: () => toast.success('Student Resource Vault unlocked'),
+        action: () => navigate('/resources'),
       },
     ],
-    []
+    [navigate]
   );
 
   if (loading) {
@@ -476,7 +510,11 @@ const DashboardPage = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5, ease: 'easeInOut' }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-[#140726] px-6 py-12"
+            onClick={() => {
+              setShowWelcome(false);
+              sessionStorage.removeItem('showWelcomeOverlay');
+            }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-[#140726] px-6 py-12 cursor-pointer"
           >
             <div className="absolute inset-0 opacity-20 [background-image:radial-gradient(circle_at_center,rgba(255,213,74,0.25)_0%,transparent_70%)]" />
             <div className="absolute top-1/4 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-[#2B0A5A]/60 blur-3xl" />
@@ -622,7 +660,7 @@ const DashboardPage = () => {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="space-y-8"
+        className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-10"
       >
         {error && (
           <motion.div variants={itemVariants} className="rounded-2xl border border-yellow-500/30 bg-yellow-500/10 p-4 text-sm text-yellow-200">
@@ -692,7 +730,7 @@ const DashboardPage = () => {
         <motion.div variants={itemVariants} className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <StatCard
             title="Active Bookings"
-            target={3}
+            target={activeBookingsCount}
             subtitle="Workspace seats reserved"
             icon={Cpu}
             borderColor="border-[#FFD54A]/25"
@@ -746,7 +784,12 @@ const DashboardPage = () => {
                     <User className="h-5 w-5" />
                   </div>
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#FFE7A3]">Student Details</p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#FFE7A3]">Student Details</p>
+                      <span className="rounded-full bg-[#FFD54A]/15 px-2 py-0.5 text-[10px] font-extrabold text-[#FFD54A] border border-[#FFD54A]/30">
+                        {profileCompletion}% Complete
+                      </span>
+                    </div>
                     <h3 className="text-xl font-semibold text-white">Profile Overview</h3>
                   </div>
                 </div>
@@ -869,31 +912,50 @@ const DashboardPage = () => {
                   <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#FFE7A3]">Live Updates</p>
                   <h3 className="mt-1 text-2xl font-semibold text-white">Notifications & Hub</h3>
                 </div>
-                <Button variant="ghost" size="sm" onClick={() => toast.success('Notifications marked as read')}>
-                  Mark All
+                <Button variant="ghost" size="sm" onClick={() => setIsNotificationCenterOpen(true)}>
+                  View Center
                 </Button>
               </div>
 
               <div className="mt-6 space-y-3">
-                {notifications.map((item) => (
-                  <div key={item.title} className="flex items-start gap-3 rounded-[20px] border border-white/10 bg-white/10 p-3.5">
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#FFD54A]/15 text-[#FFD54A]">
-                      <BellRing className="h-4 w-4" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-2">
-                        <p className="font-semibold text-white text-sm">{item.title}</p>
-                        <span className="text-[10px] text-white/50">{item.time}</span>
+                {liveNotifications.length > 0 ? (
+                  liveNotifications.slice(0, 4).map((item) => (
+                    <div key={item.id || item.title} className="flex items-start gap-3 rounded-[20px] border border-white/10 bg-white/10 p-3.5">
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#FFD54A]/15 text-[#FFD54A]">
+                        <BellRing className="h-4 w-4" />
                       </div>
-                      <p className="mt-0.5 text-xs text-white/60">{item.detail}</p>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-2">
+                          <p className="font-semibold text-white text-sm">{item.title}</p>
+                          <span className="text-[10px] text-white/50">{item.time || 'Just now'}</span>
+                        </div>
+                        <p className="mt-0.5 text-xs text-white/60">{item.detail || item.message}</p>
+                      </div>
                     </div>
+                  ))
+                ) : (
+                  <div className="rounded-[20px] border border-white/10 bg-white/5 p-6 text-center text-xs text-white/60">
+                    No new hub notifications recorded yet.
                   </div>
-                ))}
+                )}
               </div>
             </GlassCard>
           </motion.section>
         </div>
       </motion.div>
+
+      {/* Booking Modal Component */}
+      <BookingModal
+        open={isBookingModalOpen}
+        onClose={() => setIsBookingModalOpen(false)}
+        onBookingSuccess={() => setActiveBookingsCount((prev) => prev + 1)}
+      />
+
+      {/* Notification Center Popover */}
+      <NotificationCenter
+        open={isNotificationCenterOpen}
+        onClose={() => setIsNotificationCenterOpen(false)}
+      />
     </>
   );
 };

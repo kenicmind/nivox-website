@@ -47,10 +47,18 @@ const ProspectusPage = () => {
             transition={{ delay: 0.3 }}
             className="mt-8 flex justify-center"
           >
-            <Button onClick={handleDownloadProspectus} variant="primary" className="gap-2 shadow-lg">
-              <Download className="h-4 w-4" />
-              Download Prospectus PDF (5.2 MB)
-            </Button>
+            <a
+              href="/documents/NIVOX-Sponsorship-Prospectus.pdf"
+              download="NIVOX-Sponsorship-Prospectus.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={handleDownloadProspectus}
+            >
+              <Button variant="primary" className="gap-2 shadow-lg">
+                <Download className="h-4 w-4" />
+                Download Prospectus PDF (5.2 MB)
+              </Button>
+            </a>
           </motion.div>
         </div>
       </section>
@@ -86,10 +94,18 @@ const ProspectusPage = () => {
 
           <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-gray-100 pt-6 sm:flex-row">
             <div className="text-xs text-gray-500">Official document verified by NIVOX Board of Directors.</div>
-            <Button onClick={handleDownloadProspectus} variant="primary" className="gap-2">
-              <Download className="h-4 w-4" />
-              Download Full Report
-            </Button>
+            <a
+              href="/documents/NIVOX-Sponsorship-Prospectus.pdf"
+              download="NIVOX-Sponsorship-Prospectus.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={handleDownloadProspectus}
+            >
+              <Button variant="primary" className="gap-2">
+                <Download className="h-4 w-4" />
+                Download Full Report
+              </Button>
+            </a>
           </div>
         </div>
       </section>
