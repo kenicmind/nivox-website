@@ -7,7 +7,7 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
 } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
@@ -46,44 +46,55 @@ const handleRegister = async (e) => {
   }
 
   try {
-  setLoading(true);
+    setLoading(true);
 
-  console.log("Starting Firebase registration...");
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
 
-  const userCredential = await createUserWithEmailAndPassword(
-    auth,
-    email,
-    password
-  );
+    const user = userCredential.user;
 
-  console.log("User created:", userCredential.user);
+    // Send verification email
+    try {
+      await sendEmailVerification(user);
+    } catch (verificationError) {
+      console.error("Error sending verification email:", verificationError);
+      toast.error("Failed to send verification email. You can request one later.");
+    }
 
-  await sendEmailVerification(userCredential.user);
+    // Create user document in Firestore users collection
+    try {
+      await setDoc(doc(db, "users", user.uid), {
+        uid: user.uid,
+        fullName: fullName ? fullName.trim() : "",
+        email: email ? email.trim() : "",
+        phone: phone ? phone.trim() : "",
+        school: university ? university.trim() : "",
+        course: "",
+        level: "",
+        membership: "Student",
+        role: "student",
+        profileCompleted: false,
+        emailVerified: false,
+        createdAt: serverTimestamp(),
+        lastLogin: serverTimestamp(),
+      });
+    } catch (firestoreError) {
+      console.error("Firestore document creation error:", firestoreError);
+      toast.error("Account created, but profile setup failed. Please contact support.");
+    }
 
-  console.log("Verification email sent");
+    toast.success(
+      "Account created successfully! Please check your email to verify your account."
+    );
 
-  console.log("Saving user to Firestore...");
+    setTimeout(() => {
+      navigate("/verify-email");
+    }, 2000);
 
-  await setDoc(doc(db, "users", userCredential.user.uid), {
-    uid: userCredential.user.uid,
-    fullName,
-    email,
-    phone,
-    university,
-    createdAt: new Date(),
-  });
-
-  console.log("Saved to Firestore");
-
-  toast.success(
-    "Account created successfully! Please check your email to verify your account."
-  );
-
-  setTimeout(() => {
-    navigate("/verify-email");
-  }, 2000);
-
-} catch (error) {
+  } catch (error) {
 
   if (error.code === "auth/email-already-in-use") {
 
