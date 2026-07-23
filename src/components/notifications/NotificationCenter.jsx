@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { BellRing, CheckCheck, X, Sparkles, AlertCircle, Info } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { BellRing, X, Sparkles } from 'lucide-react';
 import { onAuthStateChanged } from 'firebase/auth';
 import toast from 'react-hot-toast';
 import { auth } from '../../firebase/firebase';
@@ -45,6 +45,16 @@ const NotificationCenter = ({ open, onClose }) => {
       toast.success('All notifications marked as read');
     } catch (err) {
       console.error('Error marking notifications read:', err);
+    }
+  };
+
+  const handleNotificationClick = async (notification) => {
+    if (notification.read) return;
+    const didUpdate = await markNotificationAsRead(notification.id);
+    if (didUpdate) {
+      setNotifications((prev) =>
+        prev.map((item) => (item.id === notification.id ? { ...item, read: true } : item)),
+      );
     }
   };
 
@@ -97,6 +107,15 @@ const NotificationCenter = ({ open, onClose }) => {
             notifications.map((item) => (
               <div
                 key={item.id}
+                role="button"
+                tabIndex={item.read ? -1 : 0}
+                onClick={() => handleNotificationClick(item)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    handleNotificationClick(item);
+                  }
+                }}
                 className={`flex items-start gap-3 rounded-2xl border p-3.5 backdrop-blur transition ${
                   item.read
                     ? 'border-white/5 bg-white/5 opacity-70'

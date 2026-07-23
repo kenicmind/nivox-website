@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Ticket, Sparkles, Plus, Calendar, QrCode } from 'lucide-react';
+import { Ticket, Sparkles, Plus } from 'lucide-react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { collection, query, where, getDocs } from 'firebase/firestore';
-import toast from 'react-hot-toast';
 import { auth, db } from '../../firebase/firebase';
 import { GlassCard } from '../../components/design/ui/Card';
 import Button from '../../components/design/ui/Button';
@@ -37,6 +36,7 @@ const TicketsPage = () => {
         const snapRes = await getDocs(qRes);
         let resDocs = snapRes.docs.map((docSnap) => ({
           id: docSnap.id,
+          sourceCollection: 'reservations',
           ...docSnap.data(),
         }));
 
@@ -49,6 +49,7 @@ const TicketsPage = () => {
           const snapBook = await getDocs(qBook);
           resDocs = snapBook.docs.map((docSnap) => ({
             id: docSnap.id,
+            sourceCollection: 'bookings',
             ...docSnap.data(),
           }));
         }
@@ -62,7 +63,11 @@ const TicketsPage = () => {
           }
         });
 
-        setTickets(Array.from(uniqueMap.values()));
+        setTickets(
+          Array.from(uniqueMap.values()).sort(
+            (a, b) => (b.createdAt?.toMillis?.() || 0) - (a.createdAt?.toMillis?.() || 0),
+          ),
+        );
       } catch (err) {
         console.error('Error fetching reservation tickets:', err);
         setError('Unable to load digital passes from server.');

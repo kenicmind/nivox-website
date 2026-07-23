@@ -29,6 +29,7 @@ import {
   Ticket,
 } from 'lucide-react';
 import { onAuthStateChanged } from 'firebase/auth';
+import { updateProfile } from 'firebase/auth';
 import { doc, getDoc, setDoc, serverTimestamp, collection, query, where, getDocs } from 'firebase/firestore';
 import toast from 'react-hot-toast';
 import { auth, db } from '../../firebase/firebase';
@@ -359,6 +360,9 @@ const DashboardPage = () => {
       };
 
       await setDoc(userDocRef, updatedFields, { merge: true });
+      if (auth.currentUser && formData.fullName.trim() !== auth.currentUser.displayName) {
+        await updateProfile(auth.currentUser, { displayName: formData.fullName.trim() });
+      }
 
       setUserProfile((prev) => ({
         ...prev,

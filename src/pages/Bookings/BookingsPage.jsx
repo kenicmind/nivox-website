@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Calendar,
@@ -6,10 +6,7 @@ import {
   Cpu,
   Plus,
   Trash2,
-  CheckCircle2,
-  XCircle,
   Sparkles,
-  AlertCircle,
   BookOpen,
   Camera,
   Users,
@@ -57,6 +54,7 @@ const BookingsPage = () => {
         const snapshotRes = await getDocs(qRes);
         let resDocs = snapshotRes.docs.map((docSnap) => ({
           id: docSnap.id,
+          sourceCollection: 'reservations',
           ...docSnap.data(),
         }));
 
@@ -68,6 +66,7 @@ const BookingsPage = () => {
           const snapshotBook = await getDocs(qBook);
           resDocs = snapshotBook.docs.map((docSnap) => ({
             id: docSnap.id,
+            sourceCollection: 'bookings',
             ...docSnap.data(),
           }));
         }
@@ -81,7 +80,11 @@ const BookingsPage = () => {
           }
         });
 
-        setBookings(Array.from(uniqueMap.values()));
+        setBookings(
+          Array.from(uniqueMap.values()).sort(
+            (a, b) => (b.createdAt?.toMillis?.() || 0) - (a.createdAt?.toMillis?.() || 0),
+          ),
+        );
       } catch (err) {
         console.error('Error fetching user reservations:', err);
         setError('Unable to load reservations from server.');
@@ -103,7 +106,8 @@ const BookingsPage = () => {
   const handleCancelBooking = async (bookingId) => {
     try {
       setCancellingId(bookingId);
-      const bookingRef = doc(db, 'bookings', bookingId);
+      const booking = bookings.find((item) => item.id === bookingId);
+      const bookingRef = doc(db, booking?.sourceCollection || 'reservations', bookingId);
       await updateDoc(bookingRef, { status: 'cancelled' });
 
       setBookings((prev) =>

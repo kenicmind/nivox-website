@@ -10,7 +10,9 @@ export const fetchUserNotifications = async (uid) => {
   try {
     const q = query(collection(db, 'notifications'), where('uid', '==', uid));
     const snapshot = await getDocs(q);
-    return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+    return snapshot.docs
+      .map((d) => ({ id: d.id, ...d.data() }))
+      .sort((a, b) => (b.createdAt?.toMillis?.() || 0) - (a.createdAt?.toMillis?.() || 0));
   } catch (error) {
     console.error('Error fetching notifications:', error);
     return [];

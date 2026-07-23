@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { QrCode, Calendar, Clock, MapPin, ShieldCheck, Ticket, User, CreditCard, Eye, CheckCircle2, X } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { QrCode, Calendar, Clock, MapPin, Ticket, CreditCard, Eye, CheckCircle2, X } from 'lucide-react';
 import Button from '../design/ui/Button';
 import Modal from '../design/feedback/Modal';
 
 const ReservationTicket = ({ ticket }) => {
   const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const navigate = useNavigate();
 
   if (!ticket) return null;
 
@@ -104,10 +104,20 @@ const ReservationTicket = ({ ticket }) => {
               </div>
             </div>
 
-            <Button onClick={() => setIsDetailOpen(true)} variant="ghost" size="sm" className="gap-1 border border-white/15 text-xs">
-              <Eye className="h-3.5 w-3.5" />
-              View Details
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                onClick={() => navigate(`/student/reservations/${ticket.id}`)}
+                variant="ghost"
+                size="sm"
+                className="border border-white/15 text-xs"
+              >
+                Open Record
+              </Button>
+              <Button onClick={() => setIsDetailOpen(true)} variant="ghost" size="sm" className="gap-1 border border-white/15 text-xs">
+                <Eye className="h-3.5 w-3.5" />
+                Details
+              </Button>
+            </div>
           </div>
 
           <p className="text-[10px] text-white/50 italic text-center border-t border-white/10 pt-2">
