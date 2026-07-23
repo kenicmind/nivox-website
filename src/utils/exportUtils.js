@@ -5,8 +5,7 @@
 
 export const exportToCSV = (filename, data, headers) => {
   if (!data || !data.length) {
-    alert('No data available to export.');
-    return;
+    return false;
   }
 
   const keys = headers ? Object.keys(headers) : Object.keys(data[0]);
@@ -34,4 +33,6 @@ export const exportToCSV = (filename, data, headers) => {
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+  return true;
 };
