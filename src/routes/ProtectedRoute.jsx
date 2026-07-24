@@ -2,7 +2,7 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
 
 const ProtectedRoute = ({ children }) => {
-  const { user, authInitialized } = useAuth();
+  const { user, isAdmin, authInitialized } = useAuth();
 
   if (!authInitialized) {
     return (
@@ -15,6 +15,10 @@ const ProtectedRoute = ({ children }) => {
   // Not logged in
   if (!user) {
     return <Navigate to="/login" replace />;
+  }
+
+  if (isAdmin) {
+    return <Navigate to="/admin/dashboard" replace />;
   }
 
   // Logged in but email not verified

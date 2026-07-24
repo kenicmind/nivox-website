@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Layout from '../components/common/layout/Layout.jsx';
 import HomePage from '../pages/Home/HomePage';
 import ProtectedRoute from "./ProtectedRoute";
@@ -13,6 +13,7 @@ const CommunityPage = lazy(() => import('../pages/Community/CommunityPage'));
 const MembershipPage = lazy(() => import('../pages/Membership/MembershipPage'));
 const DashboardPage = lazy(() => import('../pages/Dashboard/DashboardPage'));
 const AdminPage = lazy(() => import('../pages/Admin/AdminPage'));
+const AdminBootstrapPage = lazy(() => import('../pages/Admin/AdminBootstrapPage'));
 const LoginPage = lazy(() => import('../pages/Auth/LoginPage'));
 const RegisterPage = lazy(() => import('../pages/Auth/RegisterPage'));
 const VerifyEmailPage = lazy(() => import('../pages/Auth/VerifyEmailPage'));
@@ -52,6 +53,8 @@ const AppRouter = () => {
     <BrowserRouter>
       <Suspense fallback={<RouteLoadingState />}>
         <Routes>
+          <Route path="/admin/login" element={<LoginPage adminMode />} />
+          <Route path="/admin/bootstrap" element={<AdminBootstrapPage />} />
           <Route element={<Layout />}>
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
@@ -60,7 +63,6 @@ const AppRouter = () => {
             <Route path="/community" element={<CommunityPage />} />
             <Route path="/membership" element={<MembershipPage />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/admin/login" element={<LoginPage adminMode />} />
             <Route
               path="/dashboard"
               element={
@@ -182,13 +184,14 @@ const AppRouter = () => {
               }
             />
             <Route
-              path="/admin"
+              path="/admin/dashboard"
               element={
                 <AdminRoute>
                   <AdminPage />
                 </AdminRoute>
               }
             />
+            <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/verify-email" element={<VerifyEmailPage />} />
             <Route path="/auth-status" element={<AuthStatusPage />} />

@@ -5,20 +5,39 @@ const verifyUrl = import.meta.env.VITE_PAYSTACK_VERIFY_URL;
 const finalizeUrl = import.meta.env.VITE_RESERVATION_FINALIZE_URL;
 const statusUrl = import.meta.env.VITE_PAYMENT_STATUS_URL;
 
+export class PaymentFlowError extends Error {
+  constructor(code, message, reference = '') {
+    super(message);
+    this.name = 'PaymentFlowError';
+    this.code = code;
+    this.reference = reference;
+  }
+}
+
 const authenticatedRequest = async (url, user, body) => {
   if (!url) {
-    throw new Error('Paystack server endpoints are not configured.');
+    throw new Error('Paystack server endpoints are not configured. Restart the development server after updating the environment.');
   }
 
   const token = await user.getIdToken();
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  });
+  let response;
+  try {
+    response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+  } catch {
+    throw new PaymentFlowError(
+      'network',
+      import.meta.env.DEV
+        ? 'The local payment service is not running. Start the Firebase Functions emulator and try again.'
+        : 'The payment service could not be reached. Check your connection and try again.',
+    );
+  }
 
   const payload = await response.json().catch(() => ({}));
   if (!response.ok) {
@@ -27,7 +46,12 @@ const authenticatedRequest = async (url, user, body) => {
   return payload;
 };
 
-export const isPaystackConfigured = Boolean(initializeUrl && verifyUrl && finalizeUrl && statusUrl);
+export const isPaystackConfigured = Boolean(initializeUrl && verifyUrl && finalizeUrl);
+
+const reportPaymentStatus = async ({ user, reference, status }) => {
+  if (!statusUrl) return;
+  await authenticatedRequest(statusUrl, user, { reference, status }).catch(() => undefined);
+};
 
 export const completePaystackPayment = async ({ user, amount, metadata }) => {
   const initialized = await authenticatedRequest(initializeUrl, user, {
@@ -44,19 +68,25 @@ export const completePaystackPayment = async ({ user, amount, metadata }) => {
   const completed = await new Promise((resolve, reject) => {
     popup.resumeTransaction(initialized.accessCode, {
       onSuccess: resolve,
-      onCancel: async () => {
-        await authenticatedRequest(statusUrl, user, {
-          reference: initialized.reference,
-          status: 'cancelled',
-        }).catch(() => undefined);
-        reject(new Error('Payment was cancelled.'));
+      onCancel: () => {
+        void reportPaymentStatus({
+          user, reference: initialized.reference, status: 'cancelled',
+        });
+        reject(new PaymentFlowError(
+          'cancelled',
+          'Payment was cancelled. Your seat hold has been released.',
+          initialized.reference,
+        ));
       },
-      onError: async () => {
-        await authenticatedRequest(statusUrl, user, {
-          reference: initialized.reference,
-          status: 'failed',
-        }).catch(() => undefined);
-        reject(new Error('Paystack checkout could not be completed.'));
+      onError: () => {
+        void reportPaymentStatus({
+          user, reference: initialized.reference, status: 'failed',
+        });
+        reject(new PaymentFlowError(
+          'failed',
+          'Paystack checkout could not be completed. No booking was confirmed.',
+          initialized.reference,
+        ));
       },
     });
   });
@@ -70,16 +100,9 @@ export const completePaystackPayment = async ({ user, amount, metadata }) => {
   return verified;
 };
 
-export const finalizePaidReservation = async ({ user, payment, workspace, seat, date, timeSlot }) => {
+export const finalizePaidReservation = async ({ user, payment }) => {
   const payload = await authenticatedRequest(finalizeUrl, user, {
     reference: payment.reference,
-    workspaceId: workspace.id,
-    workspaceName: workspace.name,
-    workspaceCategory: workspace.category || '',
-    seatId: seat.id,
-    seatNumber: seat.number,
-    date,
-    timeSlot,
   });
   if (!payload.reservation?.id) {
     throw new Error('The payment succeeded, but the reservation could not be finalized.');

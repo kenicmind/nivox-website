@@ -15,9 +15,19 @@ export const getCurrentAuthUser = () => {
   return auth.currentUser;
 };
 
-export const getEmailVerificationActionSettings = () => ({
-  url: `${window.location.origin}/verify-email`,
-  handleCodeInApp: true,
+export const getEmailVerificationActionSettings = () => {
+  const continueUrl = new URL('/login?verified=1', window.location.origin);
+  return {
+    url: continueUrl.toString(),
+    // Firebase's hosted action handler is more reliable in iOS Mail/Safari
+    // than trying to deep-link directly into the SPA.
+    handleCodeInApp: false,
+  };
+};
+
+export const getPasswordResetActionSettings = () => ({
+  url: new URL('/login?reset=complete', window.location.origin).toString(),
+  handleCodeInApp: false,
 });
 
 export const fetchUserProfile = async (uid) => {

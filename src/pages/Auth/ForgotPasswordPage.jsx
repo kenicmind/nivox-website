@@ -5,6 +5,7 @@ import { useState } from "react";
 import { auth } from "../../firebase/firebase";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { getPasswordResetActionSettings } from "../../services/authService";
 
 const ForgotPasswordPage = () => {
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ const ForgotPasswordPage = () => {
   try {
     setLoading(true);
 
-    await sendPasswordResetEmail(auth, email);
+    await sendPasswordResetEmail(auth, email.trim(), getPasswordResetActionSettings());
 
     navigate("/auth-status", {
       state: {

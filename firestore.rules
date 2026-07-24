@@ -9,19 +9,59 @@ service cloud.firestore {
       return signedIn() && request.auth.uid == uid;
     }
 
+    function isDevelopmentAdmin() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/system/adminConfig)
+        && get(/databases/$(database)/documents/system/adminConfig).data.configured == true
+        && get(/databases/$(database)/documents/system/adminConfig).data.authorizationMode == 'development-firestore-role'
+        && get(/databases/$(database)/documents/system/adminConfig).data.configuredBy == request.auth.uid
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
     function isAdmin() {
-      return signedIn() && request.auth.token.admin == true;
+      return signedIn()
+        && (request.auth.token.admin == true || isDevelopmentAdmin());
     }
 
     match /users/{userId} {
       allow create: if isOwner(userId)
         && request.resource.data.uid == request.auth.uid
-        && request.resource.data.role == 'student';
+        && (
+          request.resource.data.role == 'student'
+          || (
+            request.resource.data.role == 'admin'
+            && !exists(/databases/$(database)/documents/system/adminConfig)
+            && getAfter(/databases/$(database)/documents/system/adminConfig).data.configured == true
+            && getAfter(/databases/$(database)/documents/system/adminConfig).data.configuredBy == request.auth.uid
+            && getAfter(/databases/$(database)/documents/system/adminConfig).data.authorizationMode == 'development-firestore-role'
+          )
+        );
       allow read: if isOwner(userId) || isAdmin();
       allow update: if isOwner(userId)
         && request.resource.data.uid == resource.data.uid
-        && request.resource.data.role == resource.data.role;
+        && (
+          request.resource.data.role == resource.data.role
+          || (
+            resource.data.role == 'student'
+            && request.resource.data.role == 'admin'
+            && !exists(/databases/$(database)/documents/system/adminConfig)
+            && getAfter(/databases/$(database)/documents/system/adminConfig).data.configured == true
+            && getAfter(/databases/$(database)/documents/system/adminConfig).data.configuredBy == request.auth.uid
+            && getAfter(/databases/$(database)/documents/system/adminConfig).data.authorizationMode == 'development-firestore-role'
+          )
+        );
       allow delete: if isAdmin();
+    }
+
+    match /system/adminConfig {
+      allow read: if signedIn();
+      allow create: if signedIn()
+        && !exists(/databases/$(database)/documents/system/adminConfig)
+        && request.resource.data.configured == true
+        && request.resource.data.configuredBy == request.auth.uid
+        && request.resource.data.authorizationMode == 'development-firestore-role'
+        && getAfter(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+      allow update, delete: if false;
     }
 
     match /payment_verifications/{reference} {
@@ -36,7 +76,10 @@ service cloud.firestore {
     match /seat_reservations/{seatKey} {
       allow read: if signedIn();
       allow create: if false;
-      allow update: if isOwner(resource.data.uid) || isAdmin();
+      allow update: if isAdmin()
+        || (isOwner(resource.data.uid)
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+          && request.resource.data.status == 'cancelled');
       allow delete: if isAdmin();
     }
 

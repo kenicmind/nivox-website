@@ -35,7 +35,10 @@ const VerifyEmailPage = () => {
     // Verification is an external Firebase action; this state reflects its progress.
     setProcessing(true);
     applyActionCode(auth, params.get('oobCode'))
-      .then(() => {
+      .then(async () => {
+        // Safari can keep the Firebase user object cached after an external
+        // action link. Refresh it before rendering the success state.
+        await auth.currentUser?.reload().catch(() => undefined);
         if (active) {
           setVerified(true);
           setError('');
@@ -83,7 +86,7 @@ const VerifyEmailPage = () => {
           <h1 className="mt-7 text-3xl font-black text-white sm:text-4xl">Email Verified Successfully</h1>
           <p className="mt-3 text-lg font-semibold text-[#FFE7A3]">Welcome to NIVOX.</p>
           <p className="mt-2 text-sm leading-7 text-white/70">Your account is now verified. You can book innovation spaces, access digital tickets, join events, download resources, and build your future.</p>
-          <Link to="/dashboard" className="mt-8 block rounded-xl bg-[#FFD54A] py-3.5 font-bold text-[#140726] transition hover:bg-[#FFE07A]">Continue to Dashboard</Link>
+          <Link to="/login?verified=1" className="mt-8 block rounded-xl bg-[#FFD54A] py-3.5 font-bold text-[#140726] transition hover:bg-[#FFE07A]">Continue to Login</Link>
           <Link to="/" className="mt-4 block font-semibold text-white/75 hover:text-[#FFD54A]">Back to Home</Link>
         </motion.section>
       </main>

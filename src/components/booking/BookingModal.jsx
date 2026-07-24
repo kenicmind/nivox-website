@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import {
   BookOpen,
   Calendar,
@@ -12,6 +13,7 @@ import {
   X,
   ArrowRight,
   Check,
+  AlertTriangle,
 } from 'lucide-react';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import toast from 'react-hot-toast';
@@ -25,6 +27,7 @@ import {
   finalizePaidReservation,
   isPaystackConfigured,
 } from '../../services/paymentService';
+import { DEFAULT_SETTINGS, fetchSystemSettings } from '../../services/systemService';
 
 const WORKSPACES = [
   {
@@ -102,8 +105,9 @@ const TIME_SLOTS = [
 
 const BookingModal = ({ open, onClose, onBookingSuccess }) => {
   const navigate = useNavigate();
+  const reduceMotion = useReducedMotion();
   const [step, setStep] = useState(1);
-  const [selectedWorkspace, setSelectedWorkspace] = useState(WORKSPACES[0]);
+  const [selectedWorkspace, setSelectedWorkspace] = useState(null);
   const [selectedDate, setSelectedDate] = useState(() => new Date().toISOString().split('T')[0]);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState('');
   const [selectedSeat, setSelectedSeat] = useState(null);
@@ -111,6 +115,19 @@ const BookingModal = ({ open, onClose, onBookingSuccess }) => {
   const [isCheckingSeats, setIsCheckingSeats] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [confirmedReservation, setConfirmedReservation] = useState(null);
+  const [paymentOutcome, setPaymentOutcome] = useState(null);
+  const [bookingPrice, setBookingPrice] = useState(DEFAULT_SETTINGS.pricing);
+
+  useEffect(() => {
+    if (!open) return;
+    let active = true;
+    fetchSystemSettings().then((settings) => {
+      if (active) setBookingPrice(Number(settings.pricing) || DEFAULT_SETTINGS.pricing);
+    });
+    return () => {
+      active = false;
+    };
+  }, [open]);
 
   // Fetch occupied seats for selected workspace, date, and time slot
   useEffect(() => {
@@ -120,14 +137,22 @@ const BookingModal = ({ open, onClose, onBookingSuccess }) => {
       try {
         setIsCheckingSeats(true);
         const q = query(
-          collection(db, 'reservations'),
+          collection(db, 'seat_reservations'),
           where('workspaceId', '==', selectedWorkspace.id),
           where('date', '==', selectedDate),
           where('timeSlot', '==', selectedTimeSlot),
-          where('status', '==', 'upcoming')
+          where('status', 'in', ['upcoming', 'payment_pending'])
         );
         const snapshot = await getDocs(q);
-        const occupiedIds = snapshot.docs.map((doc) => doc.data().seatId).filter(Boolean);
+        const now = Date.now();
+        const occupiedIds = snapshot.docs
+          .map((seatDocument) => seatDocument.data())
+          .filter((seat) => (
+            seat.status === 'upcoming'
+            || seat.holdExpiresAt?.toMillis?.() > now
+          ))
+          .map((seat) => seat.seatId)
+          .filter(Boolean);
         setOccupiedSeatIds(occupiedIds);
       } catch (err) {
         console.error('Error checking seat availability:', err);
@@ -140,21 +165,27 @@ const BookingModal = ({ open, onClose, onBookingSuccess }) => {
     fetchOccupiedSeats();
   }, [open, selectedWorkspace, selectedDate, selectedTimeSlot]);
 
-  const handleNextStep = () => {
-    if (step === 1 && !selectedWorkspace) {
-      toast.error('Please select a workspace');
-      return;
-    }
-    if (step === 2 && (!selectedDate || !selectedTimeSlot)) {
-      toast.error('Please select date and 2-hour time slot');
-      return;
-    }
-    if (step === 3 && !selectedSeat) {
-      toast.error('Please select an available seat');
-      return;
-    }
-    setStep((prev) => prev + 1);
+  const selectWorkspace = (workspace) => {
+    setSelectedWorkspace(workspace);
+    setSelectedSeat(null);
+    setSelectedTimeSlot('');
+    setPaymentOutcome(null);
+    setStep(2);
   };
+
+  const selectTimeSlot = (slot) => {
+    setSelectedTimeSlot(slot);
+    setSelectedSeat(null);
+    setStep(3);
+  };
+
+  const selectSeat = (seat) => {
+    setSelectedSeat(seat);
+    setPaymentOutcome(null);
+    setStep(4);
+  };
+
+  const handleNextStep = () => setStep((currentStep) => currentStep + 1);
 
   const handlePrevStep = () => {
     setStep((prev) => Math.max(1, prev - 1));
@@ -163,6 +194,11 @@ const BookingModal = ({ open, onClose, onBookingSuccess }) => {
   const handlePaymentAndConfirm = async (e) => {
     if (e) e.preventDefault();
     if (isProcessingPayment) return;
+    if (!selectedWorkspace || !selectedDate || !selectedTimeSlot || !selectedSeat) {
+      toast.error('Complete the booking details before continuing to payment.');
+      setStep(1);
+      return;
+    }
 
     const user = auth.currentUser;
     if (!user) {
@@ -174,7 +210,7 @@ const BookingModal = ({ open, onClose, onBookingSuccess }) => {
       setIsProcessingPayment(true);
       const payment = await completePaystackPayment({
         user,
-        amount: 300,
+        amount: bookingPrice,
         metadata: {
           workspaceId: selectedWorkspace.id,
           date: selectedDate,
@@ -185,10 +221,6 @@ const BookingModal = ({ open, onClose, onBookingSuccess }) => {
 
       const fullData = await finalizePaidReservation({
         user,
-        workspace: selectedWorkspace,
-        seat: selectedSeat,
-        date: selectedDate,
-        timeSlot: selectedTimeSlot,
         payment,
       });
 
@@ -203,7 +235,15 @@ const BookingModal = ({ open, onClose, onBookingSuccess }) => {
       setStep(5);
     } catch (err) {
       console.error('Error confirming reservation & payment:', err);
-      toast.error(err.message || 'Payment processing failed. Please try again.');
+      const cancelled = err.code === 'cancelled';
+      const message = err.message || 'Payment processing failed. Please try again.';
+      setPaymentOutcome({
+        type: cancelled ? 'cancelled' : 'failed',
+        message,
+        reference: err.reference || '',
+      });
+      setStep(6);
+      toast.error(message);
     } finally {
       setIsProcessingPayment(false);
     }
@@ -211,9 +251,11 @@ const BookingModal = ({ open, onClose, onBookingSuccess }) => {
 
   const handleFinishModal = () => {
     setStep(1);
+    setSelectedWorkspace(null);
     setSelectedSeat(null);
     setSelectedTimeSlot('');
     setConfirmedReservation(null);
+    setPaymentOutcome(null);
     onClose();
   };
 
@@ -235,7 +277,9 @@ const BookingModal = ({ open, onClose, onBookingSuccess }) => {
           </div>
         </div>
         <button
+          type="button"
           onClick={handleFinishModal}
+          aria-label="Close booking"
           className="rounded-full p-2 text-white/60 hover:bg-white/10 hover:text-white transition"
         >
           <X className="h-5 w-5" />
@@ -253,7 +297,15 @@ const BookingModal = ({ open, onClose, onBookingSuccess }) => {
       )}
 
       {/* Step Content */}
-      <div className="mt-6 min-h-[310px]">
+      <div className="mt-6 min-h-[310px]" aria-live="polite">
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={step}
+            initial={reduceMotion ? false : { opacity: 0, x: 18 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={reduceMotion ? undefined : { opacity: 0, x: -18 }}
+            transition={{ duration: reduceMotion ? 0 : 0.2, ease: 'easeOut' }}
+          >
         {/* Step 1: Select Workspace */}
         {step === 1 && (
           <div className="space-y-3">
@@ -264,13 +316,14 @@ const BookingModal = ({ open, onClose, onBookingSuccess }) => {
                 const isSelected = selectedWorkspace?.id === workspace.id;
 
                 return (
-                  <div
+                  <motion.button
                     key={workspace.id}
-                    onClick={() => {
-                      setSelectedWorkspace(workspace);
-                      setSelectedSeat(null);
-                    }}
-                    className={`group relative overflow-hidden rounded-2xl border p-4 backdrop-blur-md transition-all duration-200 cursor-pointer ${
+                    type="button"
+                    onClick={() => selectWorkspace(workspace)}
+                    whileHover={reduceMotion ? undefined : { y: -4, scale: 1.01 }}
+                    whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+                    aria-label={`Select ${workspace.name}`}
+                    className={`group relative overflow-hidden rounded-2xl border p-4 text-left backdrop-blur-md transition-all duration-200 ${
                       isSelected
                         ? 'border-[#FFD54A] bg-[#FFD54A]/10 ring-2 ring-[#FFD54A]/50'
                         : 'border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/10'
@@ -292,7 +345,7 @@ const BookingModal = ({ open, onClose, onBookingSuccess }) => {
                     </div>
                     <h4 className="mt-2 font-bold text-white text-sm">{workspace.name}</h4>
                     <p className="mt-1 text-xs text-white/60 leading-relaxed">{workspace.description}</p>
-                  </div>
+                  </motion.button>
                 );
               })}
             </div>
@@ -302,9 +355,21 @@ const BookingModal = ({ open, onClose, onBookingSuccess }) => {
         {/* Step 2: Date & Time Slot */}
         {step === 2 && (
           <div className="space-y-4">
+            <div className="rounded-2xl border border-[#FFD54A]/30 bg-[#FFD54A]/10 p-4">
+              <div className="flex items-center gap-3">
+                <CheckCircle2 className="h-5 w-5 shrink-0 text-[#FFD54A]" />
+                <div>
+                  <p className="text-sm font-bold text-white">{selectedWorkspace?.name}</p>
+                  <p className="mt-1 text-xs text-white/65">{selectedWorkspace?.description}</p>
+                </div>
+              </div>
+            </div>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-white/60">1. Select Date</p>
+              <label htmlFor="booking-date" className="text-xs font-semibold uppercase tracking-wider text-white/60">
+                1. Select Date
+              </label>
               <input
+                id="booking-date"
                 type="date"
                 min={todayStr}
                 value={selectedDate}
@@ -322,7 +387,8 @@ const BookingModal = ({ open, onClose, onBookingSuccess }) => {
                     <button
                       key={slot}
                       type="button"
-                      onClick={() => setSelectedTimeSlot(slot)}
+                      onClick={() => selectTimeSlot(slot)}
+                      aria-pressed={isSelected}
                       className={`flex items-center justify-between rounded-xl border p-3 text-xs font-semibold transition-all ${
                         isSelected
                           ? 'border-[#FFD54A] bg-[#FFD54A]/15 text-[#FFD54A] ring-2 ring-[#FFD54A]/50'
@@ -374,7 +440,8 @@ const BookingModal = ({ open, onClose, onBookingSuccess }) => {
                     key={seat.id}
                     type="button"
                     disabled={isOccupied}
-                    onClick={() => setSelectedSeat(seat)}
+                    onClick={() => selectSeat(seat)}
+                    aria-pressed={isSelected}
                     className={`flex flex-col items-start justify-between rounded-xl border p-3 text-left transition-all ${
                       isOccupied
                         ? 'cursor-not-allowed border-red-500/30 bg-red-500/10 text-white/40'
@@ -444,10 +511,43 @@ const BookingModal = ({ open, onClose, onBookingSuccess }) => {
             <ReservationTicket ticket={confirmedReservation} />
           </div>
         )}
+        {step === 6 && paymentOutcome && (
+          <div className="space-y-5 py-4 text-center" role="status" aria-live="polite">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-red-500/15 text-red-300">
+              <AlertTriangle className="h-7 w-7" />
+            </div>
+            <div>
+              <h3 className="text-2xl font-black text-white">
+                {paymentOutcome.type === 'cancelled' ? 'Payment Cancelled' : 'Payment Unsuccessful'}
+              </h3>
+              <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-white/65">
+                {paymentOutcome.message}
+              </p>
+              {paymentOutcome.reference && (
+                <p className="mt-3 font-mono text-[11px] text-white/45">
+                  Reference: {paymentOutcome.reference}
+                </p>
+              )}
+            </div>
+            <Button
+              type="button"
+              variant="primary"
+              onClick={() => {
+                setPaymentOutcome(null);
+                setStep(4);
+              }}
+              className="w-full justify-center"
+            >
+              Try Payment Again
+            </Button>
+          </div>
+        )}
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       {/* Footer Controls */}
-      <div className="mt-6 flex items-center justify-between border-t border-white/10 pt-4">
+      <div className={`${step < 4 || step === 6 ? 'hidden' : 'flex'} mt-6 items-center justify-between border-t border-white/10 pt-4`}>
         {step > 1 && step < 5 ? (
           <Button type="button" variant="secondary" onClick={handlePrevStep} disabled={isProcessingPayment}>
             Back
@@ -465,7 +565,7 @@ const BookingModal = ({ open, onClose, onBookingSuccess }) => {
             type="button"
             variant="primary"
             onClick={handlePaymentAndConfirm}
-            disabled={isProcessingPayment || !isPaystackConfigured}
+            disabled={isProcessingPayment}
             className="gap-2 shadow-[0_10px_25px_rgba(255,213,74,0.3)]"
           >
             {isProcessingPayment ? 'Opening Paystack…' : 'Continue to Paystack • ₦300'}
