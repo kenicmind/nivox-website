@@ -1,5 +1,6 @@
 const { applicationDefault, initializeApp } = require('firebase-admin/app');
 const { getAuth } = require('firebase-admin/auth');
+const { FieldValue, getFirestore } = require('firebase-admin/firestore');
 
 initializeApp({ credential: applicationDefault() });
 
@@ -10,7 +11,16 @@ if (!email) {
 } else {
   getAuth()
     .getUserByEmail(email)
-    .then((user) => getAuth().setCustomUserClaims(user.uid, { admin: true }))
+    .then(async (user) => {
+      await getAuth().setCustomUserClaims(user.uid, {
+        ...(user.customClaims || {}),
+        admin: true,
+      });
+      await getFirestore().doc(`users/${user.uid}`).set({
+        role: 'admin',
+        adminGrantedAt: FieldValue.serverTimestamp(),
+      }, { merge: true });
+    })
     .then(() => console.log(`Admin claim granted to ${email}.`))
     .catch((error) => {
       console.error(error);

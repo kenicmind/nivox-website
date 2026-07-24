@@ -8,11 +8,12 @@ import { auth } from "../../firebase/firebase";
 import {
   signInWithEmailAndPassword,
   sendEmailVerification,
+  signOut,
 } from "firebase/auth";
 import toast from "react-hot-toast";
 import { getEmailVerificationActionSettings } from "../../services/authService";
 
-const LoginPage = () => {
+const LoginPage = ({ adminMode = false }) => {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -43,8 +44,17 @@ const LoginPage = () => {
         return;
       }
 
+      if (adminMode) {
+        const token = await userCredential.user.getIdTokenResult(true);
+        if (token.claims.admin !== true) {
+          await signOut(auth);
+          toast.error("This account does not have administrator access.");
+          return;
+        }
+      }
+
       sessionStorage.setItem('showWelcomeOverlay', 'true');
-      navigate("/dashboard");
+      navigate(adminMode ? "/admin" : "/dashboard");
 
     } catch (error) {
       const messages = {
@@ -67,11 +77,11 @@ const LoginPage = () => {
         className="w-full max-w-md rounded-3xl border border-white/20 bg-white/10 backdrop-blur-xl p-8 shadow-2xl"
       >
         <h1 className="text-3xl font-bold text-white">
-          Student Login
+          {adminMode ? 'Admin Login' : 'Student Login'}
         </h1>
 
         <p className="mt-2 text-gray-300">
-          Welcome back to NIVOX.
+          {adminMode ? 'Secure access for authorized NIVOX administrators.' : 'Welcome back to NIVOX.'}
         </p>
 
         <form onSubmit={handleLogin} className="mt-8 space-y-5">
@@ -127,13 +137,16 @@ const LoginPage = () => {
         </div>
 
         <p className="mt-6 text-center text-sm text-white">
-          Don't have an account?{" "}
-          <Link
-            to="/register"
-            className="font-semibold text-[#FFD54A]"
-          >
-            Sign Up
-          </Link>
+          {adminMode ? (
+            <Link to="/login" className="font-semibold text-[#FFD54A]">Student login</Link>
+          ) : (
+            <>
+              Don't have an account?{" "}
+              <Link to="/register" className="font-semibold text-[#FFD54A]">Sign Up</Link>
+              <span className="mx-2 text-white/40">•</span>
+              <Link to="/admin/login" className="font-semibold text-[#FFD54A]">Admin login</Link>
+            </>
+          )}
         </p>
 
       </motion.div>

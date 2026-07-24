@@ -5,10 +5,19 @@ import toast from 'react-hot-toast';
 import Modal from '../design/feedback/Modal';
 import Button from '../design/ui/Button';
 
+const getStudentId = (profile) => {
+  if (profile.studentId) return profile.studentId;
+  const source = profile.uid || profile.email || profile.fullName || 'NIVOX-STUDENT';
+  const checksum = [...source].reduce((total, character) => (
+    ((total * 31) + character.charCodeAt(0)) % 100000
+  ), 0);
+  return `NIV-STU-${String(checksum).padStart(5, '0')}`;
+};
+
 const NivoxStudentIdBadge = ({ open, onClose, userProfile }) => {
   if (!open || !userProfile) return null;
 
-  const studentIdNumber = userProfile.studentId || `NIV-STU-2026-${Math.floor(10000 + Math.random() * 90000)}`;
+  const studentIdNumber = getStudentId(userProfile);
 
   const handleDownloadId = () => {
     toast.success('Digital NIVOX Student ID downloaded to wallet');

@@ -20,8 +20,11 @@ import { useNavigate } from 'react-router-dom';
 import Modal from '../design/feedback/Modal';
 import Button from '../design/ui/Button';
 import ReservationTicket from './ReservationTicket';
-import { completePaystackPayment, isPaystackConfigured } from '../../services/paymentService';
-import { createVerifiedReservation } from '../../services/reservationService';
+import {
+  completePaystackPayment,
+  finalizePaidReservation,
+  isPaystackConfigured,
+} from '../../services/paymentService';
 
 const WORKSPACES = [
   {
@@ -180,7 +183,7 @@ const BookingModal = ({ open, onClose, onBookingSuccess }) => {
         },
       });
 
-      const fullData = await createVerifiedReservation({
+      const fullData = await finalizePaidReservation({
         user,
         workspace: selectedWorkspace,
         seat: selectedSeat,

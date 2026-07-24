@@ -1,6 +1,11 @@
-NIVOX placeholder resource
+NIVOX DESIGN SYSTEMS QUICK GUIDE
 
-UI/UX Design Systems and Micro-Interactions
+Start with reusable tokens for color, type, spacing, radius, shadow, and motion.
+Build accessible primitives before composing feature components. Every control
+needs a visible focus state, accessible name, keyboard behavior, disabled state,
+and clear feedback. Design mobile-first, then verify tablet and desktop layouts.
 
-This local placeholder confirms that the NIVOX download flow is connected.
-TODO: Replace with the approved, licensed NIVOX design systems guide.
+Use motion to explain state or hierarchy. Keep transitions short, avoid layout
+thrashing, and respect reduced-motion preferences. Document variants and test
+components with real content, long labels, errors, and empty states.
+NIVOX — Shaping Tomorrow, Today.

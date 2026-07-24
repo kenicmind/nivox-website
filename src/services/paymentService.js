@@ -2,6 +2,8 @@ import PaystackPop from '@paystack/inline-js';
 
 const initializeUrl = import.meta.env.VITE_PAYSTACK_INITIALIZE_URL;
 const verifyUrl = import.meta.env.VITE_PAYSTACK_VERIFY_URL;
+const finalizeUrl = import.meta.env.VITE_RESERVATION_FINALIZE_URL;
+const statusUrl = import.meta.env.VITE_PAYMENT_STATUS_URL;
 
 const authenticatedRequest = async (url, user, body) => {
   if (!url) {
@@ -25,7 +27,7 @@ const authenticatedRequest = async (url, user, body) => {
   return payload;
 };
 
-export const isPaystackConfigured = Boolean(initializeUrl && verifyUrl);
+export const isPaystackConfigured = Boolean(initializeUrl && verifyUrl && finalizeUrl && statusUrl);
 
 export const completePaystackPayment = async ({ user, amount, metadata }) => {
   const initialized = await authenticatedRequest(initializeUrl, user, {
@@ -42,8 +44,20 @@ export const completePaystackPayment = async ({ user, amount, metadata }) => {
   const completed = await new Promise((resolve, reject) => {
     popup.resumeTransaction(initialized.accessCode, {
       onSuccess: resolve,
-      onCancel: () => reject(new Error('Payment was cancelled.')),
-      onError: () => reject(new Error('Paystack checkout could not be completed.')),
+      onCancel: async () => {
+        await authenticatedRequest(statusUrl, user, {
+          reference: initialized.reference,
+          status: 'cancelled',
+        }).catch(() => undefined);
+        reject(new Error('Payment was cancelled.'));
+      },
+      onError: async () => {
+        await authenticatedRequest(statusUrl, user, {
+          reference: initialized.reference,
+          status: 'failed',
+        }).catch(() => undefined);
+        reject(new Error('Paystack checkout could not be completed.'));
+      },
     });
   });
 
@@ -54,4 +68,21 @@ export const completePaystackPayment = async ({ user, amount, metadata }) => {
   }
 
   return verified;
+};
+
+export const finalizePaidReservation = async ({ user, payment, workspace, seat, date, timeSlot }) => {
+  const payload = await authenticatedRequest(finalizeUrl, user, {
+    reference: payment.reference,
+    workspaceId: workspace.id,
+    workspaceName: workspace.name,
+    workspaceCategory: workspace.category || '',
+    seatId: seat.id,
+    seatNumber: seat.number,
+    date,
+    timeSlot,
+  });
+  if (!payload.reservation?.id) {
+    throw new Error('The payment succeeded, but the reservation could not be finalized.');
+  }
+  return payload.reservation;
 };

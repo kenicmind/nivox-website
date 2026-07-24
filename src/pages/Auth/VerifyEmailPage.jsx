@@ -33,7 +33,6 @@ const VerifyEmailPage = () => {
 
     let active = true;
     // Verification is an external Firebase action; this state reflects its progress.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setProcessing(true);
     applyActionCode(auth, params.get('oobCode'))
       .then(() => {

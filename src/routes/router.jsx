@@ -60,6 +60,7 @@ const AppRouter = () => {
             <Route path="/community" element={<CommunityPage />} />
             <Route path="/membership" element={<MembershipPage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/admin/login" element={<LoginPage adminMode />} />
             <Route
               path="/dashboard"
               element={

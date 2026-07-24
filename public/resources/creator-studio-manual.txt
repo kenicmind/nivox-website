@@ -1,6 +1,13 @@
-NIVOX placeholder resource
+NIVOX CREATOR STUDIO STARTER MANUAL
 
-Creator Studio Equipment Manual
+Before your session, confirm the equipment list with a hub team member. Keep
+food and drinks outside the studio. Route cables away from walkways, use the
+provided power protection, and do not force connectors.
 
-This local placeholder confirms that the NIVOX download flow is connected.
-TODO: Replace with the final NIVOX equipment manual approved by hub operations.
+For recording, set input levels before starting, monitor with headphones, record
+a short test, and save working files to your own approved storage. At the end,
+stop recording, safely eject storage, return controls to their neutral position,
+power down in the posted order, and report faults immediately.
+
+Only trained staff may open, repair, or rewire equipment.
+NIVOX — Shaping Tomorrow, Today.

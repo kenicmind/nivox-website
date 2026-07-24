@@ -1,6 +1,13 @@
-NIVOX placeholder resource
+NIVOX FULL-STACK DEVELOPMENT ROADMAP
 
-Full-Stack Web Development Roadmap
+Foundation: semantic HTML, responsive CSS, JavaScript, Git, and accessibility.
+Frontend: React components, state, routing, forms, testing, and performance.
+Backend: HTTP, APIs, authentication, authorization, validation, and logging.
+Data: relational fundamentals, document databases, indexes, and transactions.
+Delivery: automated checks, environment configuration, monitoring, and backups.
+Security: least privilege, server-side verification, dependency updates, and
+safe handling of credentials.
 
-This local placeholder confirms that the NIVOX download flow is connected.
-TODO: Replace with the approved, licensed NIVOX full-stack roadmap PDF.
+Build one small deployed project per stage. Document trade-offs, test critical
+flows, and collect feedback before expanding scope.
+NIVOX — Shaping Tomorrow, Today.

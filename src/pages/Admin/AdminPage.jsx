@@ -23,8 +23,10 @@ import Button from '../../components/design/ui/Button';
 import { exportToCSV } from '../../utils/exportUtils';
 import CheckInScannerModal from '../../components/admin/CheckInScannerModal';
 import SystemSettingsPanel from '../../components/admin/SystemSettingsPanel';
+import { useAuth } from '../../context/useAuth';
 
 const AdminPage = () => {
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('analytics');
   const [reservations, setReservations] = useState([]);
   const [students, setStudents] = useState([]);
@@ -92,7 +94,6 @@ const AdminPage = () => {
 
   useEffect(() => {
     // Firestore synchronization intentionally updates the loading state.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchAdminData();
   }, []);
 
@@ -135,7 +136,8 @@ const AdminPage = () => {
     }
   };
 
-  const totalRevenue = reservations.filter((r) => r.paymentStatus === 'paid').length * 300;
+  const paidPayments = payments.filter((payment) => payment.paymentStatus === 'paid');
+  const totalRevenue = paidPayments.reduce((sum, payment) => sum + Number(payment.amount || 0), 0);
   const activeBookingsCount = reservations.filter((r) => r.status === 'upcoming').length;
 
   const filteredReservations = reservations.filter((r) => {
@@ -276,7 +278,7 @@ const AdminPage = () => {
             <div className="space-y-4"><h3 className="text-lg font-bold text-white">Events</h3><div className="grid gap-3 sm:grid-cols-2">{events.length ? events.map((event) => <div key={event.id} className="rounded-2xl border border-white/10 bg-white/5 p-4"><p className="font-bold text-white">{event.title || event.name}</p><p className="mt-1 text-xs text-white/60">{event.date || 'Date pending'} · {event.status || 'draft'}</p></div>) : <p className="text-sm text-white/50">No events have been published.</p>}</div></div>
           )}
           {activeTab === 'reports' && (
-            <div className="grid gap-4 sm:grid-cols-3"><GlassCard padded><p className="text-xs text-white/60">Gross revenue</p><p className="mt-2 text-2xl font-black text-[#FFD54A]">₦{payments.reduce((sum, payment) => sum + Number(payment.amount || 0), 0).toLocaleString()}</p></GlassCard><GlassCard padded><p className="text-xs text-white/60">Paid transactions</p><p className="mt-2 text-2xl font-black text-white">{payments.filter((payment) => payment.paymentStatus === 'paid').length}</p></GlassCard><GlassCard padded><p className="text-xs text-white/60">Attendance completed</p><p className="mt-2 text-2xl font-black text-white">{reservations.filter((booking) => booking.status === 'completed').length}</p></GlassCard></div>
+            <div className="grid gap-4 sm:grid-cols-3"><GlassCard padded><p className="text-xs text-white/60">Verified revenue</p><p className="mt-2 text-2xl font-black text-[#FFD54A]">₦{totalRevenue.toLocaleString()}</p></GlassCard><GlassCard padded><p className="text-xs text-white/60">Paid transactions</p><p className="mt-2 text-2xl font-black text-white">{paidPayments.length}</p></GlassCard><GlassCard padded><p className="text-xs text-white/60">Attendance completed</p><p className="mt-2 text-2xl font-black text-white">{reservations.filter((booking) => booking.status === 'completed').length}</p></GlassCard></div>
           )}
           {/* Tab 1: Reservations Audit */}
           {activeTab === 'analytics' && (
@@ -442,7 +444,7 @@ const AdminPage = () => {
           )}
 
           {/* Tab 5: System Settings & Audit Logs */}
-          {activeTab === 'settings' && <SystemSettingsPanel userEmail="admin@nivox.ng" />}
+          {activeTab === 'settings' && <SystemSettingsPanel userEmail={user?.email || 'Administrator'} />}
         </div>
       </GlassCard>
 

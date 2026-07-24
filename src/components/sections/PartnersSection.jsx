@@ -106,9 +106,8 @@ export default function PartnersSection() {
                   group-hover:grayscale-0
                 "
                 onError={(e) => {
-                  e.currentTarget.src =
-                    "https://via.placeholder.com/150x60?text=" +
-                    partner.name;
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = "/images/logo.png";
                 }}
               />
 

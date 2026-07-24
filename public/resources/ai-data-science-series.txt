@@ -1,6 +1,13 @@
-NIVOX placeholder resource
+NIVOX AI & DATA SCIENCE LEARNING PATH
 
-AI and Data Science Masterclass
+1. Learn Python, notebooks, data types, and version control.
+2. Practice cleaning, exploring, and visualizing real datasets.
+3. Study probability, sampling, bias, and evaluation metrics.
+4. Build baseline models before complex models.
+5. Separate training, validation, and test data.
+6. Document data sources, consent, limitations, and intended use.
+7. Evaluate accuracy, fairness, privacy, security, and failure modes.
+8. Deploy with monitoring and a clear rollback plan.
 
-This local placeholder confirms that the NIVOX download flow is connected.
-TODO: Replace with the approved NIVOX video-series landing page or licensed media.
+Never upload confidential or personal data to an unapproved service.
+NIVOX — Shaping Tomorrow, Today.

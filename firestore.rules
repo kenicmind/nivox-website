@@ -13,10 +13,6 @@ service cloud.firestore {
       return signedIn() && request.auth.token.admin == true;
     }
 
-    function verification(reference) {
-      return get(/databases/$(database)/documents/payment_verifications/$(reference)).data;
-    }
-
     match /users/{userId} {
       allow create: if isOwner(userId)
         && request.resource.data.uid == request.auth.uid
@@ -30,13 +26,7 @@ service cloud.firestore {
 
     match /payment_verifications/{reference} {
       allow read: if isOwner(resource.data.uid) || isAdmin();
-      allow create, delete: if false;
-      allow update: if isOwner(resource.data.uid)
-        && resource.data.verified == true
-        && resource.data.used == false
-        && request.resource.data.diff(resource.data).affectedKeys()
-          .hasOnly(['used', 'reservationId', 'usedAt'])
-        && request.resource.data.used == true;
+      allow create, update, delete: if false;
     }
 
     match /payment_attempts/{reference} {
@@ -45,21 +35,14 @@ service cloud.firestore {
 
     match /seat_reservations/{seatKey} {
       allow read: if signedIn();
-      allow create: if isOwner(request.resource.data.uid)
-        && request.resource.data.status == 'upcoming'
-        && !exists(/databases/$(database)/documents/seat_reservations/$(seatKey));
+      allow create: if false;
       allow update: if isOwner(resource.data.uid) || isAdmin();
       allow delete: if isAdmin();
     }
 
     match /reservations/{reservationId} {
       allow read: if isOwner(resource.data.uid) || isAdmin();
-      allow create: if isOwner(request.resource.data.uid)
-        && request.resource.data.paymentStatus == 'paid'
-        && verification(request.resource.data.paymentReference).uid == request.auth.uid
-        && verification(request.resource.data.paymentReference).verified == true
-        && verification(request.resource.data.paymentReference).used == false
-        && verification(request.resource.data.paymentReference).amount == request.resource.data.price;
+      allow create: if false;
       allow update: if isAdmin()
         || (isOwner(resource.data.uid)
           && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
@@ -78,11 +61,7 @@ service cloud.firestore {
 
     match /payments/{paymentId} {
       allow read: if isOwner(resource.data.uid) || isAdmin();
-      allow create: if isOwner(request.resource.data.uid)
-        && paymentId == request.resource.data.paymentReference
-        && verification(paymentId).uid == request.auth.uid
-        && verification(paymentId).verified == true
-        && verification(paymentId).amount == request.resource.data.amount;
+      allow create: if false;
       allow update, delete: if false;
     }
 

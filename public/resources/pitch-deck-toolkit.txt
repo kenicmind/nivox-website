@@ -1,6 +1,15 @@
-NIVOX placeholder resource
+NIVOX STARTUP PITCH DECK QUICK GUIDE
 
-Startup Pitch Deck and Prospectus Toolkit
+1. Problem: describe one urgent, specific user pain.
+2. Solution: show how your product removes that pain.
+3. Market: define the reachable audience and supporting evidence.
+4. Product: demonstrate the core journey and current progress.
+5. Business model: explain who pays, how much, and why.
+6. Traction: use verified usage, revenue, pilots, or research.
+7. Competition: explain your defensible advantage honestly.
+8. Team: connect relevant experience to execution.
+9. Roadmap: identify the next measurable milestones.
+10. Ask: state the funding, partnership, or support required.
 
-This local placeholder confirms that the NIVOX download flow is connected.
-TODO: Replace with the approved, licensed NIVOX toolkit files.
+Keep slides visual, cite every external statistic, and never invent traction.
+NIVOX — Shaping Tomorrow, Today.

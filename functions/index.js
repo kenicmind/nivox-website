@@ -102,6 +102,18 @@ exports.initializePaystackPayment = paymentHandler(async (request, response) => 
     status: 'initialized',
     createdAt: FieldValue.serverTimestamp(),
   });
+  await db.doc(`payments/${reference}`).set({
+    reservationId: null,
+    uid: user.uid,
+    userEmail: user.email || '',
+    amount,
+    currency: 'NGN',
+    paymentStatus: 'pending',
+    paymentReference: reference,
+    paymentMethod: 'Paystack',
+    createdAt: FieldValue.serverTimestamp(),
+    updatedAt: FieldValue.serverTimestamp(),
+  });
   return send(response, 200, { accessCode: data.access_code, reference: data.reference });
 });
 
@@ -121,6 +133,11 @@ exports.verifyPaystackPayment = paymentHandler(async (request, response) => {
     || amount !== attempt.data().amount
     || data.customer?.email?.toLowerCase() !== (user.email || '').toLowerCase()
   ) {
+    await attempt.ref.set({ status: 'failed', updatedAt: FieldValue.serverTimestamp() }, { merge: true });
+    await db.doc(`payments/${reference}`).set({
+      paymentStatus: 'failed',
+      updatedAt: FieldValue.serverTimestamp(),
+    }, { merge: true });
     return send(response, 409, { message: 'Paystack has not confirmed this payment.' });
   }
 
@@ -134,7 +151,132 @@ exports.verifyPaystackPayment = paymentHandler(async (request, response) => {
     verifiedAt: FieldValue.serverTimestamp(),
   }, { merge: true });
   await attempt.ref.set({ status: 'verified', verifiedAt: FieldValue.serverTimestamp() }, { merge: true });
+  await db.doc(`payments/${reference}`).set({
+    paymentStatus: 'paid',
+    paystackTransactionId: data.id,
+    updatedAt: FieldValue.serverTimestamp(),
+  }, { merge: true });
   return send(response, 200, { verified: true, reference, amount });
+});
+
+exports.updatePaymentStatus = paymentHandler(async (request, response) => {
+  const user = await authenticate(request);
+  const reference = String(request.body?.reference || '');
+  const status = String(request.body?.status || '');
+  if (!['failed', 'cancelled'].includes(status)) {
+    return send(response, 400, { message: 'Invalid payment status.' });
+  }
+  const paymentRef = db.doc(`payments/${reference}`);
+  const attemptRef = db.doc(`payment_attempts/${reference}`);
+  await db.runTransaction(async (transaction) => {
+    const payment = await transaction.get(paymentRef);
+    if (!payment.exists || payment.data().uid !== user.uid) throw new Error('PAYMENT_NOT_FOUND');
+    if (payment.data().paymentStatus === 'paid') throw new Error('PAYMENT_ALREADY_PAID');
+    transaction.set(paymentRef, {
+      paymentStatus: status,
+      updatedAt: FieldValue.serverTimestamp(),
+    }, { merge: true });
+    transaction.set(attemptRef, {
+      status,
+      updatedAt: FieldValue.serverTimestamp(),
+    }, { merge: true });
+  });
+  return send(response, 200, { updated: true, reference, status });
+});
+
+exports.finalizeReservation = paymentHandler(async (request, response) => {
+  const user = await authenticate(request);
+  const {
+    reference, workspaceId, workspaceName, workspaceCategory = '',
+    seatId, seatNumber, date, timeSlot,
+  } = request.body || {};
+
+  if (![reference, workspaceId, workspaceName, seatId, seatNumber, date, timeSlot]
+    .every((value) => typeof value === 'string' && value.trim())) {
+    return send(response, 400, { message: 'Complete reservation details are required.' });
+  }
+
+  const reservationRef = db.collection('reservations').doc();
+  const verificationRef = db.doc(`payment_verifications/${reference}`);
+  const paymentRef = db.doc(`payments/${reference}`);
+  const seatKey = [workspaceId, date, timeSlot, seatId].join('_').replace(/[^a-zA-Z0-9_-]/g, '-');
+  const seatRef = db.doc(`seat_reservations/${seatKey}`);
+  const notificationRef = db.collection('notifications').doc();
+
+  const result = await db.runTransaction(async (transaction) => {
+    const [verificationSnap, seatSnap, paymentSnap] = await Promise.all([
+      transaction.get(verificationRef),
+      transaction.get(seatRef),
+      transaction.get(paymentRef),
+    ]);
+    if (!verificationSnap.exists) throw new Error('PAYMENT_NOT_VERIFIED');
+    const verification = verificationSnap.data();
+    if (verification.uid !== user.uid || verification.verified !== true) {
+      throw new Error('PAYMENT_NOT_VERIFIED');
+    }
+    if (verification.used === true) {
+      if (paymentSnap.exists && paymentSnap.data().uid === user.uid) {
+        const existing = await transaction.get(db.doc(`reservations/${paymentSnap.data().reservationId}`));
+        if (existing.exists) return { id: existing.id, ...existing.data() };
+      }
+      throw new Error('PAYMENT_ALREADY_USED');
+    }
+    if (seatSnap.exists && seatSnap.data().status === 'upcoming') {
+      throw new Error('SEAT_UNAVAILABLE');
+    }
+
+    const amount = verification.amount;
+    const reservation = {
+      uid: user.uid,
+      userEmail: user.email || '',
+      userName: user.name || user.email?.split('@')[0] || 'Student',
+      ticketId: `TKT-${reservationRef.id.toUpperCase()}`,
+      workspaceId, workspaceName, workspaceCategory, date, timeSlot, seatId, seatNumber,
+      duration: '2 Hours',
+      price: amount,
+      priceFormatted: `₦${amount.toLocaleString()}`,
+      paymentStatus: 'paid',
+      paymentMethod: 'Paystack',
+      paymentReference: reference,
+      status: 'upcoming',
+      createdAt: FieldValue.serverTimestamp(),
+    };
+
+    transaction.create(reservationRef, reservation);
+    transaction.set(paymentRef, {
+      reservationId: reservationRef.id,
+      uid: user.uid,
+      userEmail: user.email || '',
+      amount,
+      currency: verification.currency || 'NGN',
+      paymentStatus: 'paid',
+      paymentReference: reference,
+      paymentMethod: 'Paystack',
+      createdAt: FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp(),
+    }, { merge: true });
+    transaction.set(seatRef, {
+      reservationId: reservationRef.id, uid: user.uid, workspaceId, date, timeSlot, seatId,
+      status: 'upcoming',
+      createdAt: FieldValue.serverTimestamp(),
+    });
+    transaction.create(notificationRef, {
+      uid: user.uid,
+      title: 'Reservation Confirmed',
+      detail: `${workspaceName} (${seatNumber}) • ${timeSlot}`,
+      type: 'reservation',
+      read: false,
+      createdAt: FieldValue.serverTimestamp(),
+    });
+    transaction.update(verificationRef, {
+      used: true,
+      reservationId: reservationRef.id,
+      usedAt: FieldValue.serverTimestamp(),
+    });
+    return { id: reservationRef.id, ...reservation };
+  });
+
+  return send(response, 200, { reservation: result });
 });
 
 exports.paystackWebhook = onRequest(
@@ -146,7 +288,12 @@ exports.paystackWebhook = onRequest(
       .createHmac('sha512', paystackSecret.value())
       .update(request.rawBody)
       .digest('hex');
-    if (!crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(digest))) {
+    const signatureBuffer = Buffer.from(signature);
+    const digestBuffer = Buffer.from(digest);
+    if (
+      signatureBuffer.length !== digestBuffer.length
+      || !crypto.timingSafeEqual(signatureBuffer, digestBuffer)
+    ) {
       return response.status(401).send('Invalid signature');
     }
 
@@ -164,6 +311,11 @@ exports.paystackWebhook = onRequest(
           used: false,
           paystackTransactionId: data.id,
           verifiedAt: FieldValue.serverTimestamp(),
+        }, { merge: true });
+        await db.doc(`payments/${data.reference}`).set({
+          paymentStatus: 'paid',
+          paystackTransactionId: data.id,
+          updatedAt: FieldValue.serverTimestamp(),
         }, { merge: true });
       }
     }
