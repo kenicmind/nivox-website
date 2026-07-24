@@ -27,6 +27,7 @@ const quickLinks = [
   { label: 'Events', to: '/events' },
   { label: 'Community', to: '/community' },
   { label: 'Membership', to: '/membership' },
+  { label: 'Learning Library', to: '/resources' },
 ];
 
 const exploreLinks = [

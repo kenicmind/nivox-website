@@ -4,11 +4,14 @@ const { defineSecret } = require('firebase-functions/params');
 const { initializeApp } = require('firebase-admin/app');
 const { getAuth } = require('firebase-admin/auth');
 const { FieldValue, getFirestore } = require('firebase-admin/firestore');
+const { getStorage } = require('firebase-admin/storage');
+const PDFDocument = require('pdfkit');
 
 initializeApp();
 
 const db = getFirestore();
 const paystackSecret = defineSecret('PAYSTACK_SECRET_KEY');
+const openaiSecret = defineSecret('OPENAI_API_KEY');
 const allowedOrigins = (process.env.NIVOX_ALLOWED_ORIGINS || 'http://localhost:5173,http://127.0.0.1:5173')
   .split(',')
   .map((origin) => origin.trim())
@@ -17,6 +20,45 @@ const isAllowedOrigin = (origin) => (
   allowedOrigins.includes(origin)
   || /^https:\/\/[a-z0-9-]+\.vercel\.app$/i.test(origin || '')
 );
+
+const aiCoursePrompt = (course) => `You are an experienced secondary-school teacher writing a complete beginner-friendly NIVOX textbook chapter for "${course.title}".
+Write simple English with short sections. Return valid JSON with keys:
+overview, objectives (array), modules (array of objects with title, explanation, example, exercise, summary),
+assignment, miniProject, challengeProject, faqs (array), commonMistakes (array), professionalTips (array),
+careerOpportunities (array), tools (array), websites (array), books (array), communities (array), nextSteps (array).
+Teach from zero. Use practical examples and include visual placeholders such as "[Diagram: ...]" where useful.
+Do not say coming soon, sample, placeholder, or refer to yourself as an AI.`;
+
+const renderLearningPdf = (course, content) => new Promise((resolve) => {
+  const document = new PDFDocument({ size: 'A4', margin: 54, info: { Title: course.title, Author: 'NIVOX Learning Team' } });
+  const chunks = [];
+  document.on('data', (chunk) => chunks.push(chunk));
+  document.on('end', () => resolve(Buffer.concat(chunks)));
+  document.fillColor('#2B0A5A').fontSize(11).text('NIVOX | SHAPING TOMORROW, TODAY.');
+  document.moveDown(3).fillColor('#140726').fontSize(26).text(course.title);
+  document.moveDown().fontSize(12).fillColor('#555').text('AI-generated learning manual | NIVOX Learning Library');
+  document.addPage();
+  const write = (heading, value) => {
+    document.fillColor('#2B0A5A').fontSize(16).text(heading);
+    document.moveDown(0.35).fillColor('#222').fontSize(10).text(Array.isArray(value) ? value.join('\n• ') : String(value || ''));
+    document.moveDown();
+  };
+  write('Course overview', content.overview);
+  write('Learning objectives', content.objectives);
+  (content.modules || []).forEach((module, index) => {
+    write(`Lesson ${index + 1}: ${module.title}`, `${module.explanation}\n\nExample: ${module.example}\n\nExercise: ${module.exercise}\n\nSummary: ${module.summary}`);
+  });
+  write('Assignment', content.assignment);
+  write('Mini project', content.miniProject);
+  write('Challenge project', content.challengeProject);
+  write('Frequently asked questions', content.faqs);
+  write('Common mistakes', content.commonMistakes);
+  write('Professional tips', content.professionalTips);
+  write('Career opportunities', content.careerOpportunities);
+  write('Tools and resources', [...(content.tools || []), ...(content.websites || []), ...(content.books || []), ...(content.communities || [])]);
+  write('Next learning steps', content.nextSteps);
+  document.end();
+});
 const BOOKING_HOLD_MINUTES = 15;
 const TIME_SLOTS = new Set([
   '08:00 AM - 10:00 AM',
@@ -225,6 +267,63 @@ exports.createMockReservation = onRequest(
           : 'The development booking could not be created.',
       ];
       return send(response, status, { message });
+    }
+  },
+);
+
+exports.generateLearningMaterial = onRequest(
+  { region: 'europe-west1', secrets: [openaiSecret] },
+  async (request, response) => {
+    setCors(request, response);
+    if (request.method === 'OPTIONS') return response.status(204).send('');
+    if (request.method !== 'POST') return send(response, 405, { message: 'Method not allowed.' });
+    try {
+      const caller = await authenticate(request);
+      const claims = await getAuth().getUser(caller.uid);
+      if (claims.customClaims?.admin !== true) return send(response, 403, { message: 'Administrator access required.' });
+      const course = request.body?.course;
+      if (!course?.id || !course?.title) return send(response, 400, { message: 'A course is required.' });
+      const aiResponse = await fetch('https://api.openai.com/v1/responses', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${openaiSecret.value()}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'gpt-5.6-sol',
+          input: aiCoursePrompt(course),
+          text: { format: { type: 'json_object' } },
+        }),
+      });
+      const payload = await aiResponse.json();
+      if (!aiResponse.ok) throw new Error(payload.error?.message || 'OpenAI generation failed.');
+      const text = payload.output_text || payload.output?.flatMap((item) => item.content || []).find((item) => item.text)?.text;
+      const content = JSON.parse(text);
+      const pdfBuffer = await renderLearningPdf(course, content);
+      const bucket = getStorage().bucket();
+      const storagePath = `learning-materials/generated/${course.id}-${Date.now()}.pdf`;
+      const file = bucket.file(storagePath);
+      await file.save(pdfBuffer, { metadata: { contentType: 'application/pdf', metadata: { courseId: course.id, provider: 'openai' } } });
+      const [signedUrl] = await file.getSignedUrl({ action: 'read', expires: '2035-01-01' });
+      const materialRef = db.doc(`learning_materials/${course.id}`);
+      await materialRef.set({
+        courseId: course.id,
+        title: course.title,
+        category: course.category || 'General',
+        difficulty: course.difficulty || 'Beginner',
+        content,
+        provider: 'openai',
+        model: 'gpt-5.6-sol',
+        pdfUrl: signedUrl,
+        storagePath,
+        published: true,
+        generatedAt: FieldValue.serverTimestamp(),
+        updatedAt: FieldValue.serverTimestamp(),
+      }, { merge: true });
+      return send(response, 200, { material: { id: course.id, title: course.title, content, published: true } });
+    } catch (error) {
+      console.error('Learning material generation failed:', error);
+      return send(response, 500, { message: error.message || 'Learning material generation failed.' });
     }
   },
 );

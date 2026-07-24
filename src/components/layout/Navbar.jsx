@@ -12,6 +12,7 @@ const navItems = [
   { to: "/events", label: "Events" },
   { to: "/community", label: "Community" },
   { to: "/membership", label: "Membership" },
+  { to: "/resources", label: "Learning Library" },
 ];
 
 const Navbar = () => {
@@ -45,7 +46,7 @@ useEffect(() => {
       initial={{ opacity: 0, y: -16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2, ease: 'easeOut' }}
-      className="fixed inset-x-0 top-4 z-50 mx-auto w-[calc(100%-2rem)] max-w-6xl"
+      className="fixed inset-x-0 top-4 z-50 mx-auto w-[calc(100%-2rem)] max-w-7xl"
     >
       <nav
   className={`flex items-center justify-between rounded-full px-4 py-3 sm:px-6 transition-all duration-300 ${
@@ -79,7 +80,7 @@ useEffect(() => {
               key={item.to}
               to={item.to}
               className={({ isActive }) =>
-                `rounded-full px-4 py-2 text-sm font-medium transition ${isActive ? 'bg-white/15 text-white' : 'text-white/80 hover:bg-white/10 hover:text-white'}`
+                `rounded-full px-3 py-2 text-sm font-medium transition ${isActive ? 'bg-white/15 text-white' : 'text-white/80 hover:bg-white/10 hover:text-white'}`
               }
             >
               {item.label}

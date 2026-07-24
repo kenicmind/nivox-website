@@ -22,7 +22,6 @@ import { GlassCard } from '../../components/design/ui/Card';
 import Button from '../../components/design/ui/Button';
 import { exportToCSV } from '../../utils/exportUtils';
 import CheckInScannerModal from '../../components/admin/CheckInScannerModal';
-import LearningMaterialsManager from '../../components/admin/LearningMaterialsManager';
 import SystemSettingsPanel from '../../components/admin/SystemSettingsPanel';
 import { useAuth } from '../../context/useAuth';
 
@@ -179,7 +178,6 @@ const AdminPage = () => {
           </div>
         </div>
       </section>
-      <LearningMaterialsManager />
 
       {/* Analytics High-Level Stat Cards */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">

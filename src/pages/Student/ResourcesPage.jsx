@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Download, Search, Sparkles, Bookmark, Check } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { GlassCard } from '../../components/design/ui/Card';
@@ -183,6 +184,9 @@ const ResourcesPage = () => {
                 <div className="mt-6 flex items-center justify-between border-t border-white/10 pt-4 text-xs">
                   <span className="text-white/50 font-mono text-[11px]">{res.fileSize}</span>
                   <div className="flex items-center gap-2">
+                    {res.available && (
+                      <Link to={`/resources/${res.id}`} className="rounded-lg border border-white/15 px-3 py-2 font-semibold text-white transition hover:border-[#FFD54A]/50 hover:text-[#FFD54A]">View Course</Link>
+                    )}
                     <button type="button" onClick={() => toggleBookmark(res)} aria-label={`${bookmarks.includes(res.id) ? 'Remove' : 'Add'} bookmark`} className="rounded-lg border border-white/10 p-2 text-[#FFD54A] hover:bg-white/10">
                       {bookmarks.includes(res.id) ? <Check className="h-3.5 w-3.5" /> : <Bookmark className="h-3.5 w-3.5" />}
                     </button>

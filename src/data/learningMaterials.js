@@ -46,3 +46,46 @@ export const LEARNING_MATERIALS = [
 ];
 
 export const MATERIAL_CATEGORIES = ['All', ...new Set(LEARNING_MATERIALS.map((material) => material.category))];
+
+export const ACTIVE_COURSE_DETAILS = {
+  'graphic-design': {
+    learningTime: '8–10 weeks',
+    software: ['Canva', 'Figma', 'Adobe Illustrator or CorelDRAW', 'Adobe Photoshop'],
+    skills: ['Visual hierarchy', 'Typography', 'Colour systems', 'Logo design', 'Brand identity', 'Print production', 'Portfolio presentation'],
+    modules: ['Visual Communication', 'Design Principles', 'Typography', 'Colour Theory', 'Layout and Composition', 'Brand Identity', 'Logo Design', 'Print and Digital Production', 'Critique and Revision', 'Portfolio Building'],
+    careers: ['Graphic Designer', 'Brand Designer', 'Production Artist', 'Social Media Designer', 'Freelance Creative'],
+    related: ['ui-ux-design', 'canva-design', 'branding-identity'],
+  },
+  html: {
+    learningTime: '4–6 weeks',
+    software: ['Visual Studio Code', 'Chrome or Firefox', 'GitHub'],
+    skills: ['Semantic structure', 'Accessible content', 'Forms', 'Tables', 'Media', 'Metadata', 'Multi-page websites'],
+    modules: ['The HTML Document', 'Text and Content', 'Links and Navigation', 'Images and Media', 'Semantic Structure', 'Tables', 'Forms', 'Accessibility', 'Metadata', 'Complete Website Project'],
+    careers: ['Front-end Developer', 'Web Content Specialist', 'Accessibility Tester', 'Email Developer', 'CMS Editor'],
+    related: ['css', 'javascript', 'react'],
+  },
+  photography: {
+    learningTime: '6–8 weeks',
+    software: ['Phone or digital camera', 'Adobe Lightroom', 'Snapseed or Darktable'],
+    skills: ['Manual exposure', 'Focus control', 'Lighting', 'Composition', 'Visual storytelling', 'Photo editing', 'Portfolio curation'],
+    modules: ['Camera Types and Lenses', 'ISO', 'Aperture', 'Shutter Speed', 'Metering and Exposure', 'Focus', 'Lighting', 'Composition', 'Editing Workflow', 'Visual Storytelling'],
+    careers: ['Portrait Photographer', 'Event Photographer', 'Product Photographer', 'Documentary Photographer', 'Content Photographer'],
+    related: ['videography', 'content-creation', 'video-editing'],
+  },
+  react: {
+    learningTime: '8–12 weeks',
+    software: ['Node.js', 'Visual Studio Code', 'React and Vite', 'GitHub', 'Firebase'],
+    skills: ['Components', 'JSX', 'Props', 'State', 'Hooks', 'Routing', 'Firebase integration', 'Testing'],
+    modules: ['Component Thinking', 'JSX', 'Props', 'State', 'Events and Forms', 'Effects', 'Hooks and Reuse', 'Routing', 'Firebase Integration', 'Testing and Performance'],
+    careers: ['React Developer', 'Front-end Developer', 'UI Engineer', 'Product Engineer', 'Freelance Web Developer'],
+    related: ['html', 'javascript', 'firebase'],
+  },
+  chatgpt: {
+    learningTime: '4–6 weeks',
+    software: ['ChatGPT', 'Web browser', 'Spreadsheet or notes application', 'Citation manager'],
+    skills: ['Prompt engineering', 'Research verification', 'AI-assisted writing', 'Coding support', 'Workflow design', 'Output evaluation', 'Responsible AI'],
+    modules: ['How Language Models Work', 'Prompt Engineering', 'Iterative Workflows', 'Research', 'Writing and Learning', 'Coding', 'Productivity', 'Business Applications', 'Responsible AI', 'Evaluation'],
+    careers: ['AI Workflow Specialist', 'Product Operations Associate', 'Research Assistant', 'Content Strategist', 'Automation Consultant'],
+    related: ['ai-tools', 'gemini-ai', 'personal-branding'],
+  },
+};

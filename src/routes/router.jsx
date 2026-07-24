@@ -14,6 +14,7 @@ const MembershipPage = lazy(() => import('../pages/Membership/MembershipPage'));
 const DashboardPage = lazy(() => import('../pages/Dashboard/DashboardPage'));
 const AdminPage = lazy(() => import('../pages/Admin/AdminPage'));
 const AdminBootstrapPage = lazy(() => import('../pages/Admin/AdminBootstrapPage'));
+const LearningMaterialsPage = lazy(() => import('../pages/Admin/LearningMaterialsPage'));
 const LoginPage = lazy(() => import('../pages/Auth/LoginPage'));
 const RegisterPage = lazy(() => import('../pages/Auth/RegisterPage'));
 const VerifyEmailPage = lazy(() => import('../pages/Auth/VerifyEmailPage'));
@@ -23,6 +24,7 @@ const BookingsPage = lazy(() => import('../pages/Bookings/BookingsPage'));
 const TicketsPage = lazy(() => import('../pages/Bookings/TicketsPage'));
 const ReservationDetailsPage = lazy(() => import('../pages/Bookings/ReservationDetailsPage'));
 const ResourcesPage = lazy(() => import('../pages/Student/ResourcesPage'));
+const CourseDetailPage = lazy(() => import('../pages/Student/CourseDetailPage'));
 const AchievementsPage = lazy(() => import('../pages/Student/AchievementsPage'));
 const AnalyticsPage = lazy(() => import('../pages/Student/AnalyticsPage'));
 const OpportunitiesPage = lazy(() => import('../pages/Student/OpportunitiesPage'));
@@ -121,11 +123,11 @@ const AppRouter = () => {
             />
             <Route
               path="/resources"
-              element={
-                <ProtectedRoute>
-                  <ResourcesPage />
-                </ProtectedRoute>
-              }
+              element={<ResourcesPage />}
+            />
+            <Route
+              path="/resources/:courseId"
+              element={<CourseDetailPage />}
             />
             <Route
               path="/student/resources"
@@ -188,6 +190,14 @@ const AppRouter = () => {
               element={
                 <AdminRoute>
                   <AdminPage />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/learning-materials"
+              element={
+                <AdminRoute>
+                  <LearningMaterialsPage />
                 </AdminRoute>
               }
             />
