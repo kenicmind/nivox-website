@@ -13,6 +13,10 @@ const allowedOrigins = (process.env.NIVOX_ALLOWED_ORIGINS || 'http://localhost:5
   .split(',')
   .map((origin) => origin.trim())
   .filter(Boolean);
+const isAllowedOrigin = (origin) => (
+  allowedOrigins.includes(origin)
+  || /^https:\/\/[a-z0-9-]+\.vercel\.app$/i.test(origin || '')
+);
 const BOOKING_HOLD_MINUTES = 15;
 const TIME_SLOTS = new Set([
   '08:00 AM - 10:00 AM',
@@ -94,7 +98,7 @@ const validateBooking = (metadata = {}) => {
 
 const setCors = (request, response) => {
   const origin = request.headers.origin;
-  if (origin && allowedOrigins.includes(origin)) {
+  if (origin && isAllowedOrigin(origin)) {
     response.set('Access-Control-Allow-Origin', origin);
     response.set('Vary', 'Origin');
   }
