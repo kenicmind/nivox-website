@@ -1,9 +1,12 @@
 import PaystackPop from '@paystack/inline-js';
 
-const initializeUrl = import.meta.env.VITE_PAYSTACK_INITIALIZE_URL;
-const verifyUrl = import.meta.env.VITE_PAYSTACK_VERIFY_URL;
-const finalizeUrl = import.meta.env.VITE_RESERVATION_FINALIZE_URL;
-const statusUrl = import.meta.env.VITE_PAYMENT_STATUS_URL;
+const functionBaseUrl = import.meta.env.DEV
+  ? 'http://127.0.0.1:5001/nivoxhub/europe-west1'
+  : 'https://europe-west1-nivoxhub.cloudfunctions.net';
+const initializeUrl = import.meta.env.VITE_PAYSTACK_INITIALIZE_URL || `${functionBaseUrl}/initializePaystackPayment`;
+const verifyUrl = import.meta.env.VITE_PAYSTACK_VERIFY_URL || `${functionBaseUrl}/verifyPaystackPayment`;
+const finalizeUrl = import.meta.env.VITE_RESERVATION_FINALIZE_URL || `${functionBaseUrl}/finalizeReservation`;
+const statusUrl = import.meta.env.VITE_PAYMENT_STATUS_URL || `${functionBaseUrl}/updatePaymentStatus`;
 
 export class PaymentFlowError extends Error {
   constructor(code, message, reference = '') {
@@ -45,8 +48,6 @@ const authenticatedRequest = async (url, user, body) => {
   }
   return payload;
 };
-
-export const isPaystackConfigured = Boolean(initializeUrl && verifyUrl && finalizeUrl);
 
 const reportPaymentStatus = async ({ user, reference, status }) => {
   if (!statusUrl) return;

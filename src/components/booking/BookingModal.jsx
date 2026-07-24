@@ -25,7 +25,6 @@ import ReservationTicket from './ReservationTicket';
 import {
   completePaystackPayment,
   finalizePaidReservation,
-  isPaystackConfigured,
 } from '../../services/paymentService';
 import { DEFAULT_SETTINGS, fetchSystemSettings } from '../../services/systemService';
 
@@ -490,11 +489,6 @@ const BookingModal = ({ open, onClose, onBookingSuccess }) => {
                 NIVOX never receives or stores your card details.
               </p>
 
-              {!isPaystackConfigured && (
-                <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-200">
-                  Online checkout is awaiting production payment-server configuration.
-                </div>
-              )}
             </div>
           </form>
         )}

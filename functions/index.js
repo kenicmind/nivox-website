@@ -9,7 +9,7 @@ initializeApp();
 
 const db = getFirestore();
 const paystackSecret = defineSecret('PAYSTACK_SECRET_KEY');
-const allowedOrigins = (process.env.NIVOX_ALLOWED_ORIGINS || '')
+const allowedOrigins = (process.env.NIVOX_ALLOWED_ORIGINS || 'http://localhost:5173,http://127.0.0.1:5173')
   .split(',')
   .map((origin) => origin.trim())
   .filter(Boolean);
