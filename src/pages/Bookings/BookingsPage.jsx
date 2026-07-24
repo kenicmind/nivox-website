@@ -20,6 +20,7 @@ import Button from '../../components/design/ui/Button';
 import BookingModal from '../../components/booking/BookingModal';
 import ErrorState from '../../app/components/common/ErrorState';
 import { cancelReservation } from '../../services/reservationService';
+import { getMockBookings } from '../../services/mockPaymentService';
 
 const categoryIcons = {
   'learning-zone': BookOpen,
@@ -81,6 +82,11 @@ const BookingsPage = () => {
           }
         });
 
+        getMockBookings(currentUser.uid).forEach((booking) => {
+          if (!uniqueMap.has(booking.paymentReference)) {
+            uniqueMap.set(booking.paymentReference, booking);
+          }
+        });
         setBookings(
           Array.from(uniqueMap.values()).sort(
             (a, b) => (b.createdAt?.toMillis?.() || 0) - (a.createdAt?.toMillis?.() || 0),
@@ -124,7 +130,12 @@ const BookingsPage = () => {
     }
   };
 
-  const filteredBookings = bookings.filter((b) => (b.status || 'upcoming') === activeTab);
+  const filteredBookings = bookings.filter((booking) => {
+    const status = booking.status || 'upcoming';
+    return activeTab === 'upcoming'
+      ? ['approved', 'upcoming'].includes(status)
+      : status === activeTab;
+  });
 
   if (loading) {
     return (
@@ -191,7 +202,11 @@ const BookingsPage = () => {
                     : 'text-white/60 hover:text-white'
                 }`}
               >
-                {tab} ({bookings.filter((b) => (b.status || 'upcoming') === tab).length})
+                {tab} ({bookings.filter((booking) => (
+                  tab === 'upcoming'
+                    ? ['approved', 'upcoming'].includes(booking.status || 'upcoming')
+                    : (booking.status || 'upcoming') === tab
+                )).length})
               </button>
             ))}
           </div>

@@ -43,6 +43,7 @@ import Input from '../../components/design/forms/Input';
 import Select from '../../components/design/forms/Select';
 import AutocompleteInput from '../../components/design/forms/AutocompleteInput';
 import BookingModal from '../../components/booking/BookingModal';
+import { getMockBookings } from '../../services/mockPaymentService';
 import NotificationCenter from '../../components/notifications/NotificationCenter';
 import { fetchUserNotifications, markNotificationAsRead } from '../../services/notificationService';
 import { NIGERIAN_INSTITUTIONS, NIGERIAN_COURSES } from '../../data/nigerianTertiaryData';
@@ -244,10 +245,17 @@ const DashboardPage = () => {
           const bQuery = query(
             collection(db, 'reservations'),
             where('uid', '==', currentUser.uid),
-            where('status', '==', 'upcoming')
+            where('status', 'in', ['approved', 'upcoming'])
           );
           const bSnap = await getDocs(bQuery);
-          setActiveBookingsCount(bSnap.docs.length);
+          const firestoreKeys = new Set(
+            bSnap.docs.map((booking) => booking.data().paymentReference || booking.id),
+          );
+          const mockCount = getMockBookings(currentUser.uid)
+            .filter((booking) => ['approved', 'upcoming'].includes(booking.status))
+            .filter((booking) => !firestoreKeys.has(booking.paymentReference))
+            .length;
+          setActiveBookingsCount(bSnap.docs.length + mockCount);
 
           const notifs = await fetchUserNotifications(currentUser.uid);
           setLiveNotifications(notifs);
@@ -723,7 +731,7 @@ const DashboardPage = () => {
                 <Edit3 className="h-4 w-4" />
                 Edit Profile
               </Button>
-              <Button variant="secondary" onClick={() => toast.success('Calendar scheduling opened')}>
+              <Button variant="secondary" onClick={() => navigate('/bookings')}>
                 View Calendar
               </Button>
             </div>

@@ -156,6 +156,79 @@ const paymentHandler = (handler) => onRequest(
   },
 );
 
+exports.createMockReservation = onRequest(
+  { region: 'europe-west1' },
+  async (request, response) => {
+    setCors(request, response);
+    if (request.method === 'OPTIONS') return response.status(204).send('');
+    if (request.method !== 'POST') return send(response, 405, { message: 'Method not allowed.' });
+    try {
+      const user = await authenticate(request);
+      const booking = validateBooking(request.body?.metadata);
+      const reservationRef = db.collection('reservations').doc();
+      const bookingId = `NIVOX-${reservationRef.id.slice(0, 8).toUpperCase()}`;
+      const seatRef = db.doc(`seat_reservations/${getSeatKey(booking)}`);
+      const amount = Number(request.body?.amount || 0);
+      const reservation = {
+        uid: user.uid,
+        userEmail: user.email || '',
+        userName: user.name || user.email?.split('@')[0] || 'Student',
+        bookingId,
+        ticketId: bookingId,
+        ...booking,
+        duration: '2 Hours',
+        price: amount,
+        priceFormatted: `₦${amount.toLocaleString()}`,
+        paymentStatus: 'mock_paid',
+        paymentMethod: 'Development Mock',
+        paymentReference: `MOCK-${reservationRef.id.toUpperCase()}`,
+        status: 'approved',
+        createdAt: FieldValue.serverTimestamp(),
+        updatedAt: FieldValue.serverTimestamp(),
+      };
+
+      await db.runTransaction(async (transaction) => {
+        const seat = await transaction.get(seatRef);
+        const seatData = seat.data();
+        const activeHold = seatData?.status === 'payment_pending'
+          && seatData.holdExpiresAt?.toMillis?.() > Date.now();
+        if (['approved', 'upcoming'].includes(seatData?.status) || activeHold) {
+          throw new Error('SEAT_UNAVAILABLE');
+        }
+        transaction.create(reservationRef, reservation);
+        transaction.set(seatRef, {
+          uid: user.uid,
+          reservationId: reservationRef.id,
+          bookingId,
+          workspaceId: booking.workspaceId,
+          date: booking.date,
+          timeSlot: booking.timeSlot,
+          seatId: booking.seatId,
+          status: 'approved',
+          updatedAt: FieldValue.serverTimestamp(),
+        });
+      });
+      return send(response, 200, {
+        reservation: { id: reservationRef.id, ...reservation },
+      });
+    } catch (error) {
+      console.error('Mock reservation failed:', error);
+      const errors = {
+        UNAUTHENTICATED: [401, 'Please sign in again before completing the booking.'],
+        INVALID_BOOKING: [400, 'Choose a valid space, date, time, and seat.'],
+        SEAT_UNAVAILABLE: [409, 'That seat has just been booked. Please choose another seat.'],
+      };
+      const [status, message] = errors[error.message] || [
+        500,
+        process.env.FUNCTIONS_EMULATOR === 'true'
+          ? `Development booking error: ${error.message}`
+          : 'The development booking could not be created.',
+      ];
+      return send(response, status, { message });
+    }
+  },
+);
+
 exports.initializePaystackPayment = paymentHandler(async (request, response) => {
   const user = await authenticate(request);
   if (!user.email || user.email_verified !== true) {

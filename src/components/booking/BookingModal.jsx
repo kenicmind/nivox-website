@@ -7,13 +7,12 @@ import {
   CheckCircle2,
   Clock,
   Cpu,
-  CreditCard,
-  ShieldCheck,
   Users,
   X,
   ArrowRight,
   Check,
   AlertTriangle,
+  Sparkles,
 } from 'lucide-react';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import toast from 'react-hot-toast';
@@ -21,11 +20,7 @@ import { auth, db } from '../../firebase/firebase';
 import { useNavigate } from 'react-router-dom';
 import Modal from '../design/feedback/Modal';
 import Button from '../design/ui/Button';
-import ReservationTicket from './ReservationTicket';
-import {
-  completePaystackPayment,
-  finalizePaidReservation,
-} from '../../services/paymentService';
+import { completeMockBooking } from '../../services/mockPaymentService';
 import { DEFAULT_SETTINGS, fetchSystemSettings } from '../../services/systemService';
 
 const WORKSPACES = [
@@ -140,14 +135,14 @@ const BookingModal = ({ open, onClose, onBookingSuccess }) => {
           where('workspaceId', '==', selectedWorkspace.id),
           where('date', '==', selectedDate),
           where('timeSlot', '==', selectedTimeSlot),
-          where('status', 'in', ['upcoming', 'payment_pending'])
+          where('status', 'in', ['approved', 'upcoming', 'payment_pending'])
         );
         const snapshot = await getDocs(q);
         const now = Date.now();
         const occupiedIds = snapshot.docs
           .map((seatDocument) => seatDocument.data())
           .filter((seat) => (
-            seat.status === 'upcoming'
+            ['approved', 'upcoming'].includes(seat.status)
             || seat.holdExpiresAt?.toMillis?.() > now
           ))
           .map((seat) => seat.seatId)
@@ -207,23 +202,16 @@ const BookingModal = ({ open, onClose, onBookingSuccess }) => {
 
     try {
       setIsProcessingPayment(true);
-      const payment = await completePaystackPayment({
+      const fullData = await completeMockBooking({
         user,
         amount: bookingPrice,
-        metadata: {
-          workspaceId: selectedWorkspace.id,
-          date: selectedDate,
-          timeSlot: selectedTimeSlot,
-          seatId: selectedSeat.id,
-        },
+        workspace: selectedWorkspace,
+        seat: selectedSeat,
+        date: selectedDate,
+        timeSlot: selectedTimeSlot,
       });
 
-      const fullData = await finalizePaidReservation({
-        user,
-        payment,
-      });
-
-      toast.success(`Payment Confirmed! Seat ${selectedSeat.number} Reserved.`);
+      toast.success(`Booking approved! Seat ${selectedSeat.number} is reserved.`);
       setConfirmedReservation(fullData);
 
       if (onBookingSuccess) {
@@ -476,33 +464,79 @@ const BookingModal = ({ open, onClose, onBookingSuccess }) => {
               </div>
             </div>
 
-            <div className="rounded-2xl border border-purple-500/20 bg-purple-500/10 p-4 space-y-3">
+            <button
+              type="button"
+              onClick={handlePaymentAndConfirm}
+              disabled={isProcessingPayment}
+              className="w-full rounded-2xl border border-purple-500/20 bg-purple-500/10 p-4 text-left transition hover:border-[#FFD54A]/50 hover:bg-purple-500/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFD54A] disabled:cursor-wait disabled:opacity-70 space-y-3"
+            >
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-purple-200 flex items-center gap-2">
-                  <CreditCard className="h-4 w-4" /> Paystack Secured Gateway
+                  <Sparkles className="h-4 w-4" /> Development Booking Demo
                 </span>
-                <ShieldCheck className="h-4 w-4 text-emerald-300" />
+                <span className="rounded-full bg-amber-400/15 px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-amber-200">Mock</span>
               </div>
 
               <p className="text-xs leading-6 text-white/70">
-                Continue to Paystack's secure checkout to choose card, bank, transfer, or another available payment method.
-                NIVOX never receives or stores your card details.
+                Complete this demonstration booking without making a real payment.
+                The approved reservation will be saved to Firestore and appear in My Bookings.
               </p>
 
-            </div>
+              <span className="inline-flex items-center gap-2 text-xs font-bold text-[#FFD54A]">
+                {isProcessingPayment ? 'Completing booking…' : 'Click to complete this test booking'}
+                <ArrowRight className="h-4 w-4" />
+              </span>
+            </button>
           </form>
         )}
 
-        {/* Step 5: Confirmation Pass Receipt */}
+        {/* Step 5: Approved booking */}
         {step === 5 && confirmedReservation && (
-          <div className="space-y-5 text-center">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400 mx-auto">
-              <Check className="h-7 w-7" />
+          <div className="relative overflow-hidden rounded-3xl border border-emerald-400/25 bg-emerald-400/[0.07] p-5 text-center">
+            <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+              {[12, 25, 38, 62, 75, 88].map((left, index) => (
+                <motion.span
+                  key={left}
+                  className="absolute top-0 h-2 w-2 rounded-sm bg-[#FFD54A]"
+                  style={{ left: `${left}%` }}
+                  initial={reduceMotion ? false : { y: -10, opacity: 0, rotate: 0 }}
+                  animate={reduceMotion ? { opacity: 1 } : { y: 190, opacity: [0, 1, 0], rotate: 180 }}
+                  transition={{ delay: index * 0.08, duration: 1.4, ease: 'easeOut' }}
+                />
+              ))}
             </div>
-
-            <h3 className="text-2xl font-black text-white">Reservation Ticket Confirmed</h3>
-
-            <ReservationTicket ticket={confirmedReservation} />
+            <motion.div
+              initial={reduceMotion ? false : { scale: 0.4, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: 'spring', stiffness: 220, damping: 14 }}
+              className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-400/20 text-emerald-300 ring-8 ring-emerald-400/5"
+            >
+              <Check className="h-8 w-8" strokeWidth={3} />
+            </motion.div>
+            <h3 className="mt-5 text-2xl font-black text-white">Booking Confirmed</h3>
+            <p className="mt-2 text-sm text-white/65">Your booking has been approved successfully.</p>
+            <dl className="mt-5 space-y-2 rounded-2xl border border-white/10 bg-[#140726]/70 p-4 text-left text-sm">
+              {[
+                ['Booking ID', confirmedReservation.bookingId],
+                ['Booking Date', confirmedReservation.date],
+                ['Booking Time', confirmedReservation.timeSlot],
+                ['Space Booked', confirmedReservation.workspaceName],
+                ['Status', 'Approved'],
+              ].map(([label, value]) => (
+                <div key={label} className="flex items-start justify-between gap-4">
+                  <dt className="text-white/55">{label}</dt>
+                  <dd className={`text-right font-semibold ${label === 'Status' ? 'text-emerald-300' : 'text-white'}`}>{value}</dd>
+                </div>
+              ))}
+            </dl>
+            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              <Button type="button" variant="primary" onClick={() => { handleFinishModal(); navigate('/bookings'); }} className="justify-center">
+                View My Bookings
+              </Button>
+              <Button type="button" variant="secondary" onClick={() => { handleFinishModal(); navigate('/dashboard'); }} className="justify-center">
+                Back to Dashboard
+              </Button>
+            </div>
           </div>
         )}
         {step === 6 && paymentOutcome && (
@@ -512,7 +546,7 @@ const BookingModal = ({ open, onClose, onBookingSuccess }) => {
             </div>
             <div>
               <h3 className="text-2xl font-black text-white">
-                {paymentOutcome.type === 'cancelled' ? 'Payment Cancelled' : 'Payment Unsuccessful'}
+                Booking Unsuccessful
               </h3>
               <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-white/65">
                 {paymentOutcome.message}
@@ -532,7 +566,7 @@ const BookingModal = ({ open, onClose, onBookingSuccess }) => {
               }}
               className="w-full justify-center"
             >
-              Try Payment Again
+              Try Booking Again
             </Button>
           </div>
         )}
@@ -541,7 +575,7 @@ const BookingModal = ({ open, onClose, onBookingSuccess }) => {
       </div>
 
       {/* Footer Controls */}
-      <div className={`${step < 4 || step === 6 ? 'hidden' : 'flex'} mt-6 items-center justify-between border-t border-white/10 pt-4`}>
+      <div className={`${step !== 4 ? 'hidden' : 'flex'} mt-6 items-center justify-between border-t border-white/10 pt-4`}>
         {step > 1 && step < 5 ? (
           <Button type="button" variant="secondary" onClick={handlePrevStep} disabled={isProcessingPayment}>
             Back
@@ -562,21 +596,14 @@ const BookingModal = ({ open, onClose, onBookingSuccess }) => {
             disabled={isProcessingPayment}
             className="gap-2 shadow-[0_10px_25px_rgba(255,213,74,0.3)]"
           >
-            {isProcessingPayment ? 'Opening Paystack…' : 'Continue to Paystack • ₦300'}
+            {isProcessingPayment ? (
+              <span className="flex items-center gap-2">
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#140726]/30 border-t-[#140726]" />
+                Completing Booking…
+              </span>
+            ) : 'Complete Booking'}
           </Button>
-        ) : (
-          <Button
-            type="button"
-            variant="primary"
-            onClick={() => {
-              handleFinishModal();
-              navigate('/tickets');
-            }}
-            className="w-full justify-center shadow-lg"
-          >
-            View All My Tickets
-          </Button>
-        )}
+        ) : null}
       </div>
     </Modal>
   );

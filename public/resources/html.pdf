@@ -1,0 +1,454 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R 5 0 R 7 0 R 9 0 R] /Count 4 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 11 0 R >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 2168 >>
+stream
+BT
+54 744 Td
+/F1 10 Tf
+(NIVOX LEARNING LIBRARY | SHAPING TOMORROW, TODAY.) Tj
+0 -20 Td
+/F1 18 Tf
+(HTML: Building Accessible Web Pages) Tj
+0 -20 Td
+/F1 10 Tf
+(Premium Student Training Manual | 2026 Edition) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(COURSE OVERVIEW) Tj
+0 -20 Td
+/F1 10 Tf
+(A practical course in structuring meaningful, standards-based web content that works across devices and assistive technology.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(LEARNING OBJECTIVES) Tj
+0 -20 Td
+/F1 10 Tf
+(Write valid document structure, semantic content, links, media, tables, forms, metadata, and accessible page patterns.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(COURSE ROADMAP) Tj
+0 -20 Td
+/F1 10 Tf
+(Foundation - guided practice - independent assignment - portfolio project - career pathway) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(TABLE OF CONTENTS) Tj
+0 -20 Td
+/F1 10 Tf
+(1. The HTML Document) Tj
+0 -20 Td
+/F1 10 Tf
+(2. Text and Content Elements) Tj
+0 -20 Td
+/F1 10 Tf
+(3. Links and Navigation) Tj
+0 -20 Td
+/F1 10 Tf
+(4. Images and Media) Tj
+0 -20 Td
+/F1 10 Tf
+(5. Semantic Page Structure) Tj
+0 -20 Td
+/F1 10 Tf
+(6. Tables) Tj
+0 -20 Td
+/F1 10 Tf
+(7. Forms) Tj
+0 -20 Td
+/F1 10 Tf
+(8. Accessibility) Tj
+0 -20 Td
+/F1 10 Tf
+(9. Metadata and Sharing) Tj
+0 -20 Td
+/F1 10 Tf
+(10. Complete Website) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(LESSON 1 - THE HTML DOCUMENT) Tj
+0 -20 Td
+/F1 10 Tf
+(Use doctype, html language, head metadata, title, and body. HTML describes meaning; CSS controls presentation.) Tj
+0 -20 Td
+/F1 10 Tf
+(Practical demonstration: Create a valid page and inspect its document tree.) Tj
+0 -20 Td
+/F1 10 Tf
+(Best practice: make one intentional change at a time and keep evidence of the result.) Tj
+0 -20 Td
+/F1 10 Tf
+(Common mistake: copying a finished example without understanding the decision behind it.) Tj
+0 -20 Td
+/F1 10 Tf
+(Professional tip: explain the reason for each choice in plain language.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(LESSON 2 - TEXT AND CONTENT ELEMENTS) Tj
+0 -20 Td
+/F1 10 Tf
+(Choose headings by outline, paragraphs for prose, and lists for real sequences or groups.) Tj
+0 -20 Td
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 11 0 R >> >> /Contents 6 0 R >>
+endobj
+6 0 obj
+<< /Length 2977 >>
+stream
+BT
+54 744 Td
+/F1 10 Tf
+(Practical demonstration: Convert an unstructured article into a logical heading hierarchy.) Tj
+0 -20 Td
+/F1 10 Tf
+(Best practice: make one intentional change at a time and keep evidence of the result.) Tj
+0 -20 Td
+/F1 10 Tf
+(Common mistake: copying a finished example without understanding the decision behind it.) Tj
+0 -20 Td
+/F1 10 Tf
+(Professional tip: explain the reason for each choice in plain language.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(LESSON 3 - LINKS AND NAVIGATION) Tj
+0 -20 Td
+/F1 10 Tf
+(Write descriptive link text, use correct relative paths, and mark the current page in navigation.) Tj
+0 -20 Td
+/F1 10 Tf
+(Practical demonstration: Build navigation connecting three local pages.) Tj
+0 -20 Td
+/F1 10 Tf
+(Best practice: make one intentional change at a time and keep evidence of the result.) Tj
+0 -20 Td
+/F1 10 Tf
+(Common mistake: copying a finished example without understanding the decision behind it.) Tj
+0 -20 Td
+/F1 10 Tf
+(Professional tip: explain the reason for each choice in plain language.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(LESSON 4 - IMAGES AND MEDIA) Tj
+0 -20 Td
+/F1 10 Tf
+(Use meaningful alternative text, dimensions, captions, responsive sources, and appropriate formats.) Tj
+0 -20 Td
+/F1 10 Tf
+(Practical demonstration: Add an informative image and a decorative image correctly.) Tj
+0 -20 Td
+/F1 10 Tf
+(Best practice: make one intentional change at a time and keep evidence of the result.) Tj
+0 -20 Td
+/F1 10 Tf
+(Common mistake: copying a finished example without understanding the decision behind it.) Tj
+0 -20 Td
+/F1 10 Tf
+(Professional tip: explain the reason for each choice in plain language.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(LESSON 5 - SEMANTIC PAGE STRUCTURE) Tj
+0 -20 Td
+/F1 10 Tf
+(Use header, nav, main, article, section, aside, and footer according to content purpose.) Tj
+0 -20 Td
+/F1 10 Tf
+(Practical demonstration: Replace generic div containers in a news page.) Tj
+0 -20 Td
+/F1 10 Tf
+(Best practice: make one intentional change at a time and keep evidence of the result.) Tj
+0 -20 Td
+/F1 10 Tf
+(Common mistake: copying a finished example without understanding the decision behind it.) Tj
+0 -20 Td
+/F1 10 Tf
+(Professional tip: explain the reason for each choice in plain language.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(LESSON 6 - TABLES) Tj
+0 -20 Td
+/F1 10 Tf
+(Reserve tables for relational data. Provide captions, headers, and correct scope.) Tj
+0 -20 Td
+/F1 10 Tf
+(Practical demonstration: Mark up a class timetable that screen readers can understand.) Tj
+0 -20 Td
+/F1 10 Tf
+(Best practice: make one intentional change at a time and keep evidence of the result.) Tj
+0 -20 Td
+/F1 10 Tf
+(Common mistake: copying a finished example without understanding the decision behind it.) Tj
+0 -20 Td
+/F1 10 Tf
+(Professional tip: explain the reason for each choice in plain language.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(LESSON 7 - FORMS) Tj
+0 -20 Td
+ET
+endstream
+endobj
+7 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 11 0 R >> >> /Contents 8 0 R >>
+endobj
+8 0 obj
+<< /Length 2908 >>
+stream
+BT
+54 744 Td
+/F1 10 Tf
+(Pair every control with a label; select useful input types; group related choices; explain errors.) Tj
+0 -20 Td
+/F1 10 Tf
+(Practical demonstration: Build a student event registration form.) Tj
+0 -20 Td
+/F1 10 Tf
+(Best practice: make one intentional change at a time and keep evidence of the result.) Tj
+0 -20 Td
+/F1 10 Tf
+(Common mistake: copying a finished example without understanding the decision behind it.) Tj
+0 -20 Td
+/F1 10 Tf
+(Professional tip: explain the reason for each choice in plain language.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(LESSON 8 - ACCESSIBILITY) Tj
+0 -20 Td
+/F1 10 Tf
+(Support keyboard navigation, meaningful names, logical order, language, and clear error recovery.) Tj
+0 -20 Td
+/F1 10 Tf
+(Practical demonstration: Audit a page using keyboard-only navigation.) Tj
+0 -20 Td
+/F1 10 Tf
+(Best practice: make one intentional change at a time and keep evidence of the result.) Tj
+0 -20 Td
+/F1 10 Tf
+(Common mistake: copying a finished example without understanding the decision behind it.) Tj
+0 -20 Td
+/F1 10 Tf
+(Professional tip: explain the reason for each choice in plain language.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(LESSON 9 - METADATA AND SHARING) Tj
+0 -20 Td
+/F1 10 Tf
+(Use useful titles, descriptions, canonical information, favicons, and social preview metadata.) Tj
+0 -20 Td
+/F1 10 Tf
+(Practical demonstration: Prepare metadata for a portfolio homepage.) Tj
+0 -20 Td
+/F1 10 Tf
+(Best practice: make one intentional change at a time and keep evidence of the result.) Tj
+0 -20 Td
+/F1 10 Tf
+(Common mistake: copying a finished example without understanding the decision behind it.) Tj
+0 -20 Td
+/F1 10 Tf
+(Professional tip: explain the reason for each choice in plain language.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(LESSON 10 - COMPLETE WEBSITE) Tj
+0 -20 Td
+/F1 10 Tf
+(Plan shared navigation, consistent structure, accessible content, validation, and deployment.) Tj
+0 -20 Td
+/F1 10 Tf
+(Practical demonstration: Build and validate a three-page student portfolio.) Tj
+0 -20 Td
+/F1 10 Tf
+(Best practice: make one intentional change at a time and keep evidence of the result.) Tj
+0 -20 Td
+/F1 10 Tf
+(Common mistake: copying a finished example without understanding the decision behind it.) Tj
+0 -20 Td
+/F1 10 Tf
+(Professional tip: explain the reason for each choice in plain language.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(EXERCISES AND ASSIGNMENTS) Tj
+0 -20 Td
+/F1 10 Tf
+(Complete every practical demonstration. Save source files, exports, notes, and a short reflection for each lesson.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(MINI PROJECT) Tj
+0 -20 Td
+/F1 10 Tf
+(Build an accessible three-page NIVOX student portfolio with homepage, projects table, contact form, semantic landmarks, meaningful media, and validated HTML.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(CHALLENGE PROJECT) Tj
+0 -20 Td
+ET
+endstream
+endobj
+9 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 11 0 R >> >> /Contents 10 0 R >>
+endobj
+10 0 obj
+<< /Length 2294 >>
+stream
+BT
+54 744 Td
+/F1 10 Tf
+(Repeat the project for a different audience and tighter constraint. Present both versions and defend the changes using principles from HTML: Building Accessible Web Pages.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(FREQUENTLY ASKED QUESTIONS) Tj
+0 -20 Td
+/F1 10 Tf
+(How fast should I progress? Practise until you can explain and repeat the process without copying.) Tj
+0 -20 Td
+/F1 10 Tf
+(What belongs in a portfolio? Show the brief, alternatives, feedback, final result, and honest reflection.) Tj
+0 -20 Td
+/F1 10 Tf
+(How do I get useful feedback? Ask one specific question connected to the project goal.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(INDUSTRY TOOLS) Tj
+0 -20 Td
+/F1 10 Tf
+(Visual Studio Code, browser developer tools, W3C Validator, MDN, Lighthouse, and GitHub Pages.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(CAREER OPPORTUNITIES) Tj
+0 -20 Td
+/F1 10 Tf
+(Front-end developer, web content specialist, accessibility tester, email developer, CMS editor, and technical writer.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(RECOMMENDED LEARNING) Tj
+0 -20 Td
+/F1 10 Tf
+(Websites: MDN, freeCodeCamp, Coursera audit courses, Google learning resources, and official tool documentation.) Tj
+0 -20 Td
+/F1 10 Tf
+(Books: choose a current foundational book recommended by practitioners and practise every chapter.) Tj
+0 -20 Td
+/F1 10 Tf
+(YouTube: prefer official channels and instructors who explain decisions, not only shortcuts.) Tj
+0 -20 Td
+/F1 10 Tf
+(Communities: NIVOX peer groups, local meetups, GitHub, professional associations, and moderated learning communities.) Tj
+0 -20 Td
+/F1 10 Tf
+(Certifications: use certifications to structure learning, but prioritise verified projects and practical evidence.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(SUMMARY AND NEXT STEPS) Tj
+0 -20 Td
+/F1 10 Tf
+(Complete the real-world project, request mentor critique, revise it, and publish a case study. Then pair HTML: Building Accessible Web Pages with Git, communication, and entrepreneurship.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(NIVOX MISSION NOTE) Tj
+0 -20 Td
+/F1 10 Tf
+(Use this skill to create practical value for students, communities, and young ventures. Build responsibly, share knowledge, and keep learning.) Tj
+0 -20 Td
+ET
+endstream
+endobj
+11 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 12
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000133 00000 n 
+0000000260 00000 n 
+0000002479 00000 n 
+0000002606 00000 n 
+0000005634 00000 n 
+0000005761 00000 n 
+0000008720 00000 n 
+0000008848 00000 n 
+0000011194 00000 n 
+trailer
+<< /Size 12 /Root 1 0 R >>
+startxref
+11265
+%%EOF

@@ -8,6 +8,7 @@ import {
   where,
 } from 'firebase/firestore';
 import { db } from '../firebase/firebase';
+import { cancelMockBooking, getMockBookings } from './mockPaymentService';
 
 export const checkOccupiedSeats = async ({ workspaceId, date, timeSlot }) => {
   const availabilityQuery = query(
@@ -15,14 +16,14 @@ export const checkOccupiedSeats = async ({ workspaceId, date, timeSlot }) => {
     where('workspaceId', '==', workspaceId),
     where('date', '==', date),
     where('timeSlot', '==', timeSlot),
-    where('status', 'in', ['upcoming', 'payment_pending']),
+    where('status', 'in', ['approved', 'upcoming', 'payment_pending']),
   );
   const snapshot = await getDocs(availabilityQuery);
   const now = Date.now();
   return snapshot.docs
     .map((seatDocument) => seatDocument.data())
     .filter((seat) => (
-      seat.status === 'upcoming'
+      ['approved', 'upcoming'].includes(seat.status)
       || seat.holdExpiresAt?.toMillis?.() > now
     ))
     .map((seat) => seat.seatId)
@@ -58,10 +59,19 @@ export const fetchUserReservations = async (uid) => {
       || `${reservation.workspaceId}-${reservation.date}-${reservation.timeSlot}-${reservation.seatId || reservation.seatNumber}`;
     if (!uniqueReservations.has(key)) uniqueReservations.set(key, reservation);
   });
+  getMockBookings(uid).forEach((reservation) => {
+    if (!uniqueReservations.has(reservation.paymentReference)) {
+      uniqueReservations.set(reservation.paymentReference, reservation);
+    }
+  });
   return [...uniqueReservations.values()];
 };
 
 export const cancelReservation = async (reservation) => {
+  if (reservation.sourceCollection === 'mock') {
+    cancelMockBooking(reservation.id);
+    return true;
+  }
   const sourceCollection = reservation.sourceCollection || 'reservations';
   if (sourceCollection === 'bookings') {
     await updateDoc(doc(db, sourceCollection, reservation.id), { status: 'cancelled' });

@@ -1,0 +1,454 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R 5 0 R 7 0 R 9 0 R] /Count 4 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 11 0 R >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 2161 >>
+stream
+BT
+54 744 Td
+/F1 10 Tf
+(NIVOX LEARNING LIBRARY | SHAPING TOMORROW, TODAY.) Tj
+0 -20 Td
+/F1 18 Tf
+(React: Building Maintainable Interfaces) Tj
+0 -20 Td
+/F1 10 Tf
+(Premium Student Training Manual | 2026 Edition) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(COURSE OVERVIEW) Tj
+0 -20 Td
+/F1 10 Tf
+(A project course in component thinking, predictable state, accessible interactions, routing, data, and production readiness.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(LEARNING OBJECTIVES) Tj
+0 -20 Td
+/F1 10 Tf
+(Build components with JSX and props, manage state and effects, route pages, integrate Firebase, test behavior, and ship responsibly.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(COURSE ROADMAP) Tj
+0 -20 Td
+/F1 10 Tf
+(Foundation - guided practice - independent assignment - portfolio project - career pathway) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(TABLE OF CONTENTS) Tj
+0 -20 Td
+/F1 10 Tf
+(1. Component Thinking) Tj
+0 -20 Td
+/F1 10 Tf
+(2. JSX) Tj
+0 -20 Td
+/F1 10 Tf
+(3. Props) Tj
+0 -20 Td
+/F1 10 Tf
+(4. State) Tj
+0 -20 Td
+/F1 10 Tf
+(5. Events and Forms) Tj
+0 -20 Td
+/F1 10 Tf
+(6. Effects) Tj
+0 -20 Td
+/F1 10 Tf
+(7. Hooks and Reuse) Tj
+0 -20 Td
+/F1 10 Tf
+(8. Routing) Tj
+0 -20 Td
+/F1 10 Tf
+(9. Firebase Integration) Tj
+0 -20 Td
+/F1 10 Tf
+(10. Testing and Performance) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(LESSON 1 - COMPONENT THINKING) Tj
+0 -20 Td
+/F1 10 Tf
+(Break interfaces by responsibility and data flow, not visual boxes alone. Keep components focused and composable.) Tj
+0 -20 Td
+/F1 10 Tf
+(Practical demonstration: Sketch the component tree for a booking dashboard.) Tj
+0 -20 Td
+/F1 10 Tf
+(Best practice: make one intentional change at a time and keep evidence of the result.) Tj
+0 -20 Td
+/F1 10 Tf
+(Common mistake: copying a finished example without understanding the decision behind it.) Tj
+0 -20 Td
+/F1 10 Tf
+(Professional tip: explain the reason for each choice in plain language.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(LESSON 2 - JSX) Tj
+0 -20 Td
+/F1 10 Tf
+(JSX combines JavaScript expressions with declarative UI. Use semantic elements, stable keys, and clear conditional rendering.) Tj
+0 -20 Td
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 11 0 R >> >> /Contents 6 0 R >>
+endobj
+6 0 obj
+<< /Length 3021 >>
+stream
+BT
+54 744 Td
+/F1 10 Tf
+(Practical demonstration: Render a filtered course list from data.) Tj
+0 -20 Td
+/F1 10 Tf
+(Best practice: make one intentional change at a time and keep evidence of the result.) Tj
+0 -20 Td
+/F1 10 Tf
+(Common mistake: copying a finished example without understanding the decision behind it.) Tj
+0 -20 Td
+/F1 10 Tf
+(Professional tip: explain the reason for each choice in plain language.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(LESSON 3 - PROPS) Tj
+0 -20 Td
+/F1 10 Tf
+(Props are read-only inputs. Pass the smallest useful data and callbacks; avoid duplicating derived values.) Tj
+0 -20 Td
+/F1 10 Tf
+(Practical demonstration: Create a reusable CourseCard with an accessible action.) Tj
+0 -20 Td
+/F1 10 Tf
+(Best practice: make one intentional change at a time and keep evidence of the result.) Tj
+0 -20 Td
+/F1 10 Tf
+(Common mistake: copying a finished example without understanding the decision behind it.) Tj
+0 -20 Td
+/F1 10 Tf
+(Professional tip: explain the reason for each choice in plain language.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(LESSON 4 - STATE) Tj
+0 -20 Td
+/F1 10 Tf
+(State represents information that changes and affects rendering. Keep one source of truth and update immutably.) Tj
+0 -20 Td
+/F1 10 Tf
+(Practical demonstration: Build bookmark toggling without mutating arrays.) Tj
+0 -20 Td
+/F1 10 Tf
+(Best practice: make one intentional change at a time and keep evidence of the result.) Tj
+0 -20 Td
+/F1 10 Tf
+(Common mistake: copying a finished example without understanding the decision behind it.) Tj
+0 -20 Td
+/F1 10 Tf
+(Professional tip: explain the reason for each choice in plain language.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(LESSON 5 - EVENTS AND FORMS) Tj
+0 -20 Td
+/F1 10 Tf
+(Use controlled fields when validation and submission depend on state. Label inputs and handle loading and errors.) Tj
+0 -20 Td
+/F1 10 Tf
+(Practical demonstration: Build a course-search form with clear/reset behavior.) Tj
+0 -20 Td
+/F1 10 Tf
+(Best practice: make one intentional change at a time and keep evidence of the result.) Tj
+0 -20 Td
+/F1 10 Tf
+(Common mistake: copying a finished example without understanding the decision behind it.) Tj
+0 -20 Td
+/F1 10 Tf
+(Professional tip: explain the reason for each choice in plain language.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(LESSON 6 - EFFECTS) Tj
+0 -20 Td
+/F1 10 Tf
+(Use effects to synchronise with external systems, not to compute render data. Clean up subscriptions and cancel stale work.) Tj
+0 -20 Td
+/F1 10 Tf
+(Practical demonstration: Subscribe to authentication state and cleanly unsubscribe.) Tj
+0 -20 Td
+/F1 10 Tf
+(Best practice: make one intentional change at a time and keep evidence of the result.) Tj
+0 -20 Td
+/F1 10 Tf
+(Common mistake: copying a finished example without understanding the decision behind it.) Tj
+0 -20 Td
+/F1 10 Tf
+(Professional tip: explain the reason for each choice in plain language.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(LESSON 7 - HOOKS AND REUSE) Tj
+0 -20 Td
+ET
+endstream
+endobj
+7 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 11 0 R >> >> /Contents 8 0 R >>
+endobj
+8 0 obj
+<< /Length 2975 >>
+stream
+BT
+54 744 Td
+/F1 10 Tf
+(Extract a custom hook when behavior is reused and has a clear contract. Hooks must run unconditionally.) Tj
+0 -20 Td
+/F1 10 Tf
+(Practical demonstration: Create useLocalStorage for learning progress.) Tj
+0 -20 Td
+/F1 10 Tf
+(Best practice: make one intentional change at a time and keep evidence of the result.) Tj
+0 -20 Td
+/F1 10 Tf
+(Common mistake: copying a finished example without understanding the decision behind it.) Tj
+0 -20 Td
+/F1 10 Tf
+(Professional tip: explain the reason for each choice in plain language.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(LESSON 8 - ROUTING) Tj
+0 -20 Td
+/F1 10 Tf
+(Model routes around user tasks, protect private pages, provide loading and not-found states, and restore scroll position.) Tj
+0 -20 Td
+/F1 10 Tf
+(Practical demonstration: Add protected course and profile routes.) Tj
+0 -20 Td
+/F1 10 Tf
+(Best practice: make one intentional change at a time and keep evidence of the result.) Tj
+0 -20 Td
+/F1 10 Tf
+(Common mistake: copying a finished example without understanding the decision behind it.) Tj
+0 -20 Td
+/F1 10 Tf
+(Professional tip: explain the reason for each choice in plain language.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(LESSON 9 - FIREBASE INTEGRATION) Tj
+0 -20 Td
+/F1 10 Tf
+(Authenticate users, query bounded data, represent loading/error/empty states, and rely on rules for authorization.) Tj
+0 -20 Td
+/F1 10 Tf
+(Practical demonstration: Load only the signed-in student-s bookmarks.) Tj
+0 -20 Td
+/F1 10 Tf
+(Best practice: make one intentional change at a time and keep evidence of the result.) Tj
+0 -20 Td
+/F1 10 Tf
+(Common mistake: copying a finished example without understanding the decision behind it.) Tj
+0 -20 Td
+/F1 10 Tf
+(Professional tip: explain the reason for each choice in plain language.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(LESSON 10 - TESTING AND PERFORMANCE) Tj
+0 -20 Td
+/F1 10 Tf
+(Test behavior users observe. Profile before optimising; memoise only when measurement supports it.) Tj
+0 -20 Td
+/F1 10 Tf
+(Practical demonstration: Test course search and keyboard activation.) Tj
+0 -20 Td
+/F1 10 Tf
+(Best practice: make one intentional change at a time and keep evidence of the result.) Tj
+0 -20 Td
+/F1 10 Tf
+(Common mistake: copying a finished example without understanding the decision behind it.) Tj
+0 -20 Td
+/F1 10 Tf
+(Professional tip: explain the reason for each choice in plain language.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(EXERCISES AND ASSIGNMENTS) Tj
+0 -20 Td
+/F1 10 Tf
+(Complete every practical demonstration. Save source files, exports, notes, and a short reflection for each lesson.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(MINI PROJECT) Tj
+0 -20 Td
+/F1 10 Tf
+(Build a learning tracker with authentication, searchable courses, bookmarks, progress state, protected routes, Firestore rules, loading/error states, and a production build.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(CHALLENGE PROJECT) Tj
+0 -20 Td
+ET
+endstream
+endobj
+9 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 11 0 R >> >> /Contents 10 0 R >>
+endobj
+10 0 obj
+<< /Length 2320 >>
+stream
+BT
+54 744 Td
+/F1 10 Tf
+(Repeat the project for a different audience and tighter constraint. Present both versions and defend the changes using principles from React: Building Maintainable Interfaces.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(FREQUENTLY ASKED QUESTIONS) Tj
+0 -20 Td
+/F1 10 Tf
+(How fast should I progress? Practise until you can explain and repeat the process without copying.) Tj
+0 -20 Td
+/F1 10 Tf
+(What belongs in a portfolio? Show the brief, alternatives, feedback, final result, and honest reflection.) Tj
+0 -20 Td
+/F1 10 Tf
+(How do I get useful feedback? Ask one specific question connected to the project goal.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(INDUSTRY TOOLS) Tj
+0 -20 Td
+/F1 10 Tf
+(React, Vite, React Router, Firebase, Vitest, Testing Library, ESLint, browser devtools, and GitHub.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(CAREER OPPORTUNITIES) Tj
+0 -20 Td
+/F1 10 Tf
+(Front-end developer, React developer, UI engineer, full-stack JavaScript developer, product engineer, and freelance web developer.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(RECOMMENDED LEARNING) Tj
+0 -20 Td
+/F1 10 Tf
+(Websites: MDN, freeCodeCamp, Coursera audit courses, Google learning resources, and official tool documentation.) Tj
+0 -20 Td
+/F1 10 Tf
+(Books: choose a current foundational book recommended by practitioners and practise every chapter.) Tj
+0 -20 Td
+/F1 10 Tf
+(YouTube: prefer official channels and instructors who explain decisions, not only shortcuts.) Tj
+0 -20 Td
+/F1 10 Tf
+(Communities: NIVOX peer groups, local meetups, GitHub, professional associations, and moderated learning communities.) Tj
+0 -20 Td
+/F1 10 Tf
+(Certifications: use certifications to structure learning, but prioritise verified projects and practical evidence.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(SUMMARY AND NEXT STEPS) Tj
+0 -20 Td
+/F1 10 Tf
+(Complete the real-world project, request mentor critique, revise it, and publish a case study. Then pair React: Building Maintainable Interfaces with Git, communication, and entrepreneurship.) Tj
+0 -20 Td
+/F1 10 Tf
+() Tj
+0 -20 Td
+/F1 10 Tf
+(NIVOX MISSION NOTE) Tj
+0 -20 Td
+/F1 10 Tf
+(Use this skill to create practical value for students, communities, and young ventures. Build responsibly, share knowledge, and keep learning.) Tj
+0 -20 Td
+ET
+endstream
+endobj
+11 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 12
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000133 00000 n 
+0000000260 00000 n 
+0000002472 00000 n 
+0000002599 00000 n 
+0000005671 00000 n 
+0000005798 00000 n 
+0000008824 00000 n 
+0000008952 00000 n 
+0000011324 00000 n 
+trailer
+<< /Size 12 /Root 1 0 R >>
+startxref
+11395
+%%EOF

@@ -8,6 +8,7 @@ import { GlassCard } from '../../components/design/ui/Card';
 import Button from '../../components/design/ui/Button';
 import ReservationTicket from '../../components/booking/ReservationTicket';
 import BookingModal from '../../components/booking/BookingModal';
+import { getMockBookings } from '../../services/mockPaymentService';
 import ErrorState from '../../app/components/common/ErrorState';
 
 const TicketsPage = () => {
@@ -62,6 +63,11 @@ const TicketsPage = () => {
             uniqueMap.set(uniqueKey, t);
           }
         });
+        getMockBookings(currentUser.uid).forEach((ticket) => {
+          if (!uniqueMap.has(ticket.paymentReference)) {
+            uniqueMap.set(ticket.paymentReference, ticket);
+          }
+        });
 
         setTickets(
           Array.from(uniqueMap.values()).sort(
@@ -88,8 +94,8 @@ const TicketsPage = () => {
 
   const filteredTickets = tickets.filter((t) => {
     const status = t.status || 'upcoming';
-    if (activeTab === 'active') return status === 'upcoming';
-    if (activeTab === 'past') return status !== 'upcoming';
+    if (activeTab === 'active') return ['approved', 'upcoming'].includes(status);
+    if (activeTab === 'past') return !['approved', 'upcoming'].includes(status);
     return true;
   });
 

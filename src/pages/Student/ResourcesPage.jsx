@@ -1,86 +1,100 @@
 import { useState } from 'react';
-import { Download, Search, Sparkles, FileText, Code, Video, Cpu } from 'lucide-react';
+import { Download, Search, Sparkles, Bookmark, Check } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { GlassCard } from '../../components/design/ui/Card';
 import Button from '../../components/design/ui/Button';
-
-const RESOURCES = [
+import { LEARNING_MATERIALS, MATERIAL_CATEGORIES } from '../../data/learningMaterials';
+/*
   {
     id: 1,
     title: 'Full-Stack Web Development Roadmap 2026',
     category: 'Technology',
-    type: 'Text Guide',
+    type: 'PDF Tutorial',
     icon: Code,
     description: 'Comprehensive guide covering React 19, Node.js, and serverless architectures.',
     author: 'NIVOX Learning Team',
     version: '2026.1',
-    fileSize: '1 KB',
-    file: '/resources/full-stack-roadmap.txt',
+    fileSize: 'PDF',
+    file: '/resources/full-stack-roadmap.pdf',
   },
   {
     id: 2,
     title: 'UI/UX Design Systems & Micro-Interactions',
     category: 'Design',
-    type: 'Text Guide',
+    type: 'PDF Tutorial',
     icon: FileText,
     description: 'Master glassmorphic UI design, color harmony, and fluid motion physics.',
     author: 'NIVOX Design Guild',
     version: '2026.1',
-    fileSize: '1 KB',
-    file: '/resources/design-systems-guide.txt',
+    fileSize: 'PDF',
+    file: '/resources/design-systems-guide.pdf',
   },
   {
     id: 3,
     title: 'NIVOX Creator Studio Equipment Manual',
     category: 'Technology',
-    type: 'User Manual',
+    type: 'PDF Tutorial',
     icon: Cpu,
     description: 'Operating guidelines for 4K video recording, podcast mics, and lighting rigs.',
     author: 'NIVOX Creator Studio',
     version: '2026.1',
-    fileSize: '1 KB',
-    file: '/resources/creator-studio-manual.txt',
+    fileSize: 'PDF',
+    file: '/resources/creator-studio-manual.pdf',
   },
   {
     id: 4,
     title: 'AI & Data Science Masterclass Video Series',
     category: 'AI',
-    type: 'Learning Path',
+    type: 'PDF Tutorial',
     icon: Video,
     description: 'Introduction to PyTorch, LLM fine-tuning, and neural network pipelines.',
     author: 'NIVOX AI Lab',
     version: '2026.1',
-    fileSize: '1 KB',
-    file: '/resources/ai-data-science-series.txt',
+    fileSize: 'PDF',
+    file: '/resources/ai-data-science-series.pdf',
   },
   {
     id: 5,
     title: 'Startup Pitch Deck & Prospectus Toolkit',
     category: 'Entrepreneurship',
-    type: 'Quick Guide',
+    type: 'PDF Tutorial',
     icon: Sparkles,
     description: 'Investor pitch templates, financial modeling spreadsheets, and executive summaries.',
     author: 'NIVOX Venture Studio',
     version: '2026.1',
-    fileSize: '1 KB',
-    file: '/resources/pitch-deck-toolkit.txt',
+    fileSize: 'PDF',
+    file: '/resources/pitch-deck-toolkit.pdf',
   },
-];
+]; */
 
 const ResourcesPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedDifficulty, setSelectedDifficulty] = useState('All');
+  const [bookmarks, setBookmarks] = useState(() => JSON.parse(localStorage.getItem('nivox_learning_bookmarks') || '[]'));
+  const [history, setHistory] = useState(() => JSON.parse(localStorage.getItem('nivox_learning_history') || '[]'));
 
-  const categories = ['All', 'Design', 'Technology', 'Career', 'Entrepreneurship', 'AI'];
-
-  const filteredResources = RESOURCES.filter((res) => {
+  const filteredResources = LEARNING_MATERIALS.filter((res) => {
     const matchesCategory = selectedCategory === 'All' || res.category === selectedCategory;
+    const matchesDifficulty = selectedDifficulty === 'All' || res.difficulty === selectedDifficulty;
     const matchesSearch = res.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           res.description.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesCategory && matchesSearch;
+    return matchesCategory && matchesDifficulty && matchesSearch;
   });
 
-  const handleDownload = (resource) => toast.success(`Downloading ${resource.title} (${resource.fileSize})`);
+  const handleDownload = (resource) => {
+    const next = [resource.id, ...history.filter((id) => id !== resource.id)].slice(0, 20);
+    setHistory(next);
+    localStorage.setItem('nivox_learning_history', JSON.stringify(next));
+    toast.success(`Opening ${resource.title}`);
+  };
+  const toggleBookmark = (resource) => {
+    const next = bookmarks.includes(resource.id)
+      ? bookmarks.filter((id) => id !== resource.id)
+      : [resource.id, ...bookmarks];
+    setBookmarks(next);
+    localStorage.setItem('nivox_learning_bookmarks', JSON.stringify(next));
+  };
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-10">
@@ -107,7 +121,7 @@ const ResourcesPage = () => {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           {/* Category Tabs */}
           <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0">
-            {categories.map((cat) => (
+            {MATERIAL_CATEGORIES.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
@@ -121,6 +135,10 @@ const ResourcesPage = () => {
               </button>
             ))}
           </div>
+          <select value={selectedDifficulty} onChange={(event) => setSelectedDifficulty(event.target.value)} className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs text-white">
+            <option value="All">All levels</option>
+            <option value="Beginner">Beginner</option>
+          </select>
 
           {/* Search Bar */}
           <div className="relative w-full md:w-72">
@@ -145,7 +163,7 @@ const ResourcesPage = () => {
                 className="flex flex-col justify-between rounded-[24px] border border-white/10 bg-white/5 p-6 backdrop-blur transition hover:border-[#FFD54A]/40 hover:bg-white/10"
               >
                 <div>
-                  <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between">
                     <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#FFD54A]/15 text-[#FFD54A]">
                       <Icon className="h-5 w-5" />
                     </div>
@@ -164,9 +182,18 @@ const ResourcesPage = () => {
 
                 <div className="mt-6 flex items-center justify-between border-t border-white/10 pt-4 text-xs">
                   <span className="text-white/50 font-mono text-[11px]">{res.fileSize}</span>
-                  <Button as="a" href={res.file} download onClick={() => handleDownload(res)} variant="primary" size="sm" className="gap-1.5">
-                    <Download className="h-3.5 w-3.5" /> Download
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    <button type="button" onClick={() => toggleBookmark(res)} aria-label={`${bookmarks.includes(res.id) ? 'Remove' : 'Add'} bookmark`} className="rounded-lg border border-white/10 p-2 text-[#FFD54A] hover:bg-white/10">
+                      {bookmarks.includes(res.id) ? <Check className="h-3.5 w-3.5" /> : <Bookmark className="h-3.5 w-3.5" />}
+                    </button>
+                    {res.available ? (
+                      <Button as="a" href={res.file} target="_blank" rel="noreferrer" onClick={() => handleDownload(res)} variant="primary" size="sm" className="gap-1.5">
+                        <Download className="h-3.5 w-3.5" /> Read PDF
+                      </Button>
+                    ) : (
+                      <Button type="button" disabled variant="secondary" size="sm">Guide not yet available</Button>
+                    )}
+                  </div>
                 </div>
               </div>
             );
