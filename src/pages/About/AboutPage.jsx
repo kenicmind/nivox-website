@@ -142,18 +142,46 @@ const AboutPage = () => {
         </motion.section>
 
         <motion.section
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
+          initial={false}
           transition={{ duration: 0.7 }}
           className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr]"
         >
           <div className="rounded-[30px] border border-[#e6ddff] bg-gradient-to-br from-[#faf7ff] via-white to-[#f4eeff] p-8 shadow-[0_20px_70px_rgba(43,10,90,0.08)] backdrop-blur-xl sm:p-10">
             <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#2b0a5a]/70">Our Story</p>
             <h2 className="mt-4 text-3xl font-black tracking-tight text-[#2b0a5a] sm:text-4xl">
-              Built for students who need more than a classroom.
+              Why NIVOX Exists
             </h2>
-            <div className="mt-6 space-y-6 text-lg leading-8 text-gray-700">
+            <div className="mt-6 space-y-6 text-base leading-8 text-gray-700 sm:text-lg">
+              <p className="text-xl font-semibold text-[#2b0a5a]">Every generation is remembered for the problems it chooses to solve.</p>
+              <p>For my generation, one of those problems is not a lack of talent—it is a lack of opportunity.</p>
+              <p>As a university student, I experienced the realities that millions of Nigerian students continue to face every day. After long hours in lectures, the last thing we wanted was another power outage. Yet blackouts became part of student life. Studying at night became difficult, not because we lacked the desire to learn, but because there was no electricity to power our lights or charge our devices.</p>
+              <p>Owning a generator was beyond the reach of many students, and even those who had one struggled with the cost of fuel. We were forced to choose between continuing our studies and accepting circumstances we could not control.</p>
+              <p>Internet access presented another challenge. Data became increasingly expensive, yet it often disappeared before we could fully use it. For students learning online, researching assignments, building digital skills, or exploring opportunities in technology, reliable internet was not a luxury—it was a necessity that remained out of reach for many.</p>
+              <p>It was common to see students carrying laptops and phones from one place to another in search of somewhere to charge them. Some paid simply to keep their devices alive long enough to complete assignments or communicate with lecturers.</p>
+              <div className="rounded-3xl border border-[#2b0a5a]/10 bg-white/90 p-6 shadow-sm">
+                <p className="text-sm font-bold uppercase tracking-[0.24em] text-[#2b0a5a]/55">The deeper challenge</p>
+                <p className="mt-3 text-xl font-black text-[#2b0a5a]">But the greatest challenge was not electricity or internet.</p>
+                <p className="mt-3">It was watching brilliant people slowly give up on their dreams.</p>
+              </div>
+              <p>I met students with extraordinary ideas, creativity, and determination whose only limitation was the environment around them. They did not lack intelligence. They lacked access to the infrastructure that could help transform their potential into achievement.</p>
+              <p>That realization stayed with me. I began asking a simple question:</p>
+              <blockquote className="rounded-2xl border-l-4 border-[#FFD54A] bg-[#FFF9E6] px-6 py-5 text-xl font-semibold italic text-[#2b0a5a]">“What if every student, regardless of their background, could walk into a place designed to help them succeed?”</blockquote>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {['Reliable electricity', 'Affordable internet', 'Modern computers', 'AI and digital tools', 'Creative studios', 'Collaborative spaces'].map((item) => (
+                  <div key={item} className="rounded-2xl border border-[#2b0a5a]/10 bg-white px-4 py-3 text-sm font-semibold text-[#2b0a5a]">{item}</div>
+                ))}
+              </div>
+              <p>A community that encourages learning, innovation, and entrepreneurship. That question became <span className="font-black text-[#2b0a5a]">NIVOX</span>.</p>
+              <p>NIVOX was not created because another innovation hub was needed. It was created because opportunity should never depend on where a student comes from or what they can afford.</p>
+              <p>I believe every generation has a responsibility to leave its country better than it found it. Our parents solved many of the challenges of their time. Now it is our responsibility to solve the challenges of ours.</p>
+              <p>We cannot allow Nigeria to fall behind while the rest of the world builds the future. We must create an environment where young people can learn, innovate, build businesses, create jobs, and compete globally.</p>
+              <p className="text-xl font-bold text-[#2b0a5a]">NIVOX is our contribution to that future.</p>
+              <div className="rounded-3xl bg-[#2b0a5a] p-6 text-white shadow-[0_18px_50px_rgba(43,10,90,0.18)]">
+                <p className="text-2xl font-black">Because talent is everywhere.</p>
+                <p className="mt-2 text-lg font-semibold text-[#FFD54A]">Opportunity needs infrastructure.</p>
+              </div>
+            </div>
+            <div className="hidden">
               <p>
                 Every great innovation begins with a challenge that refuses to be ignored.
               </p>

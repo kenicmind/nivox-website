@@ -44,9 +44,7 @@ const stats = [
 const AnimatedCounter = ({ value, label }) => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.3 }}
+      initial={false}
       transition={{ duration: 0.5 }}
       className="rounded-[24px] border border-[#2B0A5A]/10 bg-white p-6 text-center shadow-[0_15px_45px_rgba(43,10,90,0.08)]"
     >
@@ -59,13 +57,11 @@ const AnimatedCounter = ({ value, label }) => {
 const WhyNivoxSection = () => {
   return (
     <section className="relative overflow-hidden bg-white px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
-      <div className="absolute left-[-5%] top-10 h-40 w-40 rounded-full bg-[#2B0A5A]/8 blur-3xl" />
-      <div className="absolute bottom-12 right-[-4%] h-48 w-48 rounded-full bg-[#FFD54A]/20 blur-3xl" />
+      <div className="pointer-events-none absolute left-[-5%] top-10 h-40 w-40 rounded-full bg-[#2B0A5A]/8 blur-3xl" />
+      <div className="pointer-events-none absolute bottom-12 right-[-4%] h-48 w-48 rounded-full bg-[#FFD54A]/20 blur-3xl" />
 
       <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.3 }}
+        initial={false}
         transition={{ duration: 0.6 }}
         className="mx-auto max-w-6xl"
       >
@@ -88,9 +84,7 @@ const WhyNivoxSection = () => {
             return (
               <motion.article
                 key={feature.title}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
+                initial={false}
                 transition={{ duration: 0.5, delay: index * 0.08 }}
                 whileHover={{ y: -8, scale: 1.01 }}
                 className="rounded-[24px] border border-[#2B0A5A]/10 bg-white p-7 shadow-[0_16px_50px_rgba(43,10,90,0.08)] transition-all duration-300"
@@ -106,9 +100,7 @@ const WhyNivoxSection = () => {
         </div>
 
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
+          initial={false}
           transition={{ duration: 0.6, delay: 0.15 }}
           className="mt-16 rounded-[32px] border border-[#2B0A5A]/10 bg-gradient-to-r from-[#2B0A5A] to-[#3a0d6a] p-8 text-white shadow-[0_20px_60px_rgba(43,10,90,0.2)] sm:p-10"
         >
