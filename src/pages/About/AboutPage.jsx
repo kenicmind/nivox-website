@@ -238,67 +238,64 @@ const AboutPage = () => {
               </div>
               <div>
                 <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#ffd54a]">Why We Exist</p>
-                <h3 className="text-xl font-semibold">Empowering the Next Generation of Innovators</h3>
+                <h3 className="text-xl font-semibold">Turning Access into Possibility</h3>
               </div>
             </div>
+            <p className="mt-6 text-base leading-8 text-white/75">
+              NIVOX exists to close the distance between a student’s potential and the opportunity to use it. We are building the dependable environment that ambition needs to become skill, enterprise, and lasting impact.
+            </p>
            <div className="mt-8 space-y-6">
             <div className="rounded-3xl border border-white/10 bg-white/10 p-6 backdrop-blur-lg">
               <h4 className="text-lg font-bold text-[#FFD54A]">
-                🌍 We See Potential
+                We Begin with Human Potential
               </h4>
 
               <p className="mt-3 leading-7 text-white/80">
-                Every student carries the ability to innovate, create and solve real-world
-                problems. What many lack is not talent—but the right environment to grow.
+                Talent does not belong to a particular background, school, or income level. Brilliant ideas already exist in lecture halls, hostels, and communities across Nigeria. Our first responsibility is to recognize that potential before difficult circumstances convince a student to abandon it.
               </p>
             </div>
 
             <div className="rounded-3xl border border-white/10 bg-white/10 p-6 backdrop-blur-lg">
               <h4 className="text-lg font-bold text-[#FFD54A]">
-                🚀 We Build Opportunity
+                We Build the Infrastructure for Opportunity
               </h4>
 
               <p className="mt-3 leading-7 text-white/80">
-                NIVOX provides reliable internet, modern technology, collaborative spaces
-                and a thriving community where ideas can become projects and projects can
-                become businesses.
+                Opportunity needs something practical beneath it: dependable electricity, affordable internet, capable computers, creative tools, and safe places to work. NIVOX brings those essentials together so students can spend less energy overcoming barriers and more energy learning, creating, and building.
               </p>
             </div>
 
             <div className="rounded-3xl border border-white/10 bg-white/10 p-6 backdrop-blur-lg">
               <h4 className="text-lg font-bold text-[#FFD54A]">
-                🤝 We Inspire the Future
+                We Turn Learning into Confidence
               </h4>
 
               <p className="mt-3 leading-7 text-white/80">
-                Our mission is to empower students with the confidence, skills and
-                opportunities needed to become innovators, entrepreneurs and leaders who
-                shape tomorrow.
+                Access alone is not enough. Students need guidance, practice, feedback, and a community that believes progress is possible. Through practical learning and collaboration, NIVOX helps young people move from curiosity to competence—and from competence to the confidence to lead.
               </p>
             </div>
             <div className="rounded-3xl border border-white/10 bg-white/10 p-6 backdrop-blur-lg">
             <h4 className="text-lg font-bold text-[#FFD54A]">
-              💡 We Foster Innovation
+              We Give Ideas Room to Become Real
             </h4>
 
             <p className="mt-3 leading-7 text-white/80">
-              We encourage students to think beyond the classroom, transform ideas into
-              practical solutions, and develop innovations that can improve lives,
-              communities, and industries.
+              An idea changes nothing until someone has the time, tools, and courage to test it. NIVOX creates room for experimentation: a place to ask better questions, build early versions, learn from failure, and turn classroom knowledge into solutions that serve real people.
             </p>
           </div>
 
           <div className="rounded-3xl border border-white/10 bg-white/10 p-6 backdrop-blur-lg">
             <h4 className="text-lg font-bold text-[#FFD54A]">
-              🌱 We Create Lasting Impact
+              We Invest in Generational Impact
             </h4>
 
             <p className="mt-3 leading-7 text-white/80">
-              Our vision extends beyond today's students. We are building a sustainable
-              ecosystem where learning, entrepreneurship, and collaboration create
-              opportunities that positively impact campuses, communities, and future
-              generations.
+              The value of NIVOX should extend far beyond one visit or one student. Skills become careers. Projects become businesses. Businesses create jobs. Knowledge is shared with others. By strengthening one generation of builders, we help create opportunities that can reach campuses, communities, and the generations that follow.
             </p>
+          </div>
+          <div className="rounded-3xl border border-[#FFD54A]/30 bg-[#FFD54A]/10 p-6">
+            <p className="text-sm font-bold uppercase tracking-[0.24em] text-[#FFD54A]">Our conviction</p>
+            <p className="mt-3 text-xl font-black leading-8 text-white">When students receive the right environment, they do more than adapt to the future—they help build it.</p>
           </div>
           </div>
           </div>
